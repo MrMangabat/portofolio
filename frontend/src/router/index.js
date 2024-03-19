@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
-import ResearchView from '../views/ResearchView.vue'
+import ResearchView from '../views/InterestView.vue'
 import AboutView from '../views/AboutView.vue'
 // import LogInView from '../views/LogInView.vue'
 // import Projects from '../views/Projects.vue'
@@ -9,8 +9,8 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/research',
-      name: 'research',
+      path: '/interests',
+      name: 'interests',
       component: ResearchView
     },
  
@@ -20,19 +20,8 @@ const router = createRouter({
       component: AboutView
     },
     
-    // {
-    //   path: '/projectoverview',
-    //   name: 'projectoverview',
-    //   component: ProjectsOverview
-    // },
-    // {
-    //   path: '/login',
-    //   name: 'login',
-    //   component: LogInView
-
-    // }, 
     {
-      path: '/',
+      path: '/login',
       name: 'login',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
