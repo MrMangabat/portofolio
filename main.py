@@ -1,7 +1,4 @@
-from fastapi import FastAPI
-
-app = FastAPI()
-
+from backend.application import app
 
 @app.get("/")
 async def root():

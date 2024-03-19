@@ -1,0 +1,2 @@
+https://github.com/qdrant/qdrant/blob/master/docs/roadmap/README.md
+https://qdrant.tech/
