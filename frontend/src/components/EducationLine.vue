@@ -44,6 +44,7 @@ defineProps({
                   </v-card-text>
                 </v-col>
               </v-row>
+
               <v-row>
                 <v-col>
                   <v-avatar class="edu-logo" size="80" rounded="1">
@@ -54,6 +55,7 @@ defineProps({
             </v-card>
           </div>
         </v-col>
+        
         <v-col>
           <div v-for="(education, index) in edu_achievements.slice(Math.ceil(edu_achievements.length / 2))" :key="education.edu_id" :education="education">
             <v-card class="edu-line" density="compact">
@@ -93,22 +95,21 @@ defineProps({
       align-items: center;
       padding: 20px;
       /* height: 200px; */
-      /* width: 400px; */
+      width: 300px;
       /* border: 1px solid #39495c; */
       margin-bottom: 30px;
     }
+    
     .edu-logo {
       margin-top: 20px
     }
     .row1 {
-      
       justify-content: center;
-      
       margin-top: -30px;
       margin-bottom: -60px;
     }
     .row2 {
-    
+  
       justify-content: center;
       align-items: center;
       margin-top: -30px;

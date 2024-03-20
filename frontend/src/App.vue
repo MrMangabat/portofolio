@@ -14,6 +14,10 @@
     <v-app-bar app color="primary" dark>
       <v-toolbar-title>To those who got lost and ended here, I salute</v-toolbar-title>
       
+      <v-btn 
+        text to="/projects"> Projects 
+      </v-btn>
+
       <v-menu v-model="showTopics" transition="slide-y-transition">
         <template v-slot:activator="{ props }">
           <v-btn v-bind="props">
@@ -38,21 +42,19 @@
         </v-list>
       </v-menu>
       
-      <v-btn 
-        text to="/projects"> Projects 
-      </v-btn>
+
 
       <v-btn
-        text to="CV"> CV + stuff
+        text to="/cvandstuff"> CV + stuff
       </v-btn>
 
       <v-btn 
         text to="/about"> About 
       </v-btn>
 
-      <v-btn 
+      <!-- <v-btn 
         text to="/login"> Login
-      </v-btn>
+      </v-btn> -->
 
     </v-app-bar>   
 
