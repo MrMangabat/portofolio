@@ -97,7 +97,7 @@ import EducationLine from '../components/EducationLine.vue'
                         
 
                         
-                        <v-card-title>Courses</v-card-title>
+                        <v-card-title style="display: flex; justify-content: center;">Courses</v-card-title>
 
                             dsad
                         </v-card>
