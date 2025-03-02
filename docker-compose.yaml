@@ -1,0 +1,190 @@
+version: '3.8'
+
+services:
+  frontend:
+    container_name: FRONTEND
+    networks:
+      - portofolio_network
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    command: npm run dev -- --host
+    depends_on:
+      - api_gateway
+
+  api_gateway:
+    container_name: API_GATEWAY
+    networks:
+      - portofolio_network
+    build:
+      context: ./backend/api_gateway
+      dockerfile: Dockerfile.api_gateway
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./backend/api_gateway:/app/api_gateway
+    environment:
+      - API_BASE_URL=http://localhost:8010
+      - COVER_LETTER_SERVICE_URL=http://service_cover_letter:8010
+      - ALLOWED_ORIGINS=http://localhost,http://localhost:5173,http://localhost:8080,http://frontend:5173,http://api_gateway:8080
+    depends_on:
+      - service_cover_letter
+    command: uvicorn src.main_system_trigger:app --host 0.0.0.0 --port 8080 --reload
+
+  service_cover_letter:
+    container_name: service_cover_letter
+    networks:
+      - portofolio_network
+    build:
+      context: ./backend/services/service_cover_letter
+      dockerfile: Dockerfile.service_cover_letter
+    ports:
+      - "8010:8010"
+    depends_on:
+      - cover_letter_postgres
+      - cover_letter_qdrant
+      - cover_letter_minio
+    environment:
+      - POSTGRES_DB=cover_letter_db
+      - POSTGRES_USER=cover_letter_user
+      - POSTGRES_PASSWORD=cover_letter_pass
+      - POSTGRES_HOST=cover_letter_postgres
+      - POSTGRES_PORT=5432
+
+      - QDRANT_URL=http://cover_letter_qdrant:6333
+
+      # MinIO Direct Host Connection (for internal container use)
+      - MINIO_HOST=minio
+      - MINIO_PORT=9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+
+      # Old experiment: Full MinIO URL (commented for history)
+      # - MINIO_URL=http://cover_letter_minio:9000
+
+      # Old experiment: Domain-based MinIO (commented for history)
+      # - MINIO_DOMAIN=cover_letter_minio
+
+    volumes:
+      - ./backend/services/service_cover_letter:/app/service_cover_letter
+    command: uvicorn src.api_cover_letter_main:app --host 0.0.0.0 --port 8010 --reload
+
+  cover_letter_postgres:
+    image: postgres:latest
+    container_name: cover_letter_postgres
+    networks:
+      - portofolio_network
+    environment:
+      - POSTGRES_DB=cover_letter_db
+      - POSTGRES_USER=cover_letter_user
+      - POSTGRES_PASSWORD=cover_letter_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - cover_letter_postgres_data:/var/lib/postgresql/data
+
+  cover_letter_qdrant:
+    image: qdrant/qdrant:latest
+    container_name: cover_letter_qdrant
+    networks:
+      - portofolio_network
+    ports:
+      - "6333:6333"
+    volumes:
+      - cover_letter_qdrant_data:/qdrant/storage
+
+  cover_letter_minio:
+    image: minio/minio:latest
+    container_name: cover_letter_minio
+    networks:
+      - portofolio_network
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+      - MINIO_DOMAIN=cover_letter_minio
+
+    command: server /data --console-address ":9001"
+    ports:
+      - "9000:9001"
+    volumes:
+      - cover_letter_minio_data:/data
+
+    # Old versions and experiments - preserved for history:
+    # - Console address mode
+    # - Domain mode
+    # - Path vs Virtual Host confusion points
+
+    # Original attempt (preserved)
+    # command: server --address ":9000" --console-address ":9001" /data --compat
+
+    # Experiment with domain (preserved)
+    # environment:
+    #   - MINIO_DOMAIN=cover_letter_minio
+    #   - MINIO_ROOT_USER=minioadmin
+    #   - MINIO_ROOT_PASSWORD=minioadmin
+
+# Data Warehouse Services (commented but preserved for future use)
+
+# warehouse_postgres:
+#   image: postgres:latest
+#   container_name: warehouse_postgres
+#   environment:
+#     - POSTGRES_DB=warehouse_db
+#     - POSTGRES_USER=warehouse_user
+#     - POSTGRES_PASSWORD=warehouse_pass
+#   ports:
+#     - "5434:5432"
+#   volumes:
+#     - warehouse_postgres_data:/var/lib/postgresql/data
+
+# warehouse_qdrant:
+#   image: qdrant/qdrant:latest
+#   container_name: warehouse_qdrant
+#   ports:
+#     - "6336:6333"
+#   volumes:
+#     - warehouse_qdrant_data:/qdrant/storage
+
+# warehouse_minio:
+#   image: minio/minio:latest
+#   container_name: warehouse_minio
+#   environment:
+#     - MINIO_ROOT_USER=minioadmin
+#     - MINIO_ROOT_PASSWORD=minioadmin
+#   command: server /data --console-address ":9002"
+#   ports:
+#     - "9200:9000"
+#     - "9201:9001"
+#   volumes:
+#     - warehouse_minio_data:/data
+
+# warehouse_graphdb:
+#   image: neo4j:latest
+#   container_name: warehouse_graphdb
+#   environment:
+#     - NEO4J_AUTH=neo4j/neo4jpassword
+#   ports:
+#     - "7474:7474"
+#     - "7687:7687"
+#   volumes:
+#     - warehouse_graphdb_data:/data
+
+volumes:
+  cover_letter_postgres_data:
+  cover_letter_qdrant_data:
+  cover_letter_minio_data:
+  # warehouse_postgres_data:
+  # warehouse_qdrant_data:
+  # warehouse_minio_data:
+  # warehouse_graphdb_data:
+
+networks:
+  portofolio_network:
+    name: portofolio_network

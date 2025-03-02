@@ -1,0 +1,8 @@
+# Pull the official Neo4j image
+FROM neo4j:latest
+
+# Set environment variables for Neo4j
+ENV NEO4J_AUTH=neo4j/your_password
+
+# Expose Neo4j ports
+EXPOSE 7474 7687

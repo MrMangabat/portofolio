@@ -1,0 +1,12 @@
+FROM python:3.10
+
+WORKDIR /app
+
+COPY . /app
+
+RUN pip install fastapi uvicorn httpx pydantic pydantic-settings
+
+# Set Python path explicitly
+ENV PYTHONPATH="/app:/app/src"
+
+CMD ["uvicorn", "src.main_system_trigger:app", "--host", "localhost", "--port", "8080"]

@@ -1,0 +1,73 @@
+# Ignore Python compiled files and cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.cpython-310.pyc
+
+# Ignore environment files (critical)
+*.env
+
+# Ignore Python virtual environments
+venv/
+env/
+.venv/
+portofolio_env/
+
+# Ignore reset script
+reset_schema.sh
+
+# Ignore utils folder (global)
+utils/
+
+# Ignore logs and temporary files
+*.log
+*.sqlite3
+*.db
+*.tmp
+*.bak
+
+# Ignore IDE and editor files
+.vscode/
+.idea/
+*.swp
+
+# Ignore Node.js dependencies (global)
+node_modules/
+
+# Ignore frontend cache and Vite cache
+.vite/
+
+# Ignore test cache (Python)
+.pytest_cache/
+
+# Ignore configuration files you want to exclude
+db.json
+package-lock.json
+*.config.js  # Handles vite.config.js, vitest.config.js
+
+# Ignore other service-specific folders/files if needed
+tests/.pytest_cache/
+
+# Optional — Docker files (if you want them ignored when overriding locally)
+docker-compose.override.yml
+.dockerignore
+.docker/
+
+# SonarQube (local analysis data)
+.sonarqube/
+
+# AI/ML model outputs (optional, if relevant)
+wandb/
+mlruns/
+models/
+checkpoints/
+artifacts/
+
+# Monitoring Data (optional, if relevant)
+prometheus-data/
+grafana-data/
+
+# Ignore misc personal files if they ever appear
+login.txt
+README.md
