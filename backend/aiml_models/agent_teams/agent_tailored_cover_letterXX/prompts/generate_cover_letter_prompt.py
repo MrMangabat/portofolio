@@ -1,4 +1,4 @@
-#backend/aiml_models/templates/prompt_templates/generate_cover_letter_prompt.py
+# backend/aiml_models/agent_teams/agent_tailored_cover_letter/prompts/generate_cover_letter_prompt.py
 
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
 from langchain.pydantic_v1 import BaseModel, Field

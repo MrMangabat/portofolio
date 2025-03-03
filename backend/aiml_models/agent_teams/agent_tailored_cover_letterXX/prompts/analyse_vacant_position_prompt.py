@@ -1,4 +1,4 @@
-# backend/aiml_models/templates/prompt_templates/analyse_vacant_position_prompt.py
+# backend/aiml_models/agent_teams/agent_tailored_cover_letter/prompts/analyse_vacant_position_prompt.py
 
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, ChatMessagePromptTemplate, PromptTemplate
 from langchain.pydantic_v1 import BaseModel, Field
