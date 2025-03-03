@@ -57,21 +57,11 @@ services:
       - POSTGRES_PASSWORD=cover_letter_pass
       - POSTGRES_HOST=cover_letter_postgres
       - POSTGRES_PORT=5432
-
       - QDRANT_URL=http://cover_letter_qdrant:6333
-
-      # MinIO Direct Host Connection (for internal container use)
-      - MINIO_HOST=minio
+      - MINIO_HOST=cover_letter_minio
       - MINIO_PORT=9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
-
-      # Old experiment: Full MinIO URL (commented for history)
-      # - MINIO_URL=http://cover_letter_minio:9000
-
-      # Old experiment: Domain-based MinIO (commented for history)
-      # - MINIO_DOMAIN=cover_letter_minio
-
     volumes:
       - ./backend/services/service_cover_letter:/app/service_cover_letter
     command: uvicorn src.api_cover_letter_main:app --host 0.0.0.0 --port 8010 --reload
@@ -108,29 +98,30 @@ services:
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
-      - MINIO_DOMAIN=cover_letter_minio
-
+      - MINIO_BROWSER_REDIRECT_URL=http://localhost:9001  # Optional web UI
     command: server /data --console-address ":9001"
     ports:
-      - "9000:9001"
+      - "9000:9000"  # S3 API for service access
+      - "9001:9001"  # Console UI (optional)
     volumes:
       - cover_letter_minio_data:/data
 
-    # Old versions and experiments - preserved for history:
-    # - Console address mode
-    # - Domain mode
-    # - Path vs Virtual Host confusion points
+volumes:
+  cover_letter_postgres_data:
+  cover_letter_qdrant_data:
+  cover_letter_minio_data:
 
-    # Original attempt (preserved)
-    # command: server --address ":9000" --console-address ":9001" /data --compat
+networks:
+  portofolio_network:
+    name: portofolio_network
 
-    # Experiment with domain (preserved)
-    # environment:
-    #   - MINIO_DOMAIN=cover_letter_minio
-    #   - MINIO_ROOT_USER=minioadmin
-    #   - MINIO_ROOT_PASSWORD=minioadmin
+# Commented experiments & historical attempts (for transparency)
 
-# Data Warehouse Services (commented but preserved for future use)
+# - MINIO_DOMAIN=cover_letter_minio
+# - MINIO_URL=http://cover_letter_minio:9000
+# - command: server --address ":9000" --console-address ":9001" /data --compat
+
+# Data Warehouse Services (reserved for future use)
 
 # warehouse_postgres:
 #   image: postgres:latest
@@ -175,16 +166,3 @@ services:
 #     - "7687:7687"
 #   volumes:
 #     - warehouse_graphdb_data:/data
-
-volumes:
-  cover_letter_postgres_data:
-  cover_letter_qdrant_data:
-  cover_letter_minio_data:
-  # warehouse_postgres_data:
-  # warehouse_qdrant_data:
-  # warehouse_minio_data:
-  # warehouse_graphdb_data:
-
-networks:
-  portofolio_network:
-    name: portofolio_network

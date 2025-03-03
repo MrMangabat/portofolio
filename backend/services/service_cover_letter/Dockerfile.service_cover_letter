@@ -1,35 +1,25 @@
-# Use the official Python 3.10 slim image as the base image
+#backend/services/service_cover_letter/Dockerfile.service_cover_letter
+# Base image - slim Python 3.10
 FROM python:3.10-slim
 
-# Set the working directory inside the container for the service
+# Set working directory inside container
 WORKDIR /app/service_cover_letter
 
-# Install system packages (ping + curl for debugging/diagnostics)
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
+# Install basic debugging tools
+RUN apt-get update && apt-get install -y \
     iputils-ping \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Install necessary Python packages using pip
-RUN pip install fastapi \              
-    uvicorn \                          
-    psycopg2-binary \ 
-    sqlalchemy \          
-    pydantic \                 
-    qdrant-client \    
-    minio \                         
-    python-dotenv \         
-    python-multipart            
+# Install Python dependencies
+RUN pip install fastapi uvicorn psycopg2-binary sqlalchemy pydantic qdrant-client minio python-dotenv python-multipart
 
-# Copy the entire service directory correctly
-COPY . /app/service_cover_letter
+# Copy service source code into container (context = ./backend/services/service_cover_letter)
+COPY ./ /app/service_cover_letter
 
-# Set the PYTHONPATH environment variable correctly
+# Set Python path so modules are correctly found
 ENV PYTHONPATH="/app:/app/src"
 
-# Expose port 8080 for this service
-EXPOSE 8080
-
-# Run the FastAPI application using Uvicorn
+# Expose and start FastAPI (port 8010)
+EXPOSE 8010
 CMD ["uvicorn", "src.api_cover_letter_main:app", "--host", "0.0.0.0", "--port", "8010", "--reload"]

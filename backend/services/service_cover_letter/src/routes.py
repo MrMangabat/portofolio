@@ -81,8 +81,9 @@ def read_job_listings(
 ############################################
 # File Service (MinIO)
 ############################################
-
+from src.config.config_top_level import Config
 def get_file_service() -> FileService:
+
     minio_connection = MiniOConnection.get_minio_connection()
     repository = MinioRepository(minio_connection)
     return FileService(repository)

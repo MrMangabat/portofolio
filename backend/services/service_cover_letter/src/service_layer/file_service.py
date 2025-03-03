@@ -25,7 +25,7 @@ class FileService:
                 file_name=unique_filename,
                 content_type=file.content_type,
                 bucket_type=bucket_type,
-                metadata={"original_name": file.filename}
+                metadata={"x-amz-meta-original-name": file.filename}  # Matches MinIO lowercasing
             )
 
             file_items.append(FileItem(
@@ -41,14 +41,16 @@ class FileService:
         self.repository.delete_file(file_name, bucket_type)
 
     def list_files(self, bucket_type: str) -> List[FileItem]:
+        
         raw_files = self.repository.list_files(bucket_type)
         return [
             FileItem(
                 file_name=file["file_name"],
-                original_file_name=file["original_name"],
+                original_file_name=file["original_name"],  # Matches CRUD_minio
                 size=file["size"],
-                file_type=""
-            ) for file in raw_files
+                file_type=""  # Can add extension parsing if needed
+            )
+            for file in raw_files
         ]
 
     def get_file_content(self, file_name: str, bucket_type: str) -> bytes:

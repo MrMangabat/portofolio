@@ -7,6 +7,9 @@ from sqlalchemy.sql import text
 
 from src.config.config_low_level import PostgressConnection
 from service_cover_letter.src.routes import router as cover_letter_router
+from src.startup import pre_startup
+
+pre_startup()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):

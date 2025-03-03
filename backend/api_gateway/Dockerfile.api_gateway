@@ -1,12 +1,19 @@
+# backend/api_gateway/Dockerfile.api_gateway
+# Base image - full Python 3.10 environment
 FROM python:3.10
 
+# Set working directory in container
 WORKDIR /app
 
-COPY . /app
+# Copy all source code inside "api_gateway" into container (context already = ./backend/api_gateway)
+COPY ./ /app
 
+# Install dependencies
 RUN pip install fastapi uvicorn httpx pydantic pydantic-settings
 
-# Set Python path explicitly
+# Set Python path so modules are correctly found
 ENV PYTHONPATH="/app:/app/src"
 
-CMD ["uvicorn", "src.main_system_trigger:app", "--host", "localhost", "--port", "8080"]
+# Expose and start FastAPI (port 8080)
+EXPOSE 8080
+CMD ["uvicorn", "src.main_system_trigger:app", "--host", "0.0.0.0", "--port", "8080"]
