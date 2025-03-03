@@ -1,0 +1,267 @@
+.
+├── backend
+│   ├── __init__.py
+│   ├── aiml_models
+│   │   ├── agent_teams
+│   │   │   ├── agent_seo
+│   │   │   │   └── word_research.py
+│   │   │   └── agent_tailored_cover_letter
+│   │   │       ├── Makefile
+│   │   │       ├── agent_docker
+│   │   │       │   ├── Dockerfile
+│   │   │       │   └── docker-compose.yaml
+│   │   │       ├── config_top_level
+│   │   │       │   ├── config.py
+│   │   │       │   └── config.yaml
+│   │   │       ├── documentation
+│   │   │       ├── langgraph_flow_functions
+│   │   │       │   ├── node_check_latex_syntax.py
+│   │   │       │   ├── node_context_validation.py
+│   │   │       │   ├── node_create_latex_pdf.py
+│   │   │       │   ├── node_decide_to_continue.py
+│   │   │       │   ├── node_decide_to_correct.py
+│   │   │       │   ├── node_generate_cover_letter.py
+│   │   │       │   ├── node_generate_vacancy_analysis.py
+│   │   │       │   ├── node_graph_state.py
+│   │   │       │   ├── node_initial_check.py
+│   │   │       │   ├── node_retrieve_cover_letters.py
+│   │   │       │   ├── node_secondary_check.py
+│   │   │       │   └── node_semantic_control_loop.py
+│   │   │       ├── monitoring
+│   │   │       │   ├── error_handler.py
+│   │   │       │   ├── event_tracking.py
+│   │   │       │   ├── logging_config.py
+│   │   │       │   ├── model_monitor.py
+│   │   │       │   └── observability.py
+│   │   │       ├── notebooks
+│   │   │       │   └── testing_agent.ipynb
+│   │   │       ├── prompts
+│   │   │       │   ├── analyse_vacant_position_prompt.py
+│   │   │       │   ├── generate_cover_letter_prompt.py
+│   │   │       │   └── sentence_word_validation_prompt.py
+│   │   │       ├── requirements.txt
+│   │   │       ├── src
+│   │   │       │   ├── agent_api
+│   │   │       │   │   ├── agent_authentication.py
+│   │   │       │   │   ├── agent_data_models.py
+│   │   │       │   │   └── routes.py
+│   │   │       │   ├── agent_logic.py
+│   │   │       │   ├── agent_main.py
+│   │   │       │   ├── config_low_level.py
+│   │   │       │   ├── dependencies.py
+│   │   │       │   ├── event_handler.py
+│   │   │       │   └── llm_model
+│   │   │       │       └── common.py
+│   │   │       └── tests
+│   │   │           ├── test_agent.py
+│   │   │           └── test_api.py
+│   │   ├── agents
+│   │   ├── llm_agents
+│   │   │   ├── LLM_model.py
+│   │   │   ├── __init__.py
+│   │   │   ├── generate_cover_letter.py
+│   │   │   ├── job_analysis.py
+│   │   │   └── validation_chain.py
+│   │   ├── main_jobapplication.py
+│   │   ├── mlmodels
+│   │   ├── notebooks
+│   │   │   └── headings_application.ipynb
+│   │   ├── retrieve_documents
+│   │   │   ├── __init__.py
+│   │   │   ├── retrieve_cv.py
+│   │   │   └── retrieve_templates.py
+│   │   ├── services
+│   │   │   └── curriculum_vitae
+│   │   │       └── JMangabat_CV_NEW.pdf
+│   │   └── templates
+│   │       ├── jobtemplates
+│   │       │   └── personal_ai.txt
+│   │       └── prompt_templates
+│   │           ├── __init__
+│   │           ├── analyse_vacant_position_prompt.py
+│   │           ├── generate_cover_letter_prompt.py
+│   │           ├── latex_templates
+│   │           │   ├── ay_engineer_new.txt
+│   │           │   └── topresume_ai.txt
+│   │           └── sentence_word_validation_prompt.py
+│   ├── api_gateway
+│   │   ├── Dockerfile.api_gateway
+│   │   ├── config_top_level.py
+│   │   ├── requiremetns_api_gateway.txt
+│   │   └── src
+│   │       ├── __init__.py
+│   │       ├── __pycache__
+│   │       ├── config
+│   │       │   ├── __init__.py
+│   │       │   ├── config_combined_settings.py
+│   │       │   ├── config_low_level.py
+│   │       │   ├── config_top_level.py
+│   │       │   └── dependencies.py
+│   │       ├── main_system_trigger.py
+│   │       ├── routes.py
+│   │       └── tests
+│   ├── datawarehouse
+│   │   ├── DockerFile.Datawarehouse
+│   │   ├── database_connections.py
+│   │   ├── databases
+│   │   │   ├── __init__.py
+│   │   │   ├── neo4j_database
+│   │   │   │   └── Dockerfile.graphdb
+│   │   │   ├── postgres_database
+│   │   │   │   ├── Dockerfile.relationaldb
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── create_database.py
+│   │   │   │   ├── insert_working_experiences.py
+│   │   │   │   ├── models.py
+│   │   │   │   ├── postgres_schemas.py
+│   │   │   │   └── test.ipynb
+│   │   │   └── qrand_vector_database
+│   │   │       └── links.txt
+│   │   ├── src
+│   │   │   ├── connections
+│   │   │   ├── data_models
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── minio_models.py
+│   │   │   │   ├── postgres_models.py
+│   │   │   │   ├── qdrant_models.py
+│   │   │   │   └── sql_models
+│   │   │   │       ├── joblistings.sql
+│   │   │   │       └── words_setences_skills.sql
+│   │   │   ├── data_repositories
+│   │   │   │   ├── __init__.py
+│   │   │   │   ├── graph_repository
+│   │   │   │   │   └── CRUD_neo4j.py
+│   │   │   │   ├── miniO_repository
+│   │   │   │   │   └── CRUD_minio.py
+│   │   │   │   ├── postgress_repository
+│   │   │   │   │   └── CRUD_postgres.py
+│   │   │   │   └── qdrant_repository
+│   │   │   │       └── CRUD_qdrant.py
+│   │   │   ├── low_level_config.py
+│   │   │   └── monitoring
+│   │   └── top_level_config.py
+│   ├── event_broker
+│   │   ├── event_handlers
+│   │   └── event_producers
+│   ├── infrastructure
+│   ├── services
+│   │   ├── service_cover_letter
+│   │   │   ├── Dockerfile.service_cover_letter
+│   │   │   ├── event_handler.py
+│   │   │   ├── requirements.txt
+│   │   │   └── src
+│   │   │       ├── __init__.py
+│   │   │       ├── api_cover_letter_main.py
+│   │   │       ├── config
+│   │   │       │   ├── config_low_level.py
+│   │   │       │   └── config_top_level.py
+│   │   │       ├── data_models
+│   │   │       │   ├── __init__.py
+│   │   │       │   ├── minio_models.py
+│   │   │       │   ├── postgres_models.py
+│   │   │       │   ├── qdrant_models.py
+│   │   │       │   └── sql_models
+│   │   │       │       ├── joblistings.sql
+│   │   │       │       └── words_setences_skills.sql
+│   │   │       ├── data_repositories
+│   │   │       │   ├── __init__.py
+│   │   │       │   ├── graph_repository
+│   │   │       │   │   └── CRUD_neo4j.py
+│   │   │       │   ├── miniO_repository
+│   │   │       │   │   └── CRUD_minio.py
+│   │   │       │   ├── postgress_repository
+│   │   │       │   │   └── CRUD_postgres.py
+│   │   │       │   └── qdrant_repository
+│   │   │       │       └── CRUD_qdrant.py
+│   │   │       ├── logic
+│   │   │       ├── monitoring
+│   │   │       ├── routes.py
+│   │   │       ├── service_layer
+│   │   │       │   ├── correction_services.py
+│   │   │       │   ├── file_service.py
+│   │   │       │   └── joblisting_service.py
+│   │   │       ├── startup.py
+│   │   │       └── tests
+│   │   └── service_user
+│   └── user_management_feature
+│       ├── api
+│       ├── crud
+│       ├── databa_models
+│       └── services
+├── docker-compose.yaml
+├── frontend
+│   ├── Dockerfile
+│   ├── index.html
+│   ├── package.json
+│   ├── public
+│   ├── src
+│   │   ├── App.vue
+│   │   ├── apis
+│   │   │   └── jobsearch_api.js
+│   │   ├── assets
+│   │   │   ├── base.css
+│   │   │   ├── images
+│   │   │   │   ├── edulogo
+│   │   │   │   │   ├── SDU.jpeg
+│   │   │   │   │   ├── eaaa.jpeg
+│   │   │   │   │   ├── ebs.jpeg
+│   │   │   │   │   ├── kunstogdesign.jpeg
+│   │   │   │   │   └── tiba.jpeg
+│   │   │   │   └── worklogos
+│   │   │   │       ├── brookelynsocial.jpeg
+│   │   │   │       ├── diningsix.jpeg
+│   │   │   │       ├── enviroprocess.jpeg
+│   │   │   │       ├── klarbar.jpeg
+│   │   │   │       ├── remouladen.jpeg
+│   │   │   │       ├── scandic.jpeg
+│   │   │   │       ├── smokingpanda.jpeg
+│   │   │   │       ├── springstreetsocial.jpeg
+│   │   │   │       ├── tdc.jpeg
+│   │   │   │       └── tdchosting.jpeg
+│   │   │   ├── logo.svg
+│   │   │   └── main.css
+│   │   ├── components
+│   │   │   ├── EducationLine.vue
+│   │   │   ├── TimeLine.vue
+│   │   │   ├── ToShow.vue
+│   │   │   ├── __tests__
+│   │   │   └── jobsearch_view
+│   │   │       ├── FileUploads.vue
+│   │   │       ├── JobListings.vue
+│   │   │       ├── SentenceForm.vue
+│   │   │       ├── SentenceList.vue
+│   │   │       ├── SkillSetList.vue
+│   │   │       ├── SkillsetForm.vue
+│   │   │       ├── WordsForm.vue
+│   │   │       └── WordsList.vue
+│   │   ├── composables
+│   │   │   ├── EducationLine.vue
+│   │   │   ├── TimeLine.vue
+│   │   │   ├── ToShow.vue
+│   │   │   ├── useItemForm.js
+│   │   │   └── useItemList.js
+│   │   ├── config.js
+│   │   ├── main.js
+│   │   ├── router
+│   │   │   └── index.js
+│   │   ├── stores
+│   │   │   ├── fileStore.js
+│   │   │   ├── removeSentencesList.js
+│   │   │   ├── removeWordsList.js
+│   │   │   └── skillSetStore.js
+│   │   └── views
+│   │       ├── AboutView.vue
+│   │       ├── DashboardTest.vue
+│   │       ├── HomeView.vue
+│   │       ├── JobSearch.vue
+│   │       ├── LogInView.vue
+│   │       ├── ProjectsOverview.vue
+│   │       └── ResearchView.vue
+│   ├── vite.config.js
+│   └── vitest.config.js
+└── temp_tree_folder
+    ├── backend
+    ├── frontend
+    └── temp_tree_folder
+
+90 directories, 174 files

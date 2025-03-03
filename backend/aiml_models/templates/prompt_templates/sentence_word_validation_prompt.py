@@ -1,3 +1,4 @@
+# backend/aiml_models/templates/prompt_templates/sentence_word_validation_prompt.py
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain_core.output_parsers import PydanticOutputParser
