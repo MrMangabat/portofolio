@@ -1,0 +1,49 @@
+version: '3.8'
+
+services:
+  service_cover_letter:
+    build:
+      context: ./backend/services/service_cover_letter
+    container_name: service_cover_letter
+    env_file:
+      - ./backend/services/service_cover_letter/.env
+    networks:
+      - microservice_network
+    depends_on:
+      - service_postgres
+      - cover_letter_minio
+    ports:
+      - "8010:8010"
+
+  service_postgres:
+    image: postgres:14
+    container_name: service_postgres
+    env_file:
+      - ./backend/services/service_cover_letter/.env
+    networks:
+      - microservice_network
+    volumes:
+      - service_postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  cover_letter_minio:
+    image: minio/minio
+    container_name: cover_letter_minio
+    env_file:
+      - ./backend/services/service_cover_letter/.env
+    command: server --console-address ":9001" /data
+    networks:
+      - microservice_network
+    volumes:
+      - service_minio_data:/data
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+networks:
+  microservice_network:
+
+volumes:
+  service_postgres_data:
+  service_minio_data:

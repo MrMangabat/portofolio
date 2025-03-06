@@ -1,4 +1,3 @@
-# backend/services/service_cover_letter/src/api_cover_letter_main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
@@ -6,7 +5,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
 from src.config.config_low_level import PostgressConnection
-from service_cover_letter.src.routes import router as cover_letter_router
+from src.routes import router as cover_letter_router
 from src.startup import pre_startup
 
 pre_startup()
@@ -42,7 +41,7 @@ app = FastAPI(lifespan=lifespan)
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # http://localhost:5173 if needed later
+    allow_origins=["*"],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],

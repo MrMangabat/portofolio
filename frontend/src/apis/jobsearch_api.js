@@ -1,4 +1,3 @@
-// frontend/src/apis/jobsearch_api.js
 import axios from "axios";
 
 // Get dynamic URLs from the global config loaded in main.js
@@ -28,10 +27,8 @@ const coverLetterAPI = axios.create({
 export default {
   // -------------------------------
   // Corrections endpoints (words, sentences, skills)
-  // These endpoints are part of the cover letter service.
   // -------------------------------
   addWord(wordData) {
-    // wordData should be an object like { text: 'example word' }
     return coverLetterAPI.post("/corrections", { ...wordData, type: 'word' });
   },
   getWords() {
@@ -69,15 +66,15 @@ export default {
   },
   
   // -------------------------------
-  // File management endpoints – assuming they belong to the cover letter service
+  // File management endpoints (updated paths)
   // -------------------------------
   uploadFiles(formData) {
-    return coverLetterAPI.post("/upload_files", formData, {
-      headers: { "Content-Type": "multipart/form-data" }
+    return coverLetterAPI.post("/files/upload", formData, {
+        headers: { "Content-Type": "multipart/form-data" }
     });
-  },
+},
   deleteFile(fileName, bucketType) {
-    return coverLetterAPI.delete(`/delete_files/${bucketType}/${fileName}`);
+    return coverLetterAPI.delete(`/files/${bucketType}/${fileName}`);
   },
   getFiles(bucketType) {
     return coverLetterAPI.get(`/files/${bucketType}`);
