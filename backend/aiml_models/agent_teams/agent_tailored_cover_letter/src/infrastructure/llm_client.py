@@ -26,8 +26,8 @@ class LLMClient:
 
         payload = {
             "model": self.model,
-            "messages": converted_messages,
-            "promt": {
+            "prompt": converted_messages,
+            "format": {
                 "type": "jsonschema",
                 "schema": JobAnalysisResult.model_json_schema()
             },

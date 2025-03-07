@@ -24,3 +24,4 @@ class JobAnalysisResultParser:
     def parse(self, llm_response: str) -> JobAnalysisResult:
         print(f"\n\nLLM response: {llm_response}")
         return JobAnalysisResult.model_validate_json(llm_response)
+    
