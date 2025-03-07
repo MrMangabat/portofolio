@@ -44,26 +44,31 @@ class AgentServiceClassCompanyAnalysis:
 
     def analyze_job_vacancy(self, job_description: str) -> JobAnalysisResult:
         # Fetch forbidden words, sentences, and skills
-        forbidden_words = [item["text"] for item in self.corrections_client.fetch_corrections("word")]
-        forbidden_sentences = [item["text"] for item in self.corrections_client.fetch_corrections("sentence")]
-        skillsets = [item["text"] for item in self.corrections_client.fetch_corrections("skill")]
+        forbidden_words_response = [item["text"] for item in self.corrections_client.fetch_corrections("word")]
+        forbidden_sentences_response = [item["text"] for item in self.corrections_client.fetch_corrections("sentence")]
+        skills_response = [item["text"] for item in self.corrections_client.fetch_corrections("skill")]
 
         # Main generation loop with up to 12 self-correction attempts
         for iteration in range(1, 13):
-            prompt = self.prompt_builder.build_prompt(skillsets, job_description)
-            formatted_prompt = prompt.format_messages(job_position=job_description, my_skills=skillsets)
+            prompt = self.prompt_builder.build_prompt(skills_response, job_description)
 
-            # 🔥 Invoke the real LLM via Ollama
+            formatted_skills = ", ".join(skills_response)  # Convert list to comma-separated string
+            formatted_prompt = prompt.format_messages(job_position=job_description, my_skills=formatted_skills)
+            print(f"Formatted prompt :\n\n{formatted_prompt}")
+
+            # Invoke the real LLM via Ollama
             raw_response = self.llm_client.invoke(formatted_prompt)
+
+            print(f"\n\nRaw response: {raw_response}")
 
             # Parse response
             parsed_response = self.response_parser.parse(raw_response)
 
             # Validate response
-            feedback = self.rules_validator.validate(parsed_response, forbidden_words, forbidden_sentences, iteration)
+            feedback = self.rules_validator.validate(parsed_response, forbidden_words_response, forbidden_sentences_response, iteration)
 
             if feedback["status"] == "passed":
-                print(f"✅ Analysis passed after {iteration} iterations.")
+                # print(f"✅ Analysis passed after {iteration} iterations.")
                 return parsed_response
 
             # Store feedback for future self-correction

@@ -13,5 +13,5 @@ class ConfigTopLevel(BaseModel):
     def load_config(cls) -> "ConfigTopLevel":
         load_dotenv()
         return cls(
-            ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
+            ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://127.0.0.1:11434")
         )

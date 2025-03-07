@@ -1,7 +1,5 @@
 # backend/aiml_models/agent_teams/agent_tailored_cover_letter/src/core/company_analysis/components/analysis_respose_parser.py
 
-
-
 from langchain_core.output_parsers import PydanticOutputParser
 from src.core.data_models.analysis_result_model import JobAnalysisResult
 
@@ -24,4 +22,5 @@ class JobAnalysisResultParser:
         self.parser = PydanticOutputParser(pydantic_object=JobAnalysisResult)
 
     def parse(self, llm_response: str) -> JobAnalysisResult:
-        return self.parser.parse(llm_response)
+        print(f"\n\nLLM response: {llm_response}")
+        return JobAnalysisResult.model_validate_json(llm_response)
