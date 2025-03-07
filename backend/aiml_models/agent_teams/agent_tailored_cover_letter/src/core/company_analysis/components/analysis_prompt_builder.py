@@ -3,66 +3,69 @@
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
 from typing import List
 
+
+
+from langchain_core.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
+from langchain_core.output_parsers import PydanticOutputParser
+from typing import List
+from src.core.data_models.analysis_result_model import JobAnalysisResult  # Your data model
+
 class AnalysisPromptBuilder:
     """
-    Purpose:
-        Constructs the structured prompt for the LLM to analyze a job vacancy.
+Purpose:
+    Constructs the structured prompt for the LLM to analyze a job vacancy.
 
-    Capabilities:
-        - Defines a static system message that sets expectations for analysis and the required output schema.
-        - Injects dynamic user inputs (job description + skills) via a separate human message.
-    
-    Reasoning:
-        This class only handles **prompt assembly** — it has zero logic for output parsing, validation, or generation.
-        ✅ Clear separation between inputs (user data) and outputs (expected schema).
-        ✅ No parser coupling.
-        ✅ Full testability in isolation.
-    """
+Capabilities:
+    - Defines a static system message that sets expectations for analysis and the required output schema.
+    - Injects dynamic user inputs (job description + skills) via a separate human message.
 
+Reasoning:
+    This class only handles **prompt assembly** — it has zero logic for output parsing, validation, or generation.
+    ✅ Clear separation between inputs (user data) and outputs (expected schema).
+    ✅ No parser coupling.
+    ✅ Full testability in isolation.
+"""
     def __init__(self) -> None:
-        pass  # No dependencies needed — pure prompt logic.
+        self.parser = PydanticOutputParser(pydantic_object=JobAnalysisResult)
 
     def build_prompt(self, skillsets: List[str], job_to_apply: str) -> ChatPromptTemplate:
+        system_analysis_template_str = """
+        You are a senior HR analyst working for a career advisory platform.
+        You do not sugarcoat the truth and provide honest and constructive feedback to job seekers.
+        
+        Your task is to analyze the provided job vacancy:
+        - Extract the all identified skills for the role
+        - Match the skills required for the role with the candidate's skills.
+        - Provide an assestment on the candidate's suitability for the role.  additional provide details on where you found these skills and traits
+        Job Vacancy Description:
+        {job_position}
+
+        Candidate's Skills:
+        {my_skills}
+
+        {format_instructions} 
         """
-        Assembles and returns the structured prompt for the LLM.
-
-        Args:
-            skillsets (List[str]): Candidate's skills (from service_cover_letter corrections).
-            job_to_apply (str): Full job description text.
-
-        Returns:
-            ChatPromptTemplate: Fully assembled system+human message ready for LLM.
-        """
-
-        # ⚙️ Static system message — this does NOT rely on dynamic input.
-        system_message = """
-You are a senior HR analyst working for a career advisory platform.
-Your task is to analyze the provided job vacancy and return **only** a JSON object that matches this schema:
-
-Important:
-- Do not add explanations, greetings, or comments.
-- Only return the JSON object — no other text.
-        """.strip()
 
         system_prompt = SystemMessagePromptTemplate(
-            prompt=PromptTemplate(template=system_message)
-        )
-
-        # ⚙️ Dynamic human message — this injects **real user data** (description + skills).
-        human_message = """
-Job Vacancy Description:
-{job_position}
-
-Candidate's Skills:
-{my_skills}
-        """.strip()
-
-        human_prompt = HumanMessagePromptTemplate(
             prompt=PromptTemplate(
-                template=human_message,
-                input_variables=["job_position", "my_skills"]  # These are real inputs injected at runtime.
+                template=system_analysis_template_str,
+                input_variables=[],
+                partial_variables={"format_instructions": self.parser.get_format_instructions()}
             )
         )
 
-        # ✅ Combine into a final ChatPromptTemplate (what Ollama sees).
+        human_analysis_template_str = """
+
+
+        Candidate's Skills:
+        {my_skills}
+        """
+
+        human_prompt = HumanMessagePromptTemplate(
+            prompt=PromptTemplate(
+                template=human_analysis_template_str,
+                input_variables=["job_position", "my_skills"]
+            )
+        )
+
         return ChatPromptTemplate(messages=[system_prompt, human_prompt])

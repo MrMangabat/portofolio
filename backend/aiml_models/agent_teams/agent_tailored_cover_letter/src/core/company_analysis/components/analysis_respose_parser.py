@@ -18,10 +18,14 @@ class JobAnalysisResultParser:
             ✅ Easy updates if fields change.
             ✅ Standalone testability.
     """
+
+
+class JobAnalysisResultParser:
     def __init__(self) -> None:
         self.parser = PydanticOutputParser(pydantic_object=JobAnalysisResult)
 
     def parse(self, llm_response: str) -> JobAnalysisResult:
-        print(f"\n\nLLM response: {llm_response}")
-        return JobAnalysisResult.model_validate_json(llm_response)
-    
+        print("\n🛠️ Raw LLM Response (Before Parsing):")
+        print(f"RAW TEXT: {llm_response}")
+        # The parser will strip markdown wrappers, trailing junk, and more
+        return self.parser.parse(llm_response)

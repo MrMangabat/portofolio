@@ -3,6 +3,7 @@
 
 from typing import Dict, List
 from src.infrastructure.correction_client import CorrectionsClient
+from src.core.company_analysis.components.analysis_post_processing import PostProcessingNormalizer
 from src.core.company_analysis.components.analysis_prompt_builder import AnalysisPromptBuilder
 from src.core.company_analysis.components.analysis_respose_parser import JobAnalysisResultParser
 from src.core.company_analysis.components.analysis_rules_validator import AnalysisRulesValidator
@@ -33,12 +34,15 @@ class AgentServiceClassCompanyAnalysis:
         prompt_builder: AnalysisPromptBuilder,
         response_parser: JobAnalysisResultParser,
         rules_validator: AnalysisRulesValidator,
-        llm_client: LLMClient  # This MUST be present
+        post_processing_normalizer: PostProcessingNormalizer,
+        llm_client: LLMClient
         ) -> None:
         self.corrections_client = corrections_client
         self.prompt_builder = prompt_builder
         self.response_parser = response_parser
         self.rules_validator = rules_validator
+        self.post_processing_normalizer = post_processing_normalizer
+
         self.llm_client = llm_client
         self.correction_history: List[Dict] = []  # Tracks all corrections across iterations
 
@@ -53,19 +57,21 @@ class AgentServiceClassCompanyAnalysis:
             prompt = self.prompt_builder.build_prompt(skills_response, job_description)
 
             formatted_skills = ", ".join(skills_response)  # Convert list to comma-separated string
-            formatted_prompt = prompt.format_messages(job_position=job_description, my_skills=formatted_skills)
-            print(f"Formatted prompt :\n\n{formatted_prompt}")
+            messages = prompt.format_messages(job_position=job_description, my_skills=formatted_skills)
+            print(f"Formatted prompt :\n\n{messages}")
 
             # Invoke the real LLM via Ollama
-            raw_response = self.llm_client.invoke(formatted_prompt)
+            raw_response = self.llm_client.invoke(messages)
 
             print(f"\n\nRaw response: {raw_response}")
 
             # Parse response
             parsed_response = self.response_parser.parse(raw_response)
+            normalized_response = self.post_processing_normalizer.normalize(parsed_response)
+
 
             # Validate response
-            feedback = self.rules_validator.validate(parsed_response, forbidden_words_response, forbidden_sentences_response, iteration)
+            feedback = self.rules_validator.validate(normalized_response, forbidden_words_response, forbidden_sentences_response, iteration)
 
             if feedback["status"] == "passed":
                 # print(f"✅ Analysis passed after {iteration} iterations.")

@@ -11,7 +11,7 @@ from core.company_analysis.agent_service_class_company_analysis import AgentServ
 from core.company_analysis.components.analysis_prompt_builder import AnalysisPromptBuilder
 from core.company_analysis.components.analysis_respose_parser import JobAnalysisResultParser
 from core.company_analysis.components.analysis_rules_validator import AnalysisRulesValidator
-
+from core.company_analysis.components.analysis_post_processing import PostProcessingNormalizer
 
 def main() -> None:
     corrections_client = CorrectionsClient()
@@ -22,12 +22,41 @@ def main() -> None:
         prompt_builder=AnalysisPromptBuilder(),
         response_parser=JobAnalysisResultParser(),
         rules_validator=AnalysisRulesValidator(),
+        post_processing_normalizer=PostProcessingNormalizer(),
         llm_client=llm_client
     )
 
     job_description = """
-    We are looking for a Data Scientist to join our team.
-    The ideal candidate should have experience in Python, SQL, and Machine Learning.
+Data Scientist til Fraud Detection & AI Solutions
+Kan du dykke dybt i data? Har du styr på Machine Learning-modeller, SQL og Python? Og vil du arbejde med landets mest interessante datagrundlag? Så er du den Data Scientist, vi søger til afdelingen Fraud Detection & AI Solutions.
+Vil du være med til at fremtidssikre velfærdssamfundet med teknologier som ML, NLP og Computer Vision?
+I Digital Solutions får vi velfærden til at fungere. Vi spiller en afgørende rolle i digitaliseringen af det danske samfund, fordi vi står bag de systemer, der får to ud af tre velfærdskroner ud til danskerne. 
+Her er vi lige nu på udkig efter en Data Scientist til afdelingen Fraud Detection & AI Solutions, hvor vi bl.a. sikrer en koordineret indsats i forhold til kontrol af fejludbetalinger og snyd med offentlige ydelser. 
+Derudover spiller vi en vigtig rolle i arbejdet med effektivisering af forretningens processer ved brug af teknologier som Machine Learning, NLP, Computer vision og lignende teknologier. Siden sidste år har vi kortlagt et (kæmpe)stort NLP-potentiale på tværs af ATP, og nu arbejder vi på at udvikle og implementere løsningerne, så vi sikrer en effektiv udbetaling.
+I jobbet som Data Scientist er det mere konkret dig, der: 
+Forstår forretningens behov på tæt hold.
+For at udvikle de bedste løsninger er det vigtigt at forstå forretningens behov. Derfor kommer du til at arbejde tæt sammen med forskellige teams for at afdække deres behov og omsætte dem til datadrevne løsninger.
+Udvikler avancerede modeller i Python
+Du er med til at udvikle statistiske modeller i Python, der er baseret på Machine Learning ved brug af både træningsdata og unsupervised metoder.
+Vedligeholder og monitorerer vores modeller
+For at sikre, at vores modeller fungerer optimalt, bliver du ansvarlig for løbende monitorering og vedligeholdelse. Her holder bl.a. øje med, hvorvidt modellerne opfører sig som forventet og tilpasser dem efter behov.
+Er med fra udvikling til produktion
+Vi arbejder med best practices fra softwareudvikling for at gøre overgangen fra udvikling til produktion så gnidningsfri som muligt. Du er derfor med til at sikre, at vores løsninger bringes sikkert fra udvikling til produktion i vores scrum-setup.
+Udvikler og implementerer NLP-løsninger
+Sidst, men ikke mindst, kommer du til at spille en central rolle i udviklingen af NLP-løsninger og sørger for, at de bliver produktionssat og taget i brug af vores interne kunder.
+Har du styr på SQL og Python?
+Der kan være flere veje til rollen som Data Scientist, men vi forestiller os, at du har en relevant kandidatgrad inden for matematik, statistik, fysik, computer science, ingeniørvidenskab eller lignende. Hvis du har et par års erfaring, er det en fordel.
+Derudover er du:
+erfaren når det kommer til dataanalyse og udvikling af Machine Learning-modeller
+en haj til Python, SQL og lignende (en fordel, ikke et krav)
+med til at skabe resultater i samarbejde med andre
+god til at finde enkle løsninger på komplekse udfordringer.
+Vil du være en del af et unikt it-fagligt fællesskab?
+I Fraud Detection & AI er vi en del af enheden Data i Digital Solutions. Vi brænder for data og de muligheder, data kan skabe. Som landets største udbetalingshus administrerer ATP to ud af tre velfærdskroner i Danmark. 
+Vi arbejder med et unikt datagrundlag, som giver os særlige muligheder – både for at lave dybdegående analyser og for at udvikle datadrevne løsninger.
+Du bliver en del af en afdeling med mere end 40 dygtige kolleger, der arbejder som Data Scientists, Software Developers, Data Analysts og forretningsansvarlige. Du kommer især til at arbejde tæt sammen med afdelingens dygtige tekniske specialister, som arbejder med Data Science og softwareudvikling i full-stack-løsninger. 
+Vi arbejder i et fagligt stærkt miljø, hvor vi deler viden og hjælper hinanden med at udvikle os – både teknisk og personligt.
+I ATP er barren sat højt, både når det gælder ambitioner og trivsel. Vi tror på et arbejdsliv i balance. Det kræver fleksibilitet med plads til den enkelte - og det har vi.
     """
 
     # try:
