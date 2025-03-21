@@ -1,17 +1,21 @@
 import sys
 from pathlib import Path
 
+# 🚀 FORCE absolute path to `/src/`
 current_file = Path(__file__).resolve()
 src_directory = current_file.parent
-sys.path.append(str(src_directory))
+backend_root = current_file.parents[3]  # Go up 3 levels to reach `/portofolio/`
+src_path = backend_root / "backend" / "aiml_models" / "agent_teams" / "agent_tailored_cover_letter" / "src"
+
+sys.path.append(str(src_path))
 
 from infrastructure.correction_client import CorrectionsClient
 from infrastructure.llm_client import LLMClient
 from core.company_analysis.agent_service_class_company_analysis import AgentServiceClassCompanyAnalysis
 from core.company_analysis.components.analysis_prompt_builder import AnalysisPromptBuilder
 from core.company_analysis.components.analysis_respose_parser import JobAnalysisResultParser
-from core.company_analysis.components.analysis_rules_validator import AnalysisRulesValidator
-from core.company_analysis.components.analysis_post_processing import PostProcessingNormalizer
+from src.core.cover_letter.components.analysis_rules_validator import AnalysisRulesValidator
+# from core.company_analysis.components.analysis_post_processing import PostProcessingNormalizer
 
 def main() -> None:
     corrections_client = CorrectionsClient()
@@ -22,7 +26,7 @@ def main() -> None:
         prompt_builder=AnalysisPromptBuilder(),
         response_parser=JobAnalysisResultParser(),
         rules_validator=AnalysisRulesValidator(),
-        post_processing_normalizer=PostProcessingNormalizer(),
+        # post_processing_normalizer=PostProcessingNormalizer(),
         llm_client=llm_client
     )
 
@@ -62,7 +66,12 @@ I ATP er barren sat højt, både når det gælder ambitioner og trivsel. Vi tror
     # try:
     final_result = agent.analyze_job_vacancy(job_description)
     print("\n✅ Final Analysis Result (JobAnalysisResult):")
-    print(final_result.model_dump_json(indent=2))
+    print(type(final_result))
+    print(final_result,"\n")
+    # print(f"Company name: {final_result.company_name}\n")
+    # print(f"Job title; {final_result.job_title}\n")
+    # print(f"Analysis output; {final_result.analysis_output}\n")
+    # print(f"REQUIREMETNTS NEEDED; {final_result.employees_skills_requirement}\n")
     # except Exception as e:
     #     print(f"\n🚨 Analysis Process Failed: {e}")
 

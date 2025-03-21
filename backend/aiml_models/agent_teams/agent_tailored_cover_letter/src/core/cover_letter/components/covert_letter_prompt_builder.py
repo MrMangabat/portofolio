@@ -26,7 +26,7 @@ class AnalysisPromptBuilder:
         self.parser = PydanticOutputParser(pydantic_object=JobAnalysisResult)
         self.format_instructions = self.parser.get_format_instructions()
 
-    def build_prompt(self, skillsets: list[str], job_to_apply: str) -> ChatPromptTemplate:
+    def cover_letter_build_prompt(self, skillsets: list[str], job_to_apply: str) -> ChatPromptTemplate:
         # System message enforcing JSON output
         system_analysis_template_str = """
         You are an AI assistant specializing in HR job analysis.

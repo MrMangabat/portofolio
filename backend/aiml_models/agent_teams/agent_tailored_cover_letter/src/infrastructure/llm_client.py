@@ -11,39 +11,66 @@ from langchain_ollama import ChatOllama
 from langchain.schema import SystemMessage, HumanMessage
 from typing import List
 from langchain.schema import BaseMessage
+from langchain_openai import ChatOpenAI
 
+
+# src/core/llm_client/llm_client.py
+
+from langchain_openai import ChatOpenAI
+from dotenv import load_dotenv
+import os
 class LLMClient:
     """
     Purpose:
-        This client wraps Langchain's ChatOllama to invoke local LLMs via Ollama.
+        This client wraps Langchain-compatible LLMs (Ollama & OpenAI) and provides a simple interface.
 
-    Capabilities:
-        - Accepts system + human messages using Langchain schema.
-        - Uses Langchain's Ollama integration directly — no manual API calls.
-        - Returns the final response as plain text (ready for parsing).
+    Models managed:
+        - llama3.2:3b via Ollama
+        - deepseek-r1 via Ollama
+        - gpt-4o via OpenAI
 
-    Reasoning:
-        - This keeps you aligned with Langchain’s native event flow.
-        - You benefit from any future Langchain enhancements to `ChatOllama`.
-        - You avoid any API version mismatches between you and Ollama.
-
+    Methods:
+        - get_model(name: str): Returns the corresponding LLM client.
     """
 
-    def __init__(self, model: str = "llama3.2:3b") -> None:
-        self.llm = ChatOllama(model=model)
+    def __init__(self) -> None:
+        load_dotenv()  # Load .env file variables into environment
+        openai_api_key = os.getenv("OPENAI_API_KEY")
 
-    def invoke(self, messages: List[BaseMessage]) -> str:
+        if not openai_api_key:
+            raise EnvironmentError("OPENAI_API_KEY not found in .env or environment variables.")
+
+        self.models = {
+            "llama": ChatOllama(
+                model="llama3.2:3b",
+                seed=66
+                ),
+            "deepseek": ChatOllama(
+                model="deepseek-r1",
+                seed=66
+                ),
+            "gpt": ChatOpenAI(
+                model="gpt-4o-2024-11-20",
+                api_key=openai_api_key,
+                seed=66
+                ),
+        }
+
+    def get_model(self, name: str):
         """
-        Invokes the Ollama LLM with a set of messages.
+        Returns the desired model instance.
 
         Args:
-            messages (List[BaseMessage]): The message history to send (system + human messages).
+            name (str): One of ["llama", "deepseek", "gpt"]
 
-        Returns:
-            str: The content of the final assistant response.
+        Raises:
+            ValueError: If model name is not recognized.
         """
-        response = self.llm.invoke(messages)
-        return response.content  # Langchain wraps this nicely into .content
+        if name not in self.models:
+            raise ValueError(f"Model '{name}' is not available. Choose from: {list(self.models.keys())}")
+        return self.models[name]
+
+
 
 
 

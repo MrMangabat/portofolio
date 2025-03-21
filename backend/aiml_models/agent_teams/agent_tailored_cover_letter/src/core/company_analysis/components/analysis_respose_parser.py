@@ -1,4 +1,6 @@
 # backend/aiml_models/agent_teams/agent_tailored_cover_letter/src/core/company_analysis/components/analysis_respose_parser.py
+import re
+import json
 
 from langchain_core.output_parsers import PydanticOutputParser
 from src.core.data_models.analysis_result_model import JobAnalysisResult
@@ -24,8 +26,3 @@ class JobAnalysisResultParser:
     def __init__(self) -> None:
         self.parser = PydanticOutputParser(pydantic_object=JobAnalysisResult)
 
-    def parse(self, llm_response: str) -> JobAnalysisResult:
-        print("\n🛠️ Raw LLM Response (Before Parsing):")
-        print(f"RAW TEXT: {llm_response}")
-        # The parser will strip markdown wrappers, trailing junk, and more
-        return self.parser.parse(llm_response)
