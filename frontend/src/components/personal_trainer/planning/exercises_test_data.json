@@ -1,0 +1,1130 @@
+[
+    {
+        "id": 1,
+        "name": "Back Squad",
+        "categories": {
+            "muskelgruppe": "Forlår",
+            "muskel_position": "Lower Body",
+            "muskel_bevægelse": "bi et eller andet andet over flere led",
+            "goodFor": ["MetCon", "Styrke"]
+        },
+        "meta": {
+            "difficulty": "2",
+            "advantages": ["Forbedrer eksplosivitet", "Træner flere muskelgrupper"],
+            "disadvantages": "",
+            "keyPointers": ["Ret ryg", " Knæ & tæer i samme retning", "Press gennem hele foden"],
+            "injuries": "hvilke skader kan have en effekt på øvelsen",
+            "voidMetCon": false
+        },
+        "movement_forms": [
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": [""]
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": ["", ""]
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": []
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Thrusters",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+            "type": "",
+            "joint": "",
+            "movement": "",
+            "muscles": [""]
+            },
+            {
+            "type": "",
+            "joint": "",
+            "movement": "",
+            "muscles": ["", ""]
+            },
+            {
+            "type": "",
+            "joint": "",
+            "movement": "",
+            "muscles": []
+            }
+        ]
+    },     
+    {
+        "id": 3,
+        "name": "Sit ups",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Rygsøjle",
+                "movement": "Fleksion",
+                "muscles": ["Rectus abdominis", "Obliquus externus", "Obliquus internus"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Fleksion",
+                "muscles": ["Psoas major", "Illiacus", "Rectus femoris"]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "navn": "Burpees",
+        "muskelgruppe": "",
+        "muskel_position": "",
+        "muskel_bevægelse": "",
+        "voidMetCon": "",
+        "goodFor": ["MetCon", "CrossFit"],
+        "keyPointers":"",
+        "advantages": "",
+        "disadvantages": "",
+        "difficulty": "",
+        "injuries": ""
+    },
+    {
+        "id": 5,
+        "name": "Biceps Curl",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["CrossFit", "styrke"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": true
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Fleksion",
+                "muscles": ["Biceps brachii", "Brachialis", "Brachioradialis"]
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "name": "Push ups",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit", "styrke"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Ekstension",
+                "muscles": ["Triceps brachii"]
+            },
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Skulderled",
+                "movement": "Fleksion",
+                "muscles": ["Pectoralis major", "Deltoideus anterior"]
+            },
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Skulderblad",
+                "movement": "Abduktion",
+                "muscles": ["Serratus anterior"]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Albueled",
+                "movement": "Fleksion",
+                "muscles": ["Triceps brachii"]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Skulderled",
+                "movement": "Ekstension",
+                "muscles": ["Pectoralis major", "Deltoideus anterior"]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Skulderblad",
+                "movement": "Adduktion",
+                "muscles": ["Serratus anterior"]
+            }
+        ]
+    },
+    {
+        "id": 7,
+        "name": "Leg Extension",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+            "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Knæled",
+                "movement": "Ekstension",
+                "muscles": ["Quadriceps femoris"]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Knæled",
+                "movement": "Fleksion",
+                "muscles": ["Quadriceps femoris"]
+            }
+        ]
+    },
+    {
+        "id": 8,
+        "name": "Leg Curl",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Knæled",
+                "movement": "Fleksion",
+                "muscles": [
+                "Biceps femoris",
+                "Semitendinosus",
+                "Semimembranosus",
+                "Gastrocnemius"
+                ]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Knæled",
+                "movement": "Ekstension",
+                "muscles": [
+                "Biceps femoris",
+                "Semitendinosus",
+                "Semimembranosus",
+                "Gastrocnemius"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 9,
+        "name": "Benpres",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Ankelled",
+                "movement": "Plantar fleksion",
+                "muscles": ["Gastrocnemius", "Soleus"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Knæled",
+                "movement": "Ekstension",
+                "muscles": ["Quadriceps femoris"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Ekstension",
+                "muscles": [
+                "Gluteus maximus",
+                "Biceps femoris",
+                "Semitendinosus",
+                "Semimembranosus",
+                "Adduktor magnus"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 10,
+        "name": "Bænkpres",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "front",
+            "muskel_bevægelse": "",
+            "goodFor": ["CrossFit", "Styrke"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Ekstension",
+                "muscles": ["Triceps brachii"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderled",
+                "movement": "Fleksion",
+                "muscles": ["Pectoralis major", "Deltoideus anterior"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderblad",
+                "movement": "Abduktion",
+                "muscles": ["Serratus anterior"]
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "name": "Dødløft",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Ankelled",
+                "movement": "Plantar fleksion",
+                "muscles": ["Gastrocnemius", "Soleus"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Knæled",
+                "movement": "Ekstension",
+                "muscles": ["Quadriceps femoris"]
+            }
+        ]
+    },  
+    {
+        "id": 12,
+        "name": "Squad",
+        "categories": {
+            "muskelgruppe": "forlår",
+            "muskel_position": "forside",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "1",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Ankelled",
+                "movement": "Plantar fleksion",
+                "muscles": ["Gastrocnemius", "Soleus"]
+            },
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Knæled",
+                "movement": "Ekstension",
+                "muscles": ["Quadriceps femoris"]
+            },
+            {
+                "phase": "Opad",
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Ekstension",
+                "muscles": [
+                "Gluteus maximus",
+                "Biceps femoris",
+                "Semitendinosus",
+                "Semimembranosus",
+                "Adduktor magnus"
+                ]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Ankelled",
+                "movement": "Dorsal fleksion",
+                "muscles": ["Gastrocnemius", "Soleus"]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Knæled",
+                "movement": "Fleksion",
+                "muscles": ["Quadriceps femoris"]
+            },
+            {
+                "phase": "Nedad",
+                "type": "Excentrisk",
+                "joint": "Hofteled",
+                "movement": "Fleksion",
+                "muscles": [
+                "Gluteus maximus",
+                "Biceps femoris",
+                "Semitendinosus",
+                "Semimembranosus",
+                "Adduktor magnus"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "name": "Pistol Squad",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "3",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": [""]
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": ["", ""]
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": []
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "name": "Chest-Fly",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Adduktion",
+            "muscles": ["Pectoralis major", "Deltoideus anterior"]
+        }
+        ]
+    },
+    {
+        "id": 15,
+        "name": "Chin-Ups",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": [""]
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": ["", ""]
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": []
+            }
+        ]
+    },  
+    {
+        "id": 16,
+        "name": "Pull-Ups",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": []
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": []
+            },
+            {
+                "type": "",
+                "joint": "",
+                "movement": "",
+                "muscles": []
+            }
+        ]
+    },
+    {
+        "id": 17,
+        "name": "Lateral-Raise",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Abduktion",
+            "muscles": ["Deltoideus medialis"]
+        }
+        ]
+    },
+    {
+        "id": 18,
+        "name": "Dips",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Albueled",
+            "movement": "Ekstension",
+            "muscles": ["Triceps brachii"]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Fleksion",
+            "muscles": ["Pectoralis major", "Deltoideus anterior"]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderblad",
+            "movement": "Abduktion",
+            "muscles": ["Serratus anterior"]
+        }
+        ]
+    },
+    {
+        "id": 19,
+        "name": "Straight-arm Pulldown",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Ekstension",
+            "muscles": [
+            "Latissimus dorsi",
+            "Deltoideus posterior",
+            "Triceps brachii"
+            ]
+        }
+        ]
+    },
+    {
+        "id": 20,
+        "name": "Jefferson-Curl",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Rygsøjle",
+                "movement": "Ekstension",
+                "muscles": ["Erector spinae"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Ekstension",
+                "muscles": [
+                "Gluteus maximus",
+                "Biceps femoris",
+                "Semitendinosus",
+                "Semimembranosus",
+                "Adduktor magnus"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 21,
+        "name": "Side-Bend",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Rygsøjle",
+            "movement": "Lateral fleksion",
+            "muscles": [
+            "Obliquus externus",
+            "Obliquus internus",
+            "Quadratus lumborum"
+            ]
+        }
+        ]
+    },  
+    {
+        "id": 22,
+        "name": "Seated Abduction",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "phase": "Koncentrisk",
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Abduktion",
+                "muscles": ["Gluteus medius", "Gluteus minimus"]
+            },
+            {
+                "phase": "Excentrisk",
+                "type": "Excentrisk",
+                "joint": "Hofteled",
+                "movement": "Adduktion",
+                "muscles": ["Gluteus medius", "Gluteus minimus"]
+            }
+        ]
+    },  
+    {
+        "id": 23,
+        "name": "Calf Raise",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Ankelled",
+            "movement": "Plantar fleksion",
+            "muscles": ["Gastrocnemius", "Soleus"]
+        }
+        ]
+    },
+    {
+        "id": 24,
+        "name": "Hyperextension",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Hofteled",
+            "movement": "Ekstension",
+            "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+            ]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Rygsøjle",
+            "movement": "Ekstension",
+            "muscles": ["Erector spinae"]
+        }
+        ]
+    },  
+    {
+        "id": 25,
+        "name": "Skulderpres",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Albueled",
+            "movement": "Ekstension",
+            "muscles": ["Triceps brachii"]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Fleksion",
+            "muscles": ["Pectoralis major", "Deltoideus anterior"]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderblad",
+            "movement": "Elevation og Udadrotation",
+            "muscles": ["Trapezius 1", "Serratus anterior"]
+        }
+        ]
+    },
+    {
+        "id": 26,
+        "name": "Split Squat",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Ankelled",
+            "movement": "Plantar fleksion",
+            "muscles": ["Gastrocnemius", "Soleus"]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Knæled",
+            "movement": "Ekstension",
+            "muscles": ["Quadriceps femoris"]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Hofteled",
+            "movement": "Ekstension",
+            "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+            ]
+        }
+        ]
+    },
+    {
+        "id": 27,
+        "name": "Russian Twist",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Rygsøjle",
+            "movement": "Rotation",
+            "muscles": [
+            "Obliquus externus",
+            "Obliquus internus"
+            ]
+        }
+        ]
+    },  
+    {
+        "id": 28,
+        "name": "Pulldown",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Albueled",
+            "movement": "Fleksion",
+            "muscles": [
+            "Biceps brachii",
+            "Brachialis",
+            "Brachioradialis"
+            ]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Ekstension",
+            "muscles": [
+            "Latissimus dorsi",
+            "Deltoideus posterior"
+            ]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderblad",
+            "movement": "Depression og Indadrotation",
+            "muscles": [
+            "Serratus anterior",
+            "Trapezius 3",
+            "Rhomboideus"
+            ]
+        }
+        ]
+    },
+    {
+        "id": 29,
+        "name": "Seated Row",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Albueled",
+            "movement": "Fleksion",
+            "muscles": [
+            "Biceps brachii",
+            "Brachialis",
+            "Brachioradialis"
+            ]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Ekstension",
+            "muscles": [
+            "Latissimus dorsi",
+            "Deltoideus posterior"
+            ]
+        },
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderblad",
+            "movement": "Adduktion",
+            "muscles": [
+            "Rhomboideus",
+            "Trapezius 2"
+            ]
+        }
+        ]
+    },
+    {
+        "id": 30,
+        "name": "Skulderpres",
+        "categories": {
+            "muskelgruppe": "",
+            "muskel_position": "",
+            "muskel_bevægelse": "",
+            "goodFor": ["MetCon", "CrossFit"]
+        },
+        "meta": {
+            "difficulty": "",
+            "advantages": "",
+            "disadvantages": "",
+            "keyPointers": "",
+            "injuries": "",
+            "voidMetCon": ""
+        },
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Ekstension",
+                "muscles": ["Triceps brachii"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderled",
+                "movement": "Fleksion",
+                "muscles": [
+                "Pectoralis major",
+                "Deltoideus anterior"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderblad",
+                "movement": "Elevation og Udadrotation",
+                "muscles": [
+                "Trapezius 1",
+                "Serratus anterior"
+                ]
+            }
+        ]
+    }
+]

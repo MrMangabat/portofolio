@@ -5,6 +5,7 @@ import AboutView from '../views/AboutView.vue'
 // import LogInView from '../views/LogInView.vue'
 import ProjectsOverview from '../views/ProjectsOverview.vue'
 import JobSearch from '../views/JobSearch.vue'
+import PersonalTraining from '../views/PersonalTraining.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -37,7 +38,12 @@ const router = createRouter({
     //   name: 'login',
     //   component: LogInView
 
-    // }, 
+    // },
+    {
+      path: '/personaltraining',
+      name: 'personaltraining',
+      component: PersonalTraining
+    }, 
     {
       path: '/',
       name: 'login',

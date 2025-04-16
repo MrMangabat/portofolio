@@ -31,10 +31,11 @@
 
         <v-col cols="12" md="4">
         <v-card 
-            title = ""
+            title = "Personal Training"
             subtitle="Placeholder"
             text = "Placeholder"
-            hover>
+            hover
+            to = "/PersonalTraining">
         </v-card>
         <div class="text-center text-caption">Placeholder</div>
         </v-col>

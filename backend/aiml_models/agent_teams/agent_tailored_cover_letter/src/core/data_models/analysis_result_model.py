@@ -7,5 +7,5 @@ class JobAnalysisResult(BaseModel):
     company_name: str = Field(description="Identified company name")
     job_title: str = Field(description="Identified job title")
     analysis_output: str = Field(description="Analysis of the vacancy")
-    employees_skills_requirement: Dict[str, bool]
-    matching_skills: Dict[str, bool]
+    employees_skills_requirement: Dict[str, bool] = Field(description="Required skills and technical experience")
+    matching_skills: Dict[str, bool] = Field(description="Matching skills between the job and the candidate")

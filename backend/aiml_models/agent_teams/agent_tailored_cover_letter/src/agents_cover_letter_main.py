@@ -9,28 +9,56 @@ src_path = backend_root / "backend" / "aiml_models" / "agent_teams" / "agent_tai
 
 sys.path.append(str(src_path))
 
-from infrastructure.correction_client import CorrectionsClient
-from infrastructure.llm_client import LLMClient
-from core.company_analysis.agent_service_class_company_analysis import AgentServiceClassCompanyAnalysis
-from core.company_analysis.components.analysis_prompt_builder import AnalysisPromptBuilder
-from core.company_analysis.components.analysis_respose_parser import JobAnalysisResultParser
-from src.core.cover_letter.components.analysis_rules_validator import AnalysisRulesValidator
-# from core.company_analysis.components.analysis_post_processing import PostProcessingNormalizer
+from langgraph.graph import StateGraph
+from langgraph.graph.schema import create_state_type
+from src.core.company_analysis.agent_service_class_company_analysis import AgentServiceClassCompanyAnalysis
+from src.core.generation.agent_generate_cover_letter import GenerateCoverLetterAgent
+from src.core.editorial.agent_editorial_validator import EditorialValidatorAgent
+from src.infrastructure.correction_client import CorrectionsClient
+from src.infrastructure.llm_client import LLMClient
+from src.core.company_analysis.components.analysis_prompt_builder import AnalysisPromptBuilder
+from src.core.company_analysis.components.analysis_respose_parser import JobAnalysisResultParser
+from src.core.data_models.analysis_result_model import JobAnalysisResult
 
-def main() -> None:
+# Define shared LangGraph state
+CoverLetterState = create_state_type("CoverLetterState", {
+    "job_description": str,
+    "analysis_output": JobAnalysisResult,
+    "cover_letter_text": str,
+    "editorial_notes": str,
+    "final_pdf_path": str
+})
+
+def build_cover_letter_flow() -> StateGraph:
     corrections_client = CorrectionsClient()
-    llm_client = LLMClient(model="llama3.2:3b")
+    llm_client = LLMClient()
 
-    agent = AgentServiceClassCompanyAnalysis(
+    company_analysis_agent = AgentServiceClassCompanyAnalysis(
         corrections_client=corrections_client,
         prompt_builder=AnalysisPromptBuilder(),
         response_parser=JobAnalysisResultParser(),
-        rules_validator=AnalysisRulesValidator(),
-        # post_processing_normalizer=PostProcessingNormalizer(),
         llm_client=llm_client
     )
 
-    job_description = """
+    cover_letter_generator = GenerateCoverLetterAgent()
+    editorial_validator = EditorialValidatorAgent()
+
+    graph = StateGraph(CoverLetterState)
+
+    graph.add_node("analyse_vacancy", company_analysis_agent.analyze_job_vacancy)
+    graph.add_node("generate_application", cover_letter_generator.generate_cover_letter)
+    graph.add_node("editorial_agent", editorial_validator.validate_output)
+    graph.add_node("create_pdf", lambda state: {**state, "final_pdf_path": "placeholder/path/final.pdf"})
+
+    graph.set_entry_point("analyse_vacancy")
+    graph.add_edge("analyse_vacancy", "generate_application")
+    graph.add_edge("generate_application", "editorial_agent")
+    graph.add_edge("editorial_agent", "create_pdf")
+    graph.set_finish_point("create_pdf")
+
+    return graph.compile()
+
+job_description = """
 Data Scientist til Fraud Detection & AI Solutions
 Kan du dykke dybt i data? Har du styr på Machine Learning-modeller, SQL og Python? Og vil du arbejde med landets mest interessante datagrundlag? Så er du den Data Scientist, vi søger til afdelingen Fraud Detection & AI Solutions.
 Vil du være med til at fremtidssikre velfærdssamfundet med teknologier som ML, NLP og Computer Vision?
@@ -51,7 +79,7 @@ Sidst, men ikke mindst, kommer du til at spille en central rolle i udviklingen a
 Har du styr på SQL og Python?
 Der kan være flere veje til rollen som Data Scientist, men vi forestiller os, at du har en relevant kandidatgrad inden for matematik, statistik, fysik, computer science, ingeniørvidenskab eller lignende. Hvis du har et par års erfaring, er det en fordel.
 Derudover er du:
-erfaren når det kommer til dataanalyse og udvikling af Machine Learning-modeller
+erfaren når det kommer til dataanalyse og udvikling af Machine Learning-imodeller
 en haj til Python, SQL og lignende (en fordel, ikke et krav)
 med til at skabe resultater i samarbejde med andre
 god til at finde enkle løsninger på komplekse udfordringer.
@@ -62,16 +90,27 @@ Du bliver en del af en afdeling med mere end 40 dygtige kolleger, der arbejder s
 Vi arbejder i et fagligt stærkt miljø, hvor vi deler viden og hjælper hinanden med at udvikle os – både teknisk og personligt.
 I ATP er barren sat højt, både når det gælder ambitioner og trivsel. Vi tror på et arbejdsliv i balance. Det kræver fleksibilitet med plads til den enkelte - og det har vi.
     """
+def main() -> None:
+    corrections_client = CorrectionsClient()
+    llm_client = LLMClient()
+
+    agent = AgentServiceClassCompanyAnalysis(
+        corrections_client=corrections_client,
+        prompt_builder=AnalysisPromptBuilder(),
+        response_parser=JobAnalysisResultParser(),
+        llm_client=llm_client
+    )
+
+    
 
     # try:
     final_result = agent.analyze_job_vacancy(job_description)
     print("\n✅ Final Analysis Result (JobAnalysisResult):")
     print(type(final_result))
-    print(final_result,"\n")
-    # print(f"Company name: {final_result.company_name}\n")
-    # print(f"Job title; {final_result.job_title}\n")
-    # print(f"Analysis output; {final_result.analysis_output}\n")
-    # print(f"REQUIREMETNTS NEEDED; {final_result.employees_skills_requirement}\n")
+    print(f"Company name: {final_result.company_name}\n")
+    print(f"Job title; {final_result.job_title}\n")
+    print(f"Analysis output; {final_result.analysis_output}\n")
+    print(f"REQUIREMETNTS NEEDED; {final_result.employees_skills_requirement}\n")
     # except Exception as e:
     #     print(f"\n🚨 Analysis Process Failed: {e}")
 

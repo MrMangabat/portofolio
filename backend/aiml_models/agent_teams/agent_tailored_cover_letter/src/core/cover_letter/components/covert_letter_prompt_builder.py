@@ -1,6 +1,9 @@
 # backend/aiml_models/agent_teams/agent_tailored_cover_letter/src/core/company_analysis/components/analysis_prompt_builder.py
 
+# backend/aiml_models/agent_teams/agent_tailored_cover_letter/src/core/company_analysis/components/analysis_prompt_builder.py
 
+from langchain_core.messages.base import BaseMessage
+from typing import List
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
 from src.core.data_models.analysis_result_model import JobAnalysisResult  # Structured Output Model
@@ -8,58 +11,55 @@ from src.core.data_models.analysis_result_model import JobAnalysisResult  # Stru
 class AnalysisPromptBuilder:
     """
     Purpose:
-        Constructs a structured prompt for LLM analysis of job vacancies.
+        Constructs a structured prompt for LLM generation of cover letters.
+        Works only with openai models.
 
     Capabilities:
-        - Defines a system message that sets expectations for analysis and required JSON schema.
+        - Defines a system message that sets expectations how to craft a cover letter.
         - Injects dynamic user inputs (job description + skills) via a separate human message.
         - Ensures that the output **strictly follows** a structured JSON format.
+        - Takes user templates/previous cover letters into account through cosine-similarity and uses that.
 
     Reasoning:
-        - ✅ Separates **inputs** (user data) from **outputs** (expected JSON schema).
-        - ✅ Reinforces JSON output compliance to avoid parsing errors.
-        - ✅ Executes `.format_messages()` to correctly inject variables.
+        - 
     """
 
     def __init__(self) -> None:
-        # Enforce structured JSON output
         self.parser = PydanticOutputParser(pydantic_object=JobAnalysisResult)
         self.format_instructions = self.parser.get_format_instructions()
 
-    def cover_letter_build_prompt(self, skillsets: list[str], job_to_apply: str) -> ChatPromptTemplate:
-        # System message enforcing JSON output
+    def build_prompt(self) -> ChatPromptTemplate:
+        # System message template
         system_analysis_template_str = """
-        You are an AI assistant specializing in HR job analysis.
-        Your task is to analyze a given job vacancy and match it with a candidate's skills.
-        - Identified relevant skills from the job description.
-        - Match the required skills with the candidate’s skills.
-        - Assess the candidate's suitability for the role.
-        - Identify:
-            - The company name.
-            - The job title.
-            - Required skills and technical experience (stored as a dictionary).
-            - Matching skills (stored as a dictionary).
-        - Write a detailed analysis of the job vacancy and the candidate's skills on a one pager
-        The candidate's skills are:
-        {my_skills}
-
+        You are to assist in writing cover letter for a job.
+        This template is the jobtemplate: {semilarity_jobtemplate}. Keep the personal tonality found.
+        The jobtemplate is a professional document and the generated cover letter must adhere to it.
+        Grammatical correctness is essential.
+        Use casual language.
+        Ensure the English language is equal to EILTS C1 score.
+        The template job application must be in English.
+        The unique skills can be in this list: {my_skills}.
+        {messages_placeholder}
         {format_instructions}
         """
 
         SYSTEM_PROMPT = SystemMessagePromptTemplate(
             prompt=PromptTemplate(
                 template=system_analysis_template_str,
-                input_variables=["my_skills"],  # No user input needed
-                partial_variables={"format_instructions": self.parser.get_format_instructions()}  # Enforce JSON format
+                input_variables=["my_skills"],
+                partial_variables={"format_instructions": self.format_instructions}
             )
         )
 
-        # Human input message
+        # Human message template
         human_analysis_template_str = """
-        Here is a job description that needs analysis:
-        Job Vacancy: 
-        {job_position}
-        
+        Introduction section: Write three lines to generate an introduction with interest in IT and AI with inspiration from the {analysis_output}.
+        Motivation section: Write it short and use few examples found matching pairs {skill_match} and how these can be utilized for the company's benefit.
+        Continued learning section: Provide short context that I am willing to learn what is necessary for the company and specific role.
+        Thank you section: Write a short and concise thank you note to set up a coffee.
+        I DO NOT have prior experience in a professional environment in programming, ONLY academia.
+        I DO have prior experience in project management.
+        {messages_placeholder}
         {format_instructions}
         """
 
@@ -67,21 +67,11 @@ class AnalysisPromptBuilder:
             prompt=PromptTemplate(
                 template=human_analysis_template_str,
                 input_variables=["job_position"],
-                partial_variables={"format_instructions": self.parser.get_format_instructions()}  # Enforce JSON format
+                partial_variables={"format_instructions": self.format_instructions}
             )
         )
-        # Ensure that messages are formatted BEFORE returning the ChatPromptTemplate
-        messages = [SYSTEM_PROMPT, HUMAN_PROMPT]
-        print(messages)
-        chat_prompt = ChatPromptTemplate(
-            messages=messages
+
+        return ChatPromptTemplate(
+            messages=[SYSTEM_PROMPT, HUMAN_PROMPT],
+            input_variables=["job_position", "my_skills"]
         )
-
-
-        chat_prompt.format_messages(
-            job_position=skillsets,
-            my_skills=job_to_apply,
-            format_messages=self.parser.get_format_instructions()
-        )
-
-        return chat_prompt

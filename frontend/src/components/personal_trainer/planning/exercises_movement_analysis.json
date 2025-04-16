@@ -1,0 +1,616 @@
+[
+    {
+      "id": 1,
+      "name": "Sit-ups",
+      "movement_forms": [
+        {"type": "Koncentrisk",
+          "joint": "Rygsøjle",
+          "movement": "Fleksion",
+          "muscles": ["Rectus abdominis", "Obliquus externus", "Obliquus internus"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Hofteled",
+          "movement": "Fleksion",
+          "muscles": ["Psoas major", "Illiacus", "Rectus femoris"]
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Push-ups",
+      "movement_forms": [
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Albueled",
+          "movement": "Ekstension",
+          "muscles": ["Triceps brachii"]
+        },
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Skulderled",
+          "movement": "Fleksion",
+          "muscles": ["Pectoralis major", "Deltoideus anterior"]
+        },
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Skulderblad",
+          "movement": "Abduktion",
+          "muscles": ["Serratus anterior"]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Albueled",
+          "movement": "Fleksion",
+          "muscles": ["Triceps brachii"]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Skulderled",
+          "movement": "Ekstension",
+          "muscles": ["Pectoralis major", "Deltoideus anterior"]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Skulderblad",
+          "movement": "Adduktion",
+          "muscles": ["Serratus anterior"]
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Biceps Curl",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Albueled",
+          "movement": "Fleksion",
+          "muscles": ["Biceps brachii", "Brachialis", "Brachioradialis"]
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Leg Extension",
+      "movement_forms": [
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Knæled",
+          "movement": "Ekstension",
+          "muscles": ["Quadriceps femoris"]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Knæled",
+          "movement": "Fleksion",
+          "muscles": ["Quadriceps femoris"]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "name": "Leg Curl",
+      "movement_forms": [
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Knæled",
+          "movement": "Fleksion",
+          "muscles": [
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Gastrocnemius"
+          ]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Knæled",
+          "movement": "Ekstension",
+          "muscles": [
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Gastrocnemius"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "name": "Benpres",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Ankelled",
+          "movement": "Plantar fleksion",
+          "muscles": ["Gastrocnemius", "Soleus"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Knæled",
+          "movement": "Ekstension",
+          "muscles": ["Quadriceps femoris"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Hofteled",
+          "movement": "Ekstension",
+          "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "name": "Bænkpres",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Albueled",
+          "movement": "Ekstension",
+          "muscles": ["Triceps brachii"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Skulderled",
+          "movement": "Fleksion",
+          "muscles": ["Pectoralis major", "Deltoideus anterior"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Skulderblad",
+          "movement": "Abduktion",
+          "muscles": ["Serratus anterior"]
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "name": "Dødløft",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Ankelled",
+          "movement": "Plantar fleksion",
+          "muscles": ["Gastrocnemius", "Soleus"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Knæled",
+          "movement": "Ekstension",
+          "muscles": ["Quadriceps femoris"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Hofteled",
+          "movement": "Ekstension",
+          "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "name": "Squad",
+      "movement_forms": [
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Ankelled",
+          "movement": "Plantar fleksion",
+          "muscles": ["Gastrocnemius", "Soleus"]
+        },
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Knæled",
+          "movement": "Ekstension",
+          "muscles": ["Quadriceps femoris"]
+        },
+        {
+          "phase": "Opad",
+          "type": "Koncentrisk",
+          "joint": "Hofteled",
+          "movement": "Ekstension",
+          "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+          ]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Ankelled",
+          "movement": "Dorsal fleksion",
+          "muscles": ["Gastrocnemius", "Soleus"]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Knæled",
+          "movement": "Fleksion",
+          "muscles": ["Quadriceps femoris"]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Hofteled",
+          "movement": "Fleksion",
+          "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+          ]
+        }
+      ]
+    },
+    {
+        "id": 10,
+        "name": "Calf Raise",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Ankelled",
+                "movement": "Plantar fleksion",
+                "muscles": [
+                    "Gastrocnemius",
+                    "Soleus"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 11,
+        "name": "Hyperextension",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Ekstension",
+                "muscles": [
+                    "Gluteus maximus",
+                    "Biceps femoris",
+                    "Semitendinosus",
+                    "Semimembranosus",
+                    "Adduktor magnus"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Rygsøjle",
+                "movement": "Ekstension",
+                "muscles": ["Erector spinae"]
+            }
+        ]
+    },
+    {
+        "id": 12,
+        "name": "Skulderpres",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Ekstension",
+                "muscles": ["Triceps brachii"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderled",
+                "movement": "Fleksion",
+                "muscles": [
+                    "Pectoralis major",
+                    "Deltoideus anterior"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderblad",
+                "movement": "Elevation og Udadrotation",
+                "muscles": [
+                    "Trapezius 1",
+                    "Serratus anterior"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 13,
+        "name": "Seated Row",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Fleksion",
+                "muscles": [
+                    "Biceps brachii",
+                    "Brachialis",
+                    "Brachioradialis"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderled",
+                "movement": "Ekstension",
+                "muscles": [
+                    "Latissimus dorsi",
+                    "Deltoideus posterior"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderblad",
+                "movement": "Adduktion",
+                "muscles": [
+                    "Rhomboideus",
+                    "Trapezius 2"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 14,
+        "name": "Pulldown",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Albueled",
+                "movement": "Fleksion",
+                "muscles": [
+                    "Biceps brachii",
+                    "Brachialis",
+                    "Brachioradialis"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderled",
+                "movement": "Ekstension",
+                "muscles": [
+                    "Latissimus dorsi",
+                    "Deltoideus posterior"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Skulderblad",
+                "movement": "Depression og Indadrotation",
+                "muscles": [
+                    "Serratus anterior",
+                    "Trapezius 3",
+                    "Rhomboideus"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 15,
+        "name": "Russian Twist",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Rygsøjle",
+                "movement": "Rotation",
+                "muscles": [
+                    "Obliquus externus",
+                    "Obliquus internus"
+                ]
+            }
+        ]
+    },
+    {
+        "id": 16,
+        "name": "Split Squat",
+        "movement_forms": [
+            {
+                "type": "Koncentrisk",
+                "joint": "Ankelled",
+                "movement": "Plantar fleksion",
+                "muscles": [
+                    "Gastrocnemius",
+                    "Soleus"
+                ]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Knæled",
+                "movement": "Ekstension",
+                "muscles": ["Quadriceps femoris"]
+            },
+            {
+                "type": "Koncentrisk",
+                "joint": "Hofteled",
+                "movement": "Ekstension",
+                "muscles": [
+                    "Gluteus maximus",
+                    "Biceps femoris",
+                    "Semitendinosus",
+                    "Semimembranosus",
+                    "Adduktor magnus"
+                ]
+            }
+        ]
+    },
+    {
+      "id": 17,
+      "name": "Chest Fly",
+      "movement_forms": [
+        {
+            "type": "Koncentrisk",
+            "joint": "Skulderled",
+            "movement": "Horisontal adduktion",
+            "muscles": [
+                "Pectoralis major",
+                "Deltoideus anterior"
+            ]
+        }
+      ]
+    },
+    {
+      "id": 18,
+      "name": "Lateral Raise",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Skulderled",
+          "movement": "Abduktion",
+          "muscles": ["Deltoideus medialis"]
+        }
+      ]
+    },
+    {
+      "id": 19,
+      "name": "Dips",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Albueled",
+          "movement": "Ekstension",
+          "muscles": ["Triceps brachii"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Skulderled",
+          "movement": "Fleksion",
+          "muscles": [
+            "Pectoralis major",
+            "Deltoideus anterior"
+        ]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Skulderblad",
+          "movement": "Abduktion",
+          "muscles": ["Serratus anterior"]
+        }
+      ]
+    },
+    {
+      "id": 20,
+      "name": "Good Morning",
+      "movement_forms": [
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Hofteled",
+          "movement": "Fleksion",
+          "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+          ]
+        },
+        {
+          "phase": "Nedad",
+          "type": "Excentrisk",
+          "joint": "Knæled",
+          "movement": "Fleksion",
+          "muscles": ["Quadriceps femoris"]
+        }
+      ]
+    },
+    {
+      "id": 21,
+      "name": "Straight-arm Pulldown",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Skulderled",
+          "movement": "Ekstension",
+          "muscles": [
+            "Latissimus dorsi",
+            "Deltoideus posterior",
+            "Triceps brachii"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "name": "Jefferson Curl",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Rygsøjle",
+          "movement": "Ekstension",
+          "muscles": ["Erector spinae"]
+        },
+        {
+          "type": "Koncentrisk",
+          "joint": "Hofteled",
+          "movement": "Ekstension",
+          "muscles": [
+            "Gluteus maximus",
+            "Biceps femoris",
+            "Semitendinosus",
+            "Semimembranosus",
+            "Adduktor magnus"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "name": "Side Bend",
+      "movement_forms": [
+        {
+          "type": "Koncentrisk",
+          "joint": "Rygsøjle",
+          "movement": "Lateral fleksion",
+          "muscles": [
+            "Obliquus externus",
+            "Obliquus internus",
+            "Quadratus lumborum"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "name": "Seated Abduction",
+      "movement_forms": [
+        {
+          "phase": "Koncentrisk",
+          "type": "Koncentrisk",
+          "joint": "Hofteled",
+          "movement": "Abduktion",
+          "muscles": ["Gluteus medius", "Gluteus minimus"]
+        },
+        {
+          "phase": "Excentrisk",
+          "type": "Excentrisk",
+          "joint": "Hofteled",
+          "movement": "Adduktion",
+          "muscles": ["Gluteus medius", "Gluteus minimus"]
+        }
+      ]
+    }
+  ]
+  
