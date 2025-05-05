@@ -1,0 +1,226 @@
+# AI-Agent SaaS Portfolio Documentation  
+_Updated structure based on all final decisions_
+
+---
+
+## 1. PROJECT OVERVIEW
+
+**Purpose:**  
+To replicate a small/medium-sized company using microservices and event-driven architecture to build a transparent AI-agent SaaS platform.  
+
+**Main Goals:**  
+- Design a scalable and modular architecture for AI-enhanced features.
+- Ensure full traceability and data transparency (compliant with GDPR and AI-Act).
+- Provide a platform for job application generation and AI agents for company research.
+- All services and agents should be decoupled, reusable, and independently testable.
+
+---
+
+## 2. ARCHITECTURAL PRINCIPLES
+
+### 2.1 Core Architecture  
+- **Object-Oriented Programming (OOP):** Enables UML class diagram generation.  
+- **Microservices Architecture:**  
+  - Each microservice represents one unique main service.  
+  - A "feature" can extend a service's functionality.  
+  - Features may be instantiated separately for different services (e.g., interview prep for job application service).  
+- **Event-Driven Architecture:**  
+  - All communication between services occurs via Kafka events.  
+  - Events must be explicitly typed (no raw dicts/lists).  
+- **Low Coupling:**  
+  - Each service and AI/ML model runs in its own Docker container.  
+  - Can be added/removed independently without affecting others.
+
+### 2.2 Modularity  
+- All agents and features follow a shared OOP structure.  
+- A supervisor node may orchestrate agent flow (e.g., LangGraph supervisor).
+
+### 2.3 Feature Versioning  
+- Feature versions are stored using a heap search tree.  
+- Supports backtracking and historical version analysis.
+
+---
+
+## 3. AI/ML STRATEGY
+
+- **Model Execution:**  
+  - All AI/ML models run in individual containers.  
+  - Communication via FastAPI + Pydantic validation.  
+- **Monitoring & Evaluation:**  
+  - Use Weights & Biases for experiment tracking.  
+  - Implement full AI/ML monitoring and evaluation pipelines.
+- **Model Registry:**  
+  - Each model is registered and versioned.
+- **LangGraph Pipelines:**  
+  - Each agent follows: `LLMClient → Prompt → PydanticOutputParser`.  
+  - Examples: `company_analysis_agent`, `generate_cover_letter_agent`, `editorial_agent`, etc.
+
+---
+
+## 4. DATA & GOVERNANCE
+
+### 4.1 Transparency & Traceability  
+- **Immutability:** Each data feature (e.g., churn rate) has one definition across all services.  
+- **Data Lineage:** All data must be traceable back to its original source and transformation logic.  
+- **Process Mining:** Every event and state change is logged and monitored.
+
+### 4.2 Metadata  
+- A dedicated metadata service tracks collection, ingestion, transformation, and usage.  
+- Ensures compliance with GDPR and AI Act.
+
+### 4.3 Data Integrity & Quality  
+- Dynamic validation per service context.  
+- FastAPI + Pydantic used for all data schema enforcement.  
+- No bare JSON—only validated schemas.
+
+---
+
+## 5. TECHNICAL FOUNDATIONS
+
+### 5.1 Backend Stack  
+- **FastAPI** for API orchestration.  
+- **Pydantic** for data validation.  
+- **Docker** for containerization.  
+- **Kafka** for event streaming.  
+- **Neo4J / Gremlin** for graph data modeling where relational + relationship insight is needed.  
+- **MinIO** for file handling (PDFs, images).  
+- **Pytest + SonarQube** for testing, coverage, and complexity metrics.
+
+### 5.2 Frontend Stack  
+- Vue 3  
+- Axios (calls isolated in `apis` directory)  
+- Vite for dev tooling  
+
+---
+
+## 6. SERVICE TEMPLATE & DESIGN STANDARDS
+
+### 6.1 Service Isolation  
+- Each microservice must follow a standard folder structure.
+- All services log exceptions and follow HTTP best practices (status codes, circuit breakers if needed).
+
+### 6.2 Interface Contracts  
+- All APIs use JSON only.  
+- Inputs/outputs fully validated with Pydantic.  
+- Interfaces defined per event schema and use case.
+
+### 6.3 Design Patterns  
+- **Factory Pattern** for third-party data fetch integrations.  
+- **Supervisor Node** (optional): For coordinating multi-agent pipelines.  
+
+---
+
+## 7. MONITORING & OBSERVABILITY
+
+- **Prometheus** for metrics.  
+- **Centralized Logging** (future work: ELK or similar stack).  
+- **Unified Monitoring:**  
+  - Each service logs individual processes triggered by events.  
+  - Wide-view dashboards for inter-service health and latency.  
+
+---
+
+## 8. TESTING & QUALITY CONTROL
+
+- **Unit Tests:** Pytest for every feature and agent.  
+- **Code Coverage:** SonarQube mandatory integration.  
+- **Complexity Review:** Automatically triggered by SonarQube pipeline.
+
+---
+
+## 9. DEPLOYMENT STRATEGY
+
+- Initially local via Docker Compose.  
+- Future: Azure hosting with multi-stage environments (dev, test, prod).  
+- Kubernetes planned for later scalability.  
+
+---
+
+## 10. BUSINESS LAYER
+
+### 10.1 Market Problem  
+- Job seekers (graduates/unemployed) face a high research/time burden to tailor applications.  
+- They must analyze companies, adjust tone/style, and prepare interview strategies.
+
+### 10.2 Platform Solution  
+- Automates application tailoring while capturing user’s writing style.  
+- Provides data-driven insights about companies (competitors, tech stack, financials).  
+- Transparent AI ensures human-approved, legally compliant job materials.
+
+### 10.3 Economic Model  
+- **Activity-Based Costing (ABC)** will be evaluated to reflect real-time resource usage across services.  
+- Future: Integration with digital labor models for AI cost-benefit optimization.
+
+---
+
+## APPENDIX - DECISION LOG
+
+**2025-02-09**  
+**Topic:** Core Architectural Strategy  
+**Decision:** Adopt Object-Oriented Programming with Microservices and Event-Driven Architecture.  
+**Rationale:** Enables automatic UML generation, supports modular design, and reflects real-world enterprise systems.
+
+**2025-02-09**  
+**Topic:** Feature Modularity  
+**Decision:** Features must be isolated, reusable, and instantiable per service.  
+**Rationale:** Enables fine-grained control over feature rollout and lifecycle.
+
+**2025-02-09**  
+**Topic:** Feature Versioning  
+**Decision:** Use a heap search tree to manage versions of features.  
+**Rationale:** Enables historical traceability and minimizes version conflicts.
+
+**2025-02-09**  
+**Topic:** AI/ML Containerization  
+**Decision:** Every model and service must run in an isolated Docker container.  
+**Rationale:** Supports low coupling and flexible experimentation.
+
+**2025-02-09**  
+**Topic:** Integration Pattern  
+**Decision:** Use the Factory Pattern to abstract third-party integrations.  
+**Rationale:** Simplifies swapping and extending integrations in a standardized way.
+
+**2025-02-09**  
+**Topic:** Transparency in Data  
+**Decision:** Every data feature must have a single authoritative definition and full traceability.  
+**Rationale:** Avoids semantic disputes between departments or services.
+
+**2025-02-09**  
+**Topic:** Monitoring Strategy  
+**Decision:** Track all service events via process mining and centralized logging.  
+**Rationale:** Ensures transparency and debugging support.
+
+**2025-03-05**  
+**Topic:** Documentation Standards  
+**Decision:** Every function/class/file must have purpose, capabilities, reasoning, and inline comments.  
+**Rationale:** Aligns with Clean Code, auditability, and knowledge transfer goals.
+
+**2025-03-05**  
+**Topic:** Typehints and Validation  
+**Decision:** Explicit typehints are mandatory everywhere; use Pydantic for all external and internal data validation.  
+**Rationale:** Prevents runtime surprises and enforces schema validation at every boundary.
+
+**2025-03-06**  
+**Topic:** Central Metadata Service  
+**Decision:** Central service will store all metadata about data collection, processing, and usage.  
+**Rationale:** Ensures AI/ML compliance, traceability, and governance.
+
+**2025-03-06**  
+**Topic:** Business Problem Framing  
+**Decision:** Focus on job seekers' difficulty in mass-producing personalized, high-quality job applications.  
+**Rationale:** Aligns with real-world pain points and system transparency goals.
+
+**2025-04-09**  
+**Topic:** LangGraph Agent Modularity  
+**Decision:** All agents must be implemented using a reusable OOP structure.  
+**Rationale:** Promotes long-term maintainability and plug-and-play orchestration.
+
+**2025-04-29**  
+**Topic:** Orchestration Strategy  
+**Decision:** Consider adding a Supervisor Node to track and manage agent progress in LangGraph.  
+**Rationale:** Provides global coordination, debugging context, and retry logic.
+
+**2025-04-30**  
+**Topic:** Critical Communication Style  
+**Decision:** All AI responses must avoid excessive politeness and flattery, focusing on grounded realism.  
+**Rationale:** Encourages professional honesty and productive collaboration.

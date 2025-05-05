@@ -2,6 +2,12 @@
 import os
 from dotenv import load_dotenv
 
+'''
+!!!!!!!!
+pydantic base settings must be used in the future
+!!!!!!!!
+'''
+
 # Load environment variables from .env file
 
 class Config:

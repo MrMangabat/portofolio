@@ -4,6 +4,10 @@
 This module handles all infrastructure connections for the 'cover_letter' service.
 It is intentionally placed within the service boundary to prevent cross-service coupling.
 Configuration is static and changes only if the infrastructure itself changes.
+
+!!!!!!!!
+pydantic base settings must be used in the future
+!!!!!!!!
 """
 
 from sqlalchemy import create_engine

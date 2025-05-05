@@ -12,6 +12,7 @@ class MinioRepository:
 
         self.buckets: Dict[str, str] = {
             "cover_letters": "uploaded-cover-letters",
+            "cv": "uploaded-cvs",
             "images": "images"
         }
 
@@ -20,15 +21,15 @@ class MinioRepository:
 
     def _ensure_buckets_exist(self) -> None:
         for bucket_name in self.buckets.values():
-            print(f"🟡 Checking bucket: {bucket_name}")
+            print(f"Checking bucket: {bucket_name}")
             exists = self.client.bucket_exists(bucket_name)
 
             if not exists:
-                print(f"⚠️ Bucket {bucket_name} not found — creating it.")
+                print(f"Bucket {bucket_name} not found — creating it.")
                 self.client.make_bucket(bucket_name)
-                print(f"✅ Created bucket: {bucket_name}")
+                print(f"Created bucket: {bucket_name}")
             else:
-                print(f"✅ Bucket {bucket_name} already exists.")
+                print(f"Bucket {bucket_name} already exists.")
 
     def upload_file(self, file_content: bytes, file_name: str, content_type: str, bucket_type: str, metadata: Optional[dict] = None) -> None:
         try:
@@ -41,9 +42,9 @@ class MinioRepository:
 
             metadata = metadata or {}
 
-            print(f"📤 Uploading to MinIO: {bucket_name}/{safe_file_name}")
-            print(f"   Metadata: {metadata}")
-            print(f"   Content-Type: {content_type}")
+            print(f"Uploading to MinIO: {bucket_name}/{safe_file_name}")
+            print(f"Metadata: {metadata}")
+            print(f"Content-Type: {content_type}")
             self.client.put_object(
                 bucket_name,
                 file_name,
@@ -52,7 +53,8 @@ class MinioRepository:
                 content_type=content_type,
                 metadata=metadata
             )
-            print(f"✅ Uploaded '{file_name}' to bucket '{bucket_name}'")
+            
+            print(f"Uploaded '{file_name}' to bucket '{bucket_name}'")
         except S3Error as e:
             self.logger.error(f"S3Error during upload: {e}")
             raise
@@ -64,7 +66,7 @@ class MinioRepository:
                 raise ValueError(f"Invalid bucket type: {bucket_type}")
 
             self.client.remove_object(bucket_name, file_name)
-            print(f"✅ Deleted file '{file_name}' from bucket '{bucket_name}'")
+            print(f"Deleted file '{file_name}' from bucket '{bucket_name}'")
         except S3Error as e:
             self.logger.error(f"S3Error during delete: {e}")
             raise
@@ -83,7 +85,7 @@ class MinioRepository:
                 "size": stat.size,
                 "original_name": original_name  # This now works
             })
-            print(f"📦 Metadata for {obj.object_name}: {stat.metadata}")
+            print(f"Metadata for {obj.object_name}: {stat.metadata}")
 
         return file_list
 
