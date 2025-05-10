@@ -4,7 +4,7 @@ from src.config.config_top_level import ConfigTopLevel
 
 class CorrectionsClient:
     def __init__(self) -> None:
-        self.config = ConfigTopLevel.load_config()
+        self.config = ConfigTopLevel()
         self.base_url = "http://localhost:8010/corrections"
 
     def fetch_corrections(self, correction_type: Literal["word", "sentence", "skill"]) -> List[Dict[str, str]]:

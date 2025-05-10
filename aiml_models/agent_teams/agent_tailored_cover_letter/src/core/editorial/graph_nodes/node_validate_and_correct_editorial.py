@@ -1,9 +1,8 @@
-# src/core/editorial/graph_nodes/node_validate_and_correct_editorial.py
-
 from typing import Dict
-from src.core.graph_master.master_graph_flow import CoverLetterGraphState
+from datetime import datetime
 from langgraph.graph import StateGraph
-from src.core.editorial.agent_serive_class_editorial import AgentServiceClassEditorial
+from src.core.graph_master.initialize_graph import CoverLetterGraphState
+from src.core.editorial.agent_service_class_editorial import AgentServiceClassEditorial
 from src.core.editorial.components.editorial_prompt_builder import EditorialPromptBuilder
 from src.core.editorial.components.editorial_response_parser import EditorialResultParser
 from src.infrastructure.llm_client import LLMClient
@@ -14,31 +13,69 @@ def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
     LangGraph node for applying editorial validation with possible self-correction.
 
     Args:
-        state (Dict): LangGraph graph state.
+        state (CoverLetterGraphState): LangGraph graph state.
 
     Returns:
-        Dict: Updated state with corrected generation.
+        CoverLetterGraphState: Updated state with corrected generation.
     """
     print("----- EDITORIAL AGENT: Running validation pass -----")
 
+    # Timestamp for logging
+    timestamp: str = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+
+    # Unpack inputs from state
+    job_description: str = state["job_description"]
+    skills: list[str] = state["skills"]
+    generation: str = state["generation"]
+    violations: list[str] = state.get("editorial_error_messages", [])
+    iteration: int = state["iterations"]
+
+    # Run editorial agent — no state mutation
     agent = AgentServiceClassEditorial(
         prompt_builder=EditorialPromptBuilder(),
         response_parser=EditorialResultParser(),
         llm_client=LLMClient()
     )
-    # Run the agent and get updated state
-    updated_state: Dict = agent.validate_and_correct(state)
+    result = agent.validate_and_correct(
+        job_description=job_description,
+        skills=skills,
+        generation=generation,
+        editorial_violations=violations
+    )
 
-    # Append logging info (before the update was applied)
-    current_log = updated_state.get("editorial_violation_log", [])
-    current_log.append({
-        "iteration": updated_state["iterations"],
-        "violations": updated_state.get("editorial_error_messages"),
-        "generation_snapshot": state["generation"]
-    })
-
-    # Return the updated state with the extended log
-    return {
-        **updated_state,
-        "editorial_violation_log": current_log
+    # Construct next state (mutate safely)
+    updated_state: CoverLetterGraphState = {
+        **state,
+        "generation": result,
     }
+
+    # Append log snapshot
+    log = updated_state.get("generation_violation_log", {})
+    log[f"iteration_{iteration}"] = {
+        "timestamp": timestamp,
+        "violations": state.get("editorial_violations", []),
+        "generation_snapshot": generation,
+    }
+    updated_state["generation_violation_log"] = log
+
+    # Append agent trace
+    updated_state["agent_trace"] = (updated_state.get("agent_trace") or []) + [f"editorial_agent @ {timestamp}"]
+
+    # Append system messages
+    updated_state["messages"] += [
+        ("system", f"[editorial_agent] Iteration {iteration} completed at {timestamp}."),
+        ("system", f"[editorial_agent] Violated rules: {state.get('editorial_violations', [])}")
+    ]
+
+    # Print last 3 iterations for inspection
+    print("\n------ Application generation completed ------")
+    print(f" ------- ITERATION: {iteration} -------\n")
+
+    for i in range(iteration, max(iteration - 3, -1), -1):
+        key = f"iteration_{i}"
+        if key in log:
+            print(f"--- Snapshot: {key} ---")
+            print(log[key])
+            print("\n")
+
+    return updated_state

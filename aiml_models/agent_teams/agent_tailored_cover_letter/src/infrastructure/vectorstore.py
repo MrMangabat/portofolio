@@ -1,53 +1,85 @@
 # aiml_models/agent_teams/agent_tailored_cover_letter/src/infrastructure/vectorstore.py
 
-from langchain_community.vectorstores import Qdrant
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_core.documents import Document
-from qdrant_client import QdrantClient
+
+
+"""
+QdrantVectorSearch provides semantic similarity search functionality using direct QdrantClient access.
+
+Purpose:
+    - Search for top-k similar documents based on query embedding.
+    - Return the best match above a defined similarity threshold.
+
+Capabilities:
+    - Encodes query using SentenceTransformers.
+    - Performs raw vector search in Qdrant.
+    - Outputs LangChain-compatible Document with score.
+
+Reasoning:
+    Uses lightweight native QdrantClient for speed and control.
+"""
+
 from typing import List, Optional, Tuple
+from langchain_core.documents import Document
+from sentence_transformers import SentenceTransformer
+from qdrant_client import QdrantClient
+from qdrant_client.models import SearchParams, ScoredPoint
+from src.config.config_low_level import QdrantConnection
+
 
 class QdrantVectorSearch:
-    def __init__(self, host: str, collection_name: str) -> None:
+    def __init__(self, connection: QdrantConnection, collection_name: Optional[str] = None) -> None:
         """
-        Purpose:
-            Initialize Qdrant vector search with a dense embedding model and collection config.
-
-        Capabilities:
-            - Connects to a running Qdrant instance.
-            - Initializes sentence-transformer embedding model.
-            - Sets target collection name for storage/retrieval.
+        Initializes the vector search with QdrantClient and embedding model.
 
         Args:
-            host (str): Qdrant host address (e.g., 'localhost' or Docker hostname).
-            collection_name (str): Target collection in Qdrant for storing embeddings.
+            connection (QdrantConnection): Pre-initialized Qdrant connection.
+            collection_name (Optional[str]): Target Qdrant collection.
         """
-        self.embedding_model: HuggingFaceEmbeddings = HuggingFaceEmbeddings(
-            model_name="sentence-transformers/all-mpnet-base-v2",
-            encode_kwargs={'normalize_embeddings': False}
-        )
-        self.client: QdrantClient = QdrantClient(host=host)
-        self.collection_name: str = collection_name
+        # Sentence-transformer model for embedding queries
+        self.embedding_model: SentenceTransformer = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
 
-    def upsert_documents(self, documents: List[Document]) -> None:
-        Qdrant.from_documents(
-            documents=documents,
-            embedding=self.embedding_model,
-            client=self.client,
+        # Direct Qdrant client instance
+        self.client: QdrantClient = connection.client
+
+        # Collection name to query from
+        self.collection_name: str = collection_name or connection.default_collection
+
+    def search(self, query: str, k: int = 2, threshold: float = 0.6) -> Optional[Tuple[Document, float]]:
+        """
+        Performs semantic search in Qdrant and returns best result if above threshold.
+
+        Args:
+            query (str): Raw text query.
+            k (int): Number of top results to consider.
+            threshold (float): Minimum score to qualify as a match.
+
+        Returns:
+            Optional[Tuple[Document, float]]: Top match and its score, or None if no good match.
+        """
+        # Encode the query into vector space
+        query_vector: List[float] = self.embedding_model.encode(query, normalize_embeddings=False).tolist()
+
+        # Search directly in Qdrant
+        results: List[ScoredPoint] = self.client.search(
             collection_name=self.collection_name,
+            query_vector=query_vector,
+            limit=k,
+            with_payload=True,
+            search_params=SearchParams(hnsw_ef=128),  # Optional param
         )
-
-    def search(self, query: str, k: int = 3, threshold: float = 0.6) -> Optional[Tuple[Document, float]]:
-        retriever = Qdrant(
-            client=self.client,
-            collection_name=self.collection_name,
-            embedding_function=self.embedding_model
-        ).as_retriever(search_type="similarity", search_kwargs={"k": k}, score_threshold = threshold)
-
-        results = retriever.get_relevant_documents(query)
 
         if not results:
-            return None
+            return f"No fileembedding found: {None}"
 
-        # You can store a custom similarity score in metadata if needed
-        best_result = results[0]
-        return best_result, best_result.metadata.get("score", 0.0)
+        best_result: ScoredPoint = results[0]
+        score: float = best_result.score or threshold
+
+
+
+        # Wrap result in a Document object for downstream LangGraph use
+        document = Document(
+            page_content=best_result.payload.get("text", ""),
+            metadata={"score": score, "id": best_result.id}
+        )
+
+        return document, score

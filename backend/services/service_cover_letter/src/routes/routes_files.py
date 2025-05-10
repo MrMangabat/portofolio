@@ -20,7 +20,11 @@ async def upload_files(
     file_service: FileService = Depends(get_file_service)
 ) -> List[FileItem]:
     try:
-        return await file_service.process_files(files)
+        logging.info(f"Received files: {[file.filename for file in files]}")
+        response = await file_service.process_files(files)
+        for file in files:
+            logging.info(f"File {file.filename} saved to MinIO bucket.")
+        return response
     except Exception as e:
         logging.error(f"Error processing files: {e}")
         raise HTTPException(status_code=500, detail=str(e))

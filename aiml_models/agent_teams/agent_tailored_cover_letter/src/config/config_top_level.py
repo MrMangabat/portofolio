@@ -34,7 +34,8 @@ class ConfigTopLevel:
 
     # Qdrant
     QDRANT_URL: str = os.getenv("QDRANT_URL", "")
-
+    QDRANT_PORT: str = os.getenv("QDRANT_PORT", "")
+    QDRANT_HOST: str = os.getenv("QDRANT_HOST", "")
     # MinIO
     MINIO_HOST: str = os.getenv("MINIO_HOST", "")
     MINIO_PORT: str = os.getenv("MINIO_PORT", "")

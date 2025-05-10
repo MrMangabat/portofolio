@@ -1,22 +1,23 @@
 # src/core/editorial/agent_service_class_editorial.py
-
 from typing import Dict, List
 from src.core.editorial.components.editorial_prompt_builder import EditorialPromptBuilder
 from src.core.editorial.components.editorial_response_parser import EditorialResultParser
 from src.infrastructure.llm_client import LLMClient
+from src.core.data_models.editorial_model import EditorialResult
+
 
 class AgentServiceClassEditorial:
     """
     Purpose:
         Handles correction and validation of AI-generated cover letters using editorial rules.
-    
+
     Capabilities:
         - Uses strict rule-based prompts to revise only problematic sections.
         - Invokes LLM with structured editorial prompt.
-        - Returns a corrected generation.
-    
+        - Returns corrected generation as EditorialResult — no state mutation.
+
     Reasoning:
-        Keeps editorial validation encapsulated with minimal prompt injection, allowing future changes to rules or parser without affecting other agents.
+        Pure service object — isolated logic, testable, no side effects on LangGraph state.
     """
 
     def __init__(
@@ -29,32 +30,29 @@ class AgentServiceClassEditorial:
         self.response_parser: EditorialResultParser = response_parser
         self.llm_client: LLMClient = llm_client
 
-    def validate_and_correct(self, state: Dict) -> Dict:
+    def validate_and_correct(self, job_description: str, skills: List[str], generation: str, editorial_violations: List[str]) -> EditorialResult:
         """
         Applies editorial validation logic to revise a generated cover letter through the prompt.
 
         Args:
-            state (Dict): LangGraph graph state.
+            job_description (str): The original job description.
+            skills (List[str]): User-provided skill list.
+            generation (str): The previous cover letter.
+            editorial_violations (List[str]): List of violations to fix.
 
         Returns:
-            Dict: Updated state with validated generation.
+            EditorialResult: Parsed, corrected output.
         """
-        job_description: str = state["job_description"]
-        skills: List[str] = state["skills"]
-        generation: str = state["generation"]
-        editorial_violations: List[str] = state["editorial_error_messages"]
-
         prompt_chain = (
             self.prompt_builder.build_prompt()
             | self.llm_client.get_model("gpt")
             | self.response_parser.parser
         )
 
-        result = prompt_chain.invoke({
+        return prompt_chain.invoke({
             "job_description": job_description,
             "my_skills": ", ".join(skills),
             "generation": generation,
-            "messages": editorial_violations
+            "editorial_error_messages": editorial_violations
         })
-
-        return {**state, "generation": result}
+        

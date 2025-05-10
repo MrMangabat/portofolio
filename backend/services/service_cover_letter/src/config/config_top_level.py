@@ -25,7 +25,8 @@ class Config:
 
     # Qdrant Database
     QDRANT_URL = os.getenv("QDRANT_URL")
-
+    QDRANT_HOST = os.getenv("QDRANT_HOST")
+    QDRANT_PORT = os.getenv("QDRANT_PORT")
     # MinIO Configuration
     MINIO_HOST = os.getenv("MINIO_HOST")
     MINIO_PORT = os.getenv("MINIO_PORT")

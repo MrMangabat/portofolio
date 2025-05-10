@@ -16,10 +16,13 @@ from sqlalchemy.ext.declarative import declarative_base
 from src.config.config_top_level import Config
 from minio import Minio
 from typing import Optional
+from qdrant_client import QdrantClient, models
+
+config = Config()
 
 class PostgressConnection:
     Base = declarative_base()
-    engine = create_engine(Config.POSTGRES_URL)
+    engine = create_engine(config.POSTGRES_URL)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     @staticmethod
@@ -32,7 +35,7 @@ class PostgressConnection:
 
 class PostgressConnection:
     Base = declarative_base()
-    engine = create_engine(Config.POSTGRES_URL)
+    engine = create_engine(config.POSTGRES_URL)
     SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
     @staticmethod
@@ -52,14 +55,14 @@ class MiniOConnection:
         minio_ip = self._read_minio_ip()
         print(f"🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑 Connecting to MinIO with:")
         print(f"   Host: {minio_ip}")
-        print(f"   Port: {Config.MINIO_PORT}")
-        print(f"   Access Key: {Config.MINIO_ACCESS_KEY}")
-        print(f"   Secret Key: {Config.MINIO_SECRET_KEY}")
+        print(f"   Port: {config.MINIO_PORT}")
+        print(f"   Access Key: {config.MINIO_ACCESS_KEY}")
+        print(f"   Secret Key: {config.MINIO_SECRET_KEY}")
 
         self.client: Minio = Minio(
-            endpoint=f"{minio_ip}:{Config.MINIO_PORT}",
-            access_key=Config.MINIO_ACCESS_KEY,
-            secret_key=Config.MINIO_SECRET_KEY,
+            endpoint=f"{minio_ip}:{config.MINIO_PORT}",
+            access_key=config.MINIO_ACCESS_KEY,
+            secret_key=config.MINIO_SECRET_KEY,
             secure=False
         )
         self._validate_connection()
@@ -86,3 +89,31 @@ class MiniOConnection:
             cls._instance = cls()
         return cls._instance
 
+class QdrantConnection:
+    def __init__(self) -> None:
+        self.url: str = config.QDRANT_URL
+        # self.port: int = config.QDRANT_PORT
+        self.default_collection: str = "embedded_cover_letters"
+
+        self.client = QdrantClient(url=f"http://{config.QDRANT_HOST}:{config.QDRANT_PORT}")
+
+        self._ensure_collection_exists()
+
+    def _ensure_collection_exists(self) -> None:
+        """
+        Check if the default collection exists in Qdrant.
+        If not, create it with appropriate vector configuration.
+        """
+        existing_collections = [c.name for c in self.client.get_collections().collections]
+
+        if self.default_collection not in existing_collections:
+            self.client.create_collection(
+                collection_name=self.default_collection,
+                vectors_config=models.VectorParams(
+                    size=768,  # required for sentence-transformers
+                    distance=models.Distance.COSINE
+                )
+            )
+            print(f"✅ Created collection: {self.default_collection}")
+        else:
+            print(f"✅ Collection already exists: {self.default_collection}")

@@ -1,28 +1,32 @@
 # aiml_models/agent_teams/agent_tailored_cover_letter/src/core/editorial/graph_nodes/node_check_editorial_output.py
 
+from datetime import datetime
 from typing import Dict
 from langgraph.graph import StateGraph
+from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from src.core.editorial.components.editorial_validation_utils import validate_words, invalid_sentences
 
 
-def check_editorial_generation(state: Dict) -> StateGraph:
+def check_editorial_generation(state: CoverLetterGraphState) -> StateGraph:
     """
-    LangGraph-compatible validation node that checks for forbidden words and sentences in the editorial output.
+    LangGraph-compatible validation node that checks for forbidden words and sentences
+    in the editorial output using user-defined rules.
 
     Args:
-        state (Dict): Current graph state, must include 'generation', 'words_to_avoid', 'sentences_to_avoid'.
+        state (CoverLetterGraphState): Current graph state.
 
     Returns:
-        Dict: Updated state with 'error' flag and possible editorial_error_messages.
+        StateGraph: Updated state with validation error flag and messages.
     """
+    print("-------- VALIDATION: EDITORIAL LANGUAGE RULES --------")
+
     generation = state["generation"]
     no_go_words = state["words_to_avoid"]
     no_go_sentences = state["sentences_to_avoid"]
     iterations = state["iterations"]
     messages = state["messages"]
 
-    print("-------- VALIDATION: EDITORIAL LANGUAGE RULES --------")
-
+    # Structure generation content
     generation_components = {
         "company_name": generation.company_name,
         "introduction": generation.introduction,
@@ -47,21 +51,30 @@ def check_editorial_generation(state: Dict) -> StateGraph:
         except ValueError as ve:
             violations.append(f"[{section}] Invalid sentences: {ve}")
 
-    if violations:
-        print("--- RULE VIOLATIONS DETECTED ---")
-        return {
-            **state,
-            "error": "yes",
-            "editorial_error_messages": violations,
-            "iterations": iterations + 1,
-            "messages": messages,  # unchanged
-        }
-    else:
-        print("--- NO VIOLATIONS ---")
-        return {
-            **state,
-            "error": "no",
-            "editorial_error_messages": [],
-            "iterations": iterations + 1,
-            "messages": messages,
-        }
+    # Timestamp for trace
+    timestamp = datetime.now().strftime("%d/%m/%Y %H:%M")
+
+    trace = state.get("agent_trace", [])
+    trace.append(f"NODE: check_editorial_output @ {timestamp}")
+
+    # Append system message
+    new_msg = ("system", f"[editorial_validator] Iteration {iterations} checked {len(generation_components)} sections. Violations: {len(violations)}")
+
+    updated_messages = messages + [new_msg]
+
+    # Debug print block
+    print(f"\n------- ITERATION: {iterations} -------")
+    print("Violations found:")
+    for v in violations:
+        print(" -", v)
+    print("------ TRACE:", trace)
+    print("--------------------------------------------------\n")
+
+    return {
+        **state,
+        "error": "yes" if violations else "no",
+        "editorial_error_messages": violations,
+        "iterations": iterations + 1,
+        "messages": updated_messages,
+        "agent_trace": trace,
+    }

@@ -1,13 +1,10 @@
-# aiml_models/agent_teams/agent_tailored_cover_letter/src/core/cover_letter/components/file_text_extractor.py
+# backend/services/service_cover_letter/src/service_layer/text_extractor.py
 from typing import Optional
 from io import BytesIO
 from PyPDF2 import PdfReader
-import docx
+# import docx
 
-from typing import Optional
-from io import BytesIO
-from PyPDF2 import PdfReader
-import docx
+
 
 class FileTextExtractor:
     """
@@ -69,11 +66,11 @@ class FileTextExtractor:
         print("[DOC2] PDF extraction method is not yet implemented.")
         return None  # Replace with actual logic later
 
-    @staticmethod
-    def _extract_docx_text(file_stream: BytesIO) -> Optional[str]:
-        try:
-            doc = docx.Document(file_stream)
-            return "\n".join(paragraph.text for paragraph in doc.paragraphs)
-        except Exception as e:
-            print(f"DOCX extraction failed: {e}")
-            return None
+    # @staticmethod
+    # def _extract_docx_text(file_stream: BytesIO) -> Optional[str]:
+    #     try:
+    #         doc = docx.Document(file_stream)
+    #         return "\n".join(paragraph.text for paragraph in doc.paragraphs)
+    #     except Exception as e:
+    #         print(f"DOCX extraction failed: {e}")
+    #         return None

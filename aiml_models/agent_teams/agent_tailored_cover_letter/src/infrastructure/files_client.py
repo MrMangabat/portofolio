@@ -28,7 +28,7 @@ class MinioFileClient:
         self.buckets: Dict[str, str] = {
             "cover_letters": "uploaded-cover-letters",
             "cv": "uploaded-cvs",
-            "images": "images"
+            # "images": "images"
         }
 
     def fetch_file(self, bucket_key: str, filename: str) -> Optional[BytesIO]:

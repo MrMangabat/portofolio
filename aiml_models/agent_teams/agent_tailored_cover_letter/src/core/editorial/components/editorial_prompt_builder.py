@@ -2,7 +2,8 @@
 
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, HumanMessagePromptTemplate, PromptTemplate
 from langchain_core.output_parsers import PydanticOutputParser
-from src.core.data_models.editorial_model import EditorialResultParser  # Structured output model
+from src.core.editorial.components.editorial_response_parser import EditorialResultParser
+
 
 class EditorialPromptBuilder:
     """
@@ -15,18 +16,16 @@ class EditorialPromptBuilder:
         - Forces re-generation in the exact output structure expected.
     
     Reasoning:
-        While the generation agent handles writing, the editorial agent ensures that strict language rules are met and that hallucinations are corrected in a looped validation process.
-        This agent is given minimal context, focusing strictly on repairing what is broken, not reinventing content.
+        Keeps the editorial logic encapsulated and rule-driven.
     """
 
     def __init__(self) -> None:
-        self.parser = PydanticOutputParser(pydantic_object=EditorialResultParser)
+        self.parser = PydanticOutputParser(pydantic_object=EditorialResultParser().parser)
         self.format_instructions = self.parser.get_format_instructions()
 
     def build_prompt(self) -> ChatPromptTemplate:
-        # System message with clear editorial responsibilities
         system_template = """
-        You are an editorial validator for AI-generated cover letters. Your role is to enforce language rules and correct the text *only* where violations occur.
+You are an editorial validator for AI-generated cover letters. Your role is to enforce language rules and correct the text *only* where violations occur.
 
 You are provided with:
 - The original job description
@@ -60,9 +59,8 @@ Your task:
 4. Return the output in **strictly the same structured format**.
 
 {format_instructions}
-
-        {format_instructions}
         """
+
         SYSTEM_PROMPT = SystemMessagePromptTemplate(
             prompt=PromptTemplate(
                 template=system_template,
@@ -71,19 +69,18 @@ Your task:
             )
         )
 
-        # Human message template: Injects generation and editorial error feedback
         human_template = """
 Job description: {job_description}
 User skills: {my_skills}
 Original generation (structured): {generation}
-Editorial violations: {editorial_error_messages}
 
 Please revise the generation strictly according to the rule violations.
 Do not repeat previous mistakes or introduce hallucinated content.
 
 Violation that occurred:
-{placeholder_messages}
+{editorial_error_messages}
         """
+
         HUMAN_PROMPT = HumanMessagePromptTemplate(
             prompt=PromptTemplate(
                 template=human_template,
