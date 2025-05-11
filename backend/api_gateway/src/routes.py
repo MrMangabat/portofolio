@@ -10,7 +10,7 @@ from config.config_combined_settings import CombinedSettings
 router = APIRouter()
 
 
-@router.api_route("/cover-letter/{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
+@router.api_route("/{path:path}", methods=["GET", "POST", "PUT", "DELETE"])
 async def proxy_cover_letter(
     path: str,
     request: Request,

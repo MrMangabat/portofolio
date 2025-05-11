@@ -9,7 +9,8 @@ WORKDIR /app
 COPY ./ /app
 
 # Install dependencies
-RUN pip install fastapi uvicorn httpx pydantic pydantic-settings
+RUN apt update && apt install -y iputils-ping && pip install fastapi uvicorn httpx pydantic pydantic-settings
+
 
 # Set Python path so modules are correctly found
 ENV PYTHONPATH="/app:/app/src"

@@ -1,10 +1,10 @@
 import axios from "axios";
 
-// Get dynamic URLs from the global config loaded in main.js
+// Load dynamic base URLs from global config (injected via /frontend-config)
 const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || "http://localhost:8080";
-const COVER_LETTER_BASE_URL = window.APP_CONFIG?.COVER_LETTER_SERVICE_URL || "http://localhost:8080/cover-letter";
+const COVER_LETTER_BASE_URL = window.APP_CONFIG?.COVER_LETTER_SERVICE_URL || "http://localhost:8010";
 
-// Create an Axios instance for general API calls (if needed)
+// Axios instance for general API (e.g., job listings)
 const fastAPI = axios.create({
   baseURL: API_BASE_URL,
   withCredentials: false,
@@ -14,7 +14,7 @@ const fastAPI = axios.create({
   }
 });
 
-// Create an Axios instance for cover letter endpoints
+// Axios instance for cover letter service (FastAPI service)
 const coverLetterAPI = axios.create({
   baseURL: COVER_LETTER_BASE_URL,
   withCredentials: false,
@@ -37,7 +37,7 @@ export default {
   deleteWord(wordId) {
     return coverLetterAPI.delete(`/corrections/${wordId}`);
   },
-  
+
   addSentence(sentenceData) {
     return coverLetterAPI.post("/corrections", { ...sentenceData, type: 'sentence' });
   },
@@ -47,7 +47,7 @@ export default {
   deleteSentence(sentenceId) {
     return coverLetterAPI.delete(`/corrections/${sentenceId}`);
   },
-  
+
   addSkill(skillData) {
     return coverLetterAPI.post("/corrections", { ...skillData, type: 'skill' });
   },
@@ -57,26 +57,26 @@ export default {
   deleteSkill(skillId) {
     return coverLetterAPI.delete(`/corrections/${skillId}`);
   },
-  
+
   // -------------------------------
-  // Job Listings endpoint – served by the API gateway directly
+  // Job Listings endpoint – served by the general API gateway
   // -------------------------------
   getJobListings() {
-    return fastAPI.get("/job_listings");
+    return coverLetterAPI.get("/job_listings");
   },
-  
+
   // -------------------------------
-  // File management endpoints (updated paths)
+  // File management endpoints (cover letter service)
   // -------------------------------
   uploadFiles(formData) {
     return coverLetterAPI.post("/files/upload", formData, {
-        headers: { "Content-Type": "multipart/form-data" }
+      headers: { "Content-Type": "multipart/form-data" }
     });
-},
+  },
   deleteFile(fileName, bucketType) {
     return coverLetterAPI.delete(`/files/${bucketType}/${fileName}`);
   },
   getFiles(bucketType) {
     return coverLetterAPI.get(`/files/${bucketType}`);
-  },
+  }
 };

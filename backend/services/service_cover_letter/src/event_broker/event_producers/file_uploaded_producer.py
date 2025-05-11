@@ -27,7 +27,7 @@ class FileUploadedProducer:
     """
     A Kafka producer class for publishing 'file_uploaded' events.
     """
-
+    logging.info("\nInside File_uploaded_producer.py\n")
     def __init__(self) -> None:
         """
         Initializes the Kafka producer connection using values from the environment.
@@ -58,11 +58,17 @@ class FileUploadedProducer:
             bool: True if the message was sent successfully, False otherwise
         """
         try:
-            payload = event.model_dump()
-            self.producer.send(self.topic, value=payload)
-            self.producer.flush()
-            logging.info(f"✅ Published file_uploaded event to topic '{self.topic}': {event.model_dump_json()}")
-            return True
+                if not isinstance(event, FileUploadedEvent):
+                    raise TypeError(f"Expected FileUploadedEvent, got {type(event)}")
+                
+                payload = event.model_dump()
+                self.producer.send(self.topic, value=payload)
+                self.producer.flush()
+                logging.info(f"FILE: file_uploaded_producer.py | publish_file_uploaded |")
+                logging.info(f"✅ Published file_uploaded event to topic '{self.topic}': {event.model_dump_json()}")
+                return True
+
         except Exception as e:
+            logging.info(f"FILE: file_uploaded_producer.py | publish_file_uploaded |")
             logging.error(f"❌ Failed to publish file_uploaded event: {e}")
             return False

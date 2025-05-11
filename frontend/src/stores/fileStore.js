@@ -22,7 +22,7 @@ export const useFileStore = defineStore('fileStore', {
         const response = await jobsearchAPI.uploadFiles(formData);
         this.uploadedFiles = response.data; // This is the list of ExtractedText or FileItem
         // For clarity, you might also re-fetch the list of files from the server
-        await this.fetchFiles('cover_letters');
+        await this.fetchFiles('cover-letters');
         await this.fetchFiles('images');
       } catch (error) {
         console.error('Error uploading files:', error);
@@ -45,7 +45,7 @@ export const useFileStore = defineStore('fileStore', {
     async fetchFiles(bucketType) {
       try {
         const response = await jobsearchAPI.getFiles(bucketType);
-        if (bucketType === 'cover_letters') {
+        if (bucketType === 'cover-letters') {
           // Instead of saving to coverLetters, populate the “uploadedFiles” array
           this.uploadedFiles = response.data;
         } else if (bucketType === 'images') {

@@ -79,8 +79,8 @@ services:
   # kafka_broker:
   kafka:
     image: confluentinc/cp-kafka:latest
-    hostname: kafka
-    container_name: kafka
+    hostname: kafka_broker
+    container_name: kafka_broker
     networks:
      - portofolio_network
     ports:
@@ -95,7 +95,7 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
       KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
       KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka_broker:9092
       KAFKA_LOG_DIRS: /var/lib/kafka/data  # Where Kafka stores its logs.
       KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Kafka will automatically create topics if needed.
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Since we’re running one broker, one replica is enough.
@@ -104,8 +104,7 @@ services:
       CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"  # A unique ID for the Kafka cluster.
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - kafka_data:/var/lib/kafka/data
-  # Store Kafka logs on your local machine.
+      - kafka_data:/var/lib/kafka/data # Store Kafka logs on your local machine.
 
 
 

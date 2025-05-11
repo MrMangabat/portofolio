@@ -7,6 +7,7 @@ from src.data_models.minio_models import FileItem
 from src.service_layer.file_service import FileService
 from src.data_repositories.miniO_repository.CRUD_minio import MinioRepository
 from src.event_broker.event_producers.file_uploaded_producer import FileUploadedProducer
+from src.data_models.kafka_models.producers.file_upload_event import FileUploadedEvent
 from io import BytesIO
 import uuid
 
@@ -19,10 +20,10 @@ def get_file_service() -> FileService:
     repository = MinioRepository(minio_connection)
     return FileService(repository)
 
-@router.post("/upload", response_model=List[FileItem])
 async def upload_files(
     files: List[UploadFile] = File(...),
-    file_service: FileService = Depends(get_file_service)
+    file_service: FileService = Depends(get_file_service),
+    user_id: str = "placeholder-user"  # Replace with actual user_id from session or auth
 ) -> List[FileItem]:
     try:
         logging.info(f"Received files: {[file.filename for file in files]}")
@@ -31,15 +32,26 @@ async def upload_files(
         # Initialize Kafka producer
         producer = FileUploadedProducer()
 
+        # Create the FileUploadedEvent once per user/session
+        kafka_event = FileUploadedEvent(
+            user_id=user_id,  # Set the user_id once
+            upload_method="web",
+            bucket="",  # To be set per file
+            filename="",  # To be set per file
+            content_type="",  # To be set per file
+            file_id=""  # To be set per file
+        )
+
         # Publish Kafka event for each uploaded file
-        for upload_file, saved_file in zip(files, minio_responses):
-            event_payload = {
-                "file_id": saved_file.file_id,
-                "filename": saved_file.file_name,
-                "bucket": saved_file.bucket,
-                "metadata": {"original_name": saved_file.original_file_name}
-            }
-            producer.publish_file_uploaded(event_payload)
+        for _, saved_file in zip(files, minio_responses):
+            # Update the event for each file
+            kafka_event.file_id = saved_file.file_id
+            kafka_event.filename = saved_file.file_name
+            kafka_event.bucket = saved_file.bucket
+            kafka_event.content_type = saved_file.file_type
+
+            # Pass the same event instance to Kafka producer
+            producer.publish_file_uploaded(kafka_event)
 
         return minio_responses
 
@@ -61,5 +73,5 @@ def delete_file(
         raise HTTPException(status_code=500, detail=str(e))
 
 @router.get("/{bucket_type}", response_model=List[FileItem])
-def list_files(bucket_type: str, file_service: FileService = Depends(get_file_service)) -> List[FileItem]:
+def list_files_from_bucket(bucket_type: str, file_service: FileService = Depends(get_file_service)) -> List[FileItem]:
     return file_service.list_files(bucket_type)

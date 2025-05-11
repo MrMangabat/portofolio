@@ -8,7 +8,7 @@ const selectedFiles = ref([]);
 const fileStore = useFileStore();
 
 onMounted(async () => {
-  await fileStore.fetchFiles('cover_letters');
+  await fileStore.fetchFiles('cover-letters');
   await fileStore.fetchFiles('images');
 });
 
@@ -37,7 +37,7 @@ const deleteFile = async (file) => {
 
   let bucketType = '';
   if (['pdf', 'txt'].includes(fileExtension)) {
-    bucketType = 'cover_letters';
+    bucketType = 'cover-letters';
   } else if (['jpg', 'jpeg', 'png'].includes(fileExtension)) {
     bucketType = 'images';
   } else {

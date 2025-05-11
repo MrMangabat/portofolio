@@ -32,7 +32,8 @@ class FileUploadedEvent(BaseModel):
         str,
         StringConstraints(strip_whitespace=True, min_length=1)
     ]
-    bucket: Literal["uploaded-cv", "uploaded-cover-letters", "uploaded-documents"]
+    bucket: Literal["cover-letters", "cv", "images"]
+
     filename: Annotated[
         str,
         StringConstraints(strip_whitespace=True, min_length=1)
