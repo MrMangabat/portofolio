@@ -9,6 +9,9 @@ from src.infrastructure.correction_client import CorrectionsClient
 from src.core.cover_letter.components.cover_letter_prompt_builder import CoverLetterPromptBuilder
 from src.core.cover_letter.components.cover_letter_parser import CoverLetterResultParser
 from src.infrastructure.llm_client import LLMClient
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def generate_cover_letter(state: CoverLetterGraphState) -> StateGraph:
@@ -21,7 +24,7 @@ def generate_cover_letter(state: CoverLetterGraphState) -> StateGraph:
     Returns:
         CoverLetterGraphState: Updated state with generated cover letter content under key 'cover_letter_output'.
     """
-    print("------ COVER LETTER NODE: Generating Cover Letter ------")
+    logger.info("COVER LETTER NODE: Generating Cover Letter")
 
     # Step 1: Instantiate the agent
     agent = AgentServiceClassCoverLetter(
@@ -34,6 +37,7 @@ def generate_cover_letter(state: CoverLetterGraphState) -> StateGraph:
     result = agent.generate_cover_letter(state)
 
     # Step 2: Log messages
+    logger.info("Generated result: introduction=%s, skills=%s, thank_you=%s", result.introduction, result.skills, result.thank_you)
     messages = state["messages"] + [
         ("system", f"[cover_letter_gen] Generated introduction: {result.introduction}"),
         ("system", f"[cover_letter_gen] Skills emphasis: {result.skills}"),
@@ -46,12 +50,12 @@ def generate_cover_letter(state: CoverLetterGraphState) -> StateGraph:
     trace.append(f"NODE: cover_letter_gen @ {timestamp}")
 
     # Step 4: Debug print
-    print(f"\n------- ITERATION: {state['iterations']} -------")
-    print("----- Introduction:\n", result.introduction)
-    print("----- Motivation:\n", result.motivation)
-    print("----- Thank you:\n", result.thank_you)
-    print("----- Agent Trace:", trace)
-    print("--------------------------------------------------\n")
+    logger.info("Iteration: %s", state['iterations'])
+    logger.info("Introduction: %s", result.introduction)
+    logger.info("Motivation: %s", result.motivation)
+    logger.info("Thank you: %s", result.thank_you)
+    logger.info("Agent Trace: %s", trace)
+    logger.info("Finished generate_cover_letter node")
 
     return {
         **state,

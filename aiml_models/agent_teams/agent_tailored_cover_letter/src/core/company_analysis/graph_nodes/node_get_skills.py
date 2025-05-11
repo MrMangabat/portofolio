@@ -5,6 +5,9 @@ from datetime import datetime
 from src.infrastructure.correction_client import CorrectionsClient
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from langgraph.graph import StateGraph
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def get_skills(state: CoverLetterGraphState) -> StateGraph:
@@ -17,7 +20,7 @@ def get_skills(state: CoverLetterGraphState) -> StateGraph:
     Returns:
         CoverLetterGraphState: Updated state with 'skills' key.
     """
-    print("------ Fetching skills from CorrectionsClient ------")
+    logger.info("Fetching skills from CorrectionsClient")
 
     corrections_client = CorrectionsClient()
     skills_response: List[str] = [item["text"] for item in corrections_client.fetch_corrections("skill")]
@@ -31,10 +34,10 @@ def get_skills(state: CoverLetterGraphState) -> StateGraph:
 
     # Print state trace
 
-    print("\n------- ITERATION:", state["iterations"], "-------")
-    print("------ Skills fetched:", skills_response)
-    print("------ Trace:", agent_trace)
-    print("--------------------------------------\n")
+    logger.info("Iteration: %s", state["iterations"])
+    logger.info("Skills fetched: %s", skills_response)
+    logger.info("Agent trace: %s", agent_trace)
+    logger.info("Finished get_skills node")
 
     # Return updated state
     return {

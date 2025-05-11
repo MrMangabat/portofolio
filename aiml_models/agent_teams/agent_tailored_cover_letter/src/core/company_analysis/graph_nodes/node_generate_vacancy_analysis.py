@@ -7,6 +7,10 @@ from src.core.company_analysis.agent_service_class_company_analysis import Agent
 from src.core.company_analysis.components.analysis_prompt_builder import AnalysisPromptBuilder
 from src.core.company_analysis.components.analysis_respose_parser import JobAnalysisResultParser
 from src.infrastructure.llm_client import LLMClient
+import logging
+
+
+logger = logging.getLogger(__name__)
 
 
 def generate_vacancy_analysis(state: CoverLetterGraphState) -> StateGraph:
@@ -19,7 +23,7 @@ def generate_vacancy_analysis(state: CoverLetterGraphState) -> StateGraph:
     Returns:
         CoverLetterGraphState: Updated state with 'analysis_output' key
     """
-    print("------ COMPANY ANALYSIS NODE: Starting job vacancy analysis ------")
+    logger.info("COMPANY ANALYSIS NODE: Starting job vacancy analysis")
 
     # Step 1: Build agent and run analysis
     agent = AgentServiceClassCompanyAnalysis(
@@ -41,12 +45,12 @@ def generate_vacancy_analysis(state: CoverLetterGraphState) -> StateGraph:
     trace.append(f"NODE: company_analysis @ {timestamp}")
 
     # Step 4: Print state tree
-    print(f"\n------- ITERATION: {state['iterations']} -------")
-    print("----- Job Title:", result.job_title)
-    print("----- Skills Match:", result.matching_skills)
-    print("----- Agent Trace:", trace)
-    print("----- Analysis Summary:", result.analysis_output)
-    print("--------------------------------------------------\n")
+    logger.info("Iteration: %s", state['iterations'])
+    logger.info("Job Title: %s", result.job_title)
+    logger.info("Skills Match: %s", result.matching_skills)
+    logger.info("Agent Trace: %s", trace)
+    logger.info("Analysis Summary: %s", result.analysis_output)
+    logger.info("Finished job vacancy analysis node")
 
     return {
         **state,

@@ -6,6 +6,9 @@ from src.core.editorial.agent_service_class_editorial import AgentServiceClassEd
 from src.core.editorial.components.editorial_prompt_builder import EditorialPromptBuilder
 from src.core.editorial.components.editorial_response_parser import EditorialResultParser
 from src.infrastructure.llm_client import LLMClient
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
@@ -18,7 +21,7 @@ def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
     Returns:
         CoverLetterGraphState: Updated state with corrected generation.
     """
-    print("----- EDITORIAL AGENT: Running validation pass -----")
+    logger.info("EDITORIAL AGENT: Running validation pass")
 
     # Timestamp for logging
     timestamp: str = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
@@ -67,15 +70,12 @@ def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
         ("system", f"[editorial_agent] Violated rules: {state.get('editorial_violations', [])}")
     ]
 
-    # Print last 3 iterations for inspection
-    print("\n------ Application generation completed ------")
-    print(f" ------- ITERATION: {iteration} -------\n")
+    # Log last 3 iterations for inspection
+    logger.info("Application generation completed, Iteration: %s", iteration)
 
     for i in range(iteration, max(iteration - 3, -1), -1):
         key = f"iteration_{i}"
         if key in log:
-            print(f"--- Snapshot: {key} ---")
-            print(log[key])
-            print("\n")
+            logger.info("Snapshot %s: %s", key, log[key])
 
     return updated_state

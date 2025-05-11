@@ -44,7 +44,7 @@ class QdrantVectorSearch:
         # Collection name to query from
         self.collection_name: str = collection_name or connection.default_collection
 
-    def search(self, query: str, k: int = 2, threshold: float = 0.6) -> Optional[Tuple[Document, float]]:
+    def search(self, query: str, k: int = 2, threshold: float = 0.6) -> Optional[Document]:
         """
         Performs semantic search in Qdrant and returns best result if above threshold.
 
@@ -69,7 +69,7 @@ class QdrantVectorSearch:
         )
 
         if not results:
-            return f"No fileembedding found: {None}"
+            return None
 
         best_result: ScoredPoint = results[0]
         score: float = best_result.score or threshold
@@ -79,7 +79,6 @@ class QdrantVectorSearch:
         # Wrap result in a Document object for downstream LangGraph use
         document = Document(
             page_content=best_result.payload.get("text", ""),
-            metadata={"score": score, "id": best_result.id}
+            metadata={**best_result.payload, "score": score, "id": best_result.id}
         )
-
-        return document, score
+        return document

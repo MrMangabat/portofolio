@@ -58,14 +58,59 @@ services:
       - POSTGRES_PASSWORD=cover_letter_pass
       - POSTGRES_HOST=cover_letter_postgres
       - POSTGRES_PORT=5432
+
       - QDRANT_URL=http://cover_letter_qdrant:6333
+
       - MINIO_HOST=cover_letter_minio
       - MINIO_PORT=9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
+
+      - KAFKA_BROKER=kafka_broker
+      - KAFKA_PORT=9092
+      - KAFKA_TOPIC_FILE_UPLOADED=file_uploaded
+      - KAFKA_CONSUMER_GROUP=embedding_consumer_group
+      - KAFKA_BOOTSTRAP_SERVERS=kafka_broker:9092
+
     volumes:
       - ./backend/services/service_cover_letter:/app/service_cover_letter
     command: uvicorn src.api_cover_letter_main:app --host 0.0.0.0 --port 8010 --reload
+
+  # kafka_broker:
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    hostname: kafka
+    container_name: kafka
+    networks:
+     - portofolio_network
+    ports:
+      - "9092:9092"
+      - "9093:9093"
+    environment:
+      KAFKA_KRAFT_MODE: "true"  # This enables KRaft mode in Kafka.
+      KAFKA_PROCESS_ROLES: controller,broker  # Kafka acts as both broker and controller.
+      KAFKA_NODE_ID: 1  # A unique ID for this Kafka instance.
+      KAFKA_CONTROLLER_QUORUM_VOTERS: "1@localhost:9093"  # Defines the controller voters.
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9093
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_LOG_DIRS: /var/lib/kafka/data  # Where Kafka stores its logs.
+      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"  # Kafka will automatically create topics if needed.
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1  # Since we’re running one broker, one replica is enough.
+      KAFKA_LOG_RETENTION_HOURS: 168  # Keep logs for 7 days.
+      KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 0  # No delay for consumer rebalancing.
+      CLUSTER_ID: "Mk3OEYBSD34fcwNTJENDM2Qk"  # A unique ID for the Kafka cluster.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - kafka_data:/var/lib/kafka/data
+  # Store Kafka logs on your local machine.
+
+
+
+
+
 
   cover_letter_postgres:
     image: postgres:latest
@@ -127,11 +172,15 @@ services:
   #   restart: unless-stopped
 
 
+
+
 volumes:
   cover_letter_postgres_data:
   cover_letter_qdrant_data:
   cover_letter_minio_data:
   ollama_data:
+  kafka_data:
+
 
 networks:
   portofolio_network:

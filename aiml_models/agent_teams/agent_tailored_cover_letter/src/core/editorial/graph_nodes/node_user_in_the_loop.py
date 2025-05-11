@@ -3,6 +3,9 @@
 from datetime import datetime
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from langgraph.graph import StateGraph
+import logging
+
+logger = logging.getLogger(__name__)
 
 def user_in_the_loop(state: CoverLetterGraphState) -> StateGraph:
     """
@@ -19,5 +22,5 @@ def user_in_the_loop(state: CoverLetterGraphState) -> StateGraph:
     state["agent_trace"] = (state.get("agent_trace") or []) + [f"human_in_the_loop @ {timestamp}"]
     state["messages"] += [("system", f"[human_in_the_loop] Review passed at {timestamp}.")]
 
-    print("------ HUMAN REVIEW PLACEHOLDER PASSED ------")
+    logger.info("HUMAN REVIEW PLACEHOLDER PASSED, Agent trace: %s, Messages: %s", state.get('agent_trace'), state.get('messages'))
     return state

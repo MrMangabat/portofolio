@@ -30,6 +30,11 @@ from langgraph.checkpoint.memory import MemorySaver
 
 from pprint import pprint
 import uuid
+import logging
+
+# Configure logging to output INFO level to stdout with timestamp
+logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name)s - %(message)s')
+logger = logging.getLogger(__name__)
 
 # Node imports
 from src.core.company_analysis.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
@@ -158,11 +163,10 @@ def build_master_graph(job_offer: str) -> None:
     )
 
     # Execute and observe graph outputs
-    print("\n------ STARTING COVER LETTER FLOW ------\n")
+    logger.info("------ STARTING COVER LETTER FLOW ------")
     output = graph.invoke(initial_state, config=config)
-    print("Output state:")
-    pprint(output)
-    print("--------------------------------------------------")
+    logger.info("Output state: %s", output)
+    logger.info("--------------------------------------------------")
 
     # # Visual debug (optional, works only in Jupyter/IPython)
     # try:
@@ -174,5 +178,11 @@ def build_master_graph(job_offer: str) -> None:
 
 
 if __name__ == "__main__":
+    from backend.services.service_cover_letter.src.event_broker.event_consumers.embedding_comsumer import start_consumer
+    from threading import Thread
+
+    # Start consumer as a background thread (non-blocking)
+    Thread(target=start_consumer, daemon=True).start()
+
     build_master_graph(job_offer=job_description)
 

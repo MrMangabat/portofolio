@@ -5,6 +5,9 @@ from typing import Dict
 from langgraph.graph import StateGraph
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from src.core.editorial.components.editorial_validation_utils import validate_words, invalid_sentences
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def check_editorial_generation(state: CoverLetterGraphState) -> StateGraph:
@@ -18,7 +21,7 @@ def check_editorial_generation(state: CoverLetterGraphState) -> StateGraph:
     Returns:
         StateGraph: Updated state with validation error flag and messages.
     """
-    print("-------- VALIDATION: EDITORIAL LANGUAGE RULES --------")
+    logger.info("VALIDATION: EDITORIAL LANGUAGE RULES started")
 
     generation = state["generation"]
     no_go_words = state["words_to_avoid"]
@@ -62,13 +65,13 @@ def check_editorial_generation(state: CoverLetterGraphState) -> StateGraph:
 
     updated_messages = messages + [new_msg]
 
-    # Debug print block
-    print(f"\n------- ITERATION: {iterations} -------")
-    print("Violations found:")
+    # Log validation results
+    logger.info("Iteration: %s", iterations)
+    logger.info("Violations found: %s", violations)
     for v in violations:
-        print(" -", v)
-    print("------ TRACE:", trace)
-    print("--------------------------------------------------\n")
+        logger.info("Violation detail: %s", v)
+    logger.info("Trace: %s", trace)
+    logger.info("Finished VALIDATION node")
 
     return {
         **state,

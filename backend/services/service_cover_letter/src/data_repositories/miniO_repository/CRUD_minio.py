@@ -11,7 +11,7 @@ class MinioRepository:
         self.connection = connection
 
         self.buckets: Dict[str, str] = {
-            "cover_letters": "uploaded-cover-letters",
+            "uploaded-cover-letters": "uploaded-cover-letters",
             "cv": "uploaded-cvs",
             "images": "images"
         }

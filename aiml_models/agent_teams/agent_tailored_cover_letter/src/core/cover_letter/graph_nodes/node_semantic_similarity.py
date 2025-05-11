@@ -4,10 +4,13 @@
 from typing import Optional
 from datetime import datetime
 from langchain_core.documents import Document
+import logging
 
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from src.config.config_low_level import QdrantConnection
 from src.infrastructure.vectorstore import QdrantVectorSearch
+
+logger = logging.getLogger(__name__)
 
 
 def retrieve_best_matching_template(state: CoverLetterGraphState) -> CoverLetterGraphState:
@@ -19,7 +22,7 @@ def retrieve_best_matching_template(state: CoverLetterGraphState) -> CoverLetter
     Returns:
         Updated state with best_match_template_cover_letter and agent_trace.
     """
-    print("------ SEMANTIC SIMILARITY NODE: Searching for matching cover letter ------")
+    logger.info("SEMANTIC SIMILARITY NODE: Searching for matching cover letter")
 
     # Extract the job description from the graph state
     job_description: str = state["job_description"]
@@ -44,11 +47,11 @@ def retrieve_best_matching_template(state: CoverLetterGraphState) -> CoverLetter
     trace = state.get("agent_trace", [])
     trace.append(f"NODE: semantic_similarity @ {timestamp}")
 
-    # Debug output
-    print("\n------- ITERATION:", state["iterations"], "-------")
-    print("------ Best semantic match (filename):", best_match_filename)
-    print("------ Agent trace:", trace)
-    print("--------------------------------------\n")
+    # Log state details
+    logger.info("Iteration: %s", state['iterations'])
+    logger.info("Best semantic match (filename): %s", best_match_filename)
+    logger.info("Agent trace: %s", trace)
+    logger.info("Finished semantic similarity node")
 
     # Return updated graph state
     return {
