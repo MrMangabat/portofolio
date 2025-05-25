@@ -18,7 +18,7 @@ from typing import List
 
 from fastapi import APIRouter, UploadFile, File, HTTPException, status, Depends
 
-from src.config.config_low_level import QdrantConnection
+from src.config.config_db_connections import QdrantConnection
 from src.data_repositories.qdrant_repository.CRUD_qdrant import QdrantCoverLetterRepository
 from src.service_layer.embbing_file_service import FileEmbeddingService
 

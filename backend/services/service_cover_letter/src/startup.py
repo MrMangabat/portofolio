@@ -4,7 +4,6 @@ import socket
 import subprocess
 import logging
 from dotenv import load_dotenv
-from src.config.config_low_level import PostgressConnection
 # from src.data_models.postgres_models import Base
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -17,14 +16,14 @@ Pre-boot process:
 ✅ Save resolved MinIO IP into a fresh env file (used by MinioConnection later)
 '''
 
-def resolve_minio_ip() -> str:
-    try:
-        minio_ip = socket.gethostbyname("cover_letter_minio")
-        logging.info(f"✅ Resolved cover_letter_minio to {minio_ip}")
-        return minio_ip
-    except socket.gaierror as e:
-        logging.error(f"❌ Failed to resolve cover_letter_minio: {e}")
-        raise
+# def resolve_minio_ip() -> str:
+#     try:
+#         minio_ip = socket.gethostbyname("cover_letter_minio")
+#         logging.info(f"✅ Resolved cover_letter_minio to {minio_ip}")
+#         return minio_ip
+#     except socket.gaierror as e:
+#         logging.error(f"❌ Failed to resolve cover_letter_minio: {e}")
+#         raise
 
 def write_resolved_env(minio_ip: str) -> None:
     with open("/app/service_cover_letter/src/resolved_env.env", "w") as file:
@@ -42,8 +41,8 @@ def run_reset_schema() -> None:
 
 def pre_startup() -> None:
     try:
-        minio_ip = resolve_minio_ip()
-        write_resolved_env(minio_ip)
+        # minio_ip = resolve_minio_ip()
+        # write_resolved_env(minio_ip)
         run_reset_schema()
         logging.info("✅ Pre-startup process completed successfully.")
     except Exception as e:

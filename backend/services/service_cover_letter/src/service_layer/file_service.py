@@ -12,7 +12,8 @@ class FileService:
         self.repository: MinioRepository = repository
         self.logger = logging.getLogger(__name__)
         self.kafka_producer = FileUploadedProducer()  # Initialized once per service instance
-        logging.info(f"INSIDE: file_service.py | FileService initialized with repository: {repository}")
+        logging.info(f"INSIDE: {__file__} | FileService initialized with repository: {repository}")
+        logging
 
     async def process_files(self, files: List[UploadFile]) -> List[FileItem]:
         """
@@ -24,13 +25,15 @@ class FileService:
         Returns:
             List[FileItem]: Structured metadata about the uploaded files.
         """
+
         file_items: List[FileItem] = []
+        logging.info(f"{__file__} | ✅ raw_files fetched: {files}")
 
         for file in files:
             file_extension: str = file.filename.split('.')[-1].lower()
             bucket_type: str = 'cover-letters' if file_extension in ['pdf', 'txt'] else 'images'
 
-            file_id: str = str(uuid4())
+            file_id: str = str(uuid4())  # ✅ Correct: always a UUID string
             unique_filename: str = f"{file_id}.{file_extension}"
 
             try:
@@ -57,19 +60,18 @@ class FileService:
                 )
                 file_items.append(file_item)
 
-                # ✅ Trigger Kafka file_uploaded event
-                kafka_event = FileUploadedEvent(
-                    file_id=file_id,
-                    user_id="placeholder-user",  # TODO: Replace with actual user ID from session/auth
-                    bucket=bucket_type,
-                    filename=unique_filename,
-                    content_type=file.content_type,
-                    upload_method="web"
-                )
-
-                success = self.kafka_producer.publish_file_uploaded(kafka_event)
-                if not success:
-                    self.logger.warning(f"{__file__} | ⚠️ Kafka publish failed for file_id={file_id}")
+                # ✅ Uncomment when Kafka event is reactivated
+                # kafka_event = FileUploadedEvent(
+                #     file_id=file_id,
+                #     user_id="placeholder-user",
+                #     bucket=bucket_type,
+                #     filename=unique_filename,
+                #     content_type=file.content_type,
+                #     upload_method="web"
+                # )
+                # success = self.kafka_producer.publish_file_uploaded(kafka_event)
+                # if not success:
+                #     self.logger.warning(f"{__file__} | ⚠️ Kafka publish failed for file_id={file_id}")
 
             except Exception as e:
                 self.logger.error(f"{__file__} | ❌ Error processing file {file.filename}: {e}")
@@ -77,17 +79,15 @@ class FileService:
 
         return file_items
 
-    def delete_file(self, file_name: str, bucket_type: str) -> None:
+    def delete_file_minio(self, file_name: str, bucket_type: str) -> None:
         self.repository.delete_file(file_name, bucket_type)
 
         try:
-            # Retrieve raw file metadata from the repository layer
             raw_files: List[Dict[str, Any]] = self.repository.list_files(bucket_type)
 
-            # Return a list of validated FileItem objects
             return [
                 FileItem(
-                    file_id=file["file_name"],  # Assuming this is the UUID-based ID
+                    file_id=file["file_name"].split(".")[0],  # ✅ Extract UUID from filename
                     file_name=file["file_name"],
                     original_file_name=file.get("original_name", ""),
                     size=file["size"],
@@ -100,6 +100,7 @@ class FileService:
             logging.error(f"{__file__} | ❌ Error in list_files for bucket '{bucket_type}': {e}")
             raise
 
+
     def get_file_content(self, file_name: str, bucket_type: str) -> bytes:
         pass
 
@@ -107,22 +108,16 @@ class FileService:
     def list_files(self, bucket_type: str) -> List[FileItem]:
         """
         Lists files from the specified bucket type.
-
-        Args:
-            bucket_type (str): The type of bucket to list files from.
-
-        Returns:
-            List[FileItem]: A list of file metadata objects.
         """
-        try:
-            logging.info(f"INSIDE: fileservice.py | list_files |")
-            # Retrieve raw file metadata from the repository layer
-            raw_files: List[Dict[str, Any]] = self.repository.list_files(bucket_type)
+        logging.info(f"{__file__} | 📂 Service method called: list_files(bucket_type={bucket_type})")
 
-            # Return a list of validated FileItem objects
-            return [
+        try:
+            raw_files: List[Dict[str, Any]] = self.repository.list_files(bucket_type)
+            logging.info(f"{__file__} | 🔍 Raw files fetched: {raw_files}")
+
+            file_items = [
                 FileItem(
-                    file_id=file["file_name"],  # Assuming this is the UUID-based ID
+                    file_id=file["file_name"].split(".")[0],  # Extract UUID from filename
                     file_name=file["file_name"],
                     original_file_name=file.get("original_name", ""),
                     size=file["size"],
@@ -131,8 +126,14 @@ class FileService:
                 )
                 for file in raw_files
             ]
+
+            logging.info(f"{__file__} | ✅ Converted to {len(file_items)} FileItem(s)")
+            logging.info(f"FileItemObjct: {file_items}")
+            print(f"{__file__} | :{(file_items)}")
+            return file_items
+
         except Exception as e:
-            logging.error(f"{__file__} | ❌ Error in list_files for bucket '{bucket_type}': {e}")
+            logging.error(f"{__file__} | ❌ Error in list_files for bucket '{bucket_type}': {e}", exc_info=True)
             raise
 
     def get_file_content(self, file_name: str, bucket_type: str) -> bytes:

@@ -2,21 +2,10 @@ import axios from "axios";
 
 // Load dynamic base URLs from global config (injected via /frontend-config)
 const API_BASE_URL = window.APP_CONFIG?.API_BASE_URL || "http://localhost:8080";
-const COVER_LETTER_BASE_URL = window.APP_CONFIG?.COVER_LETTER_SERVICE_URL || "http://localhost:8010";
-
-// Axios instance for general API (e.g., job listings)
-const fastAPI = axios.create({
-  baseURL: API_BASE_URL,
-  withCredentials: false,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json"
-  }
-});
 
 // Axios instance for cover letter service (FastAPI service)
 const coverLetterAPI = axios.create({
-  baseURL: COVER_LETTER_BASE_URL,
+  baseURL: API_BASE_URL,
   withCredentials: false,
   headers: {
     Accept: "application/json",

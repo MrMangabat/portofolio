@@ -1,48 +1,42 @@
-#backend/api_gateway/src/main_system_trigger.py
+# backend/api_gateway/src/main_system_trigger.py
 
 import logging
-import os
-# logging.basicConfig(
-#     level=logging.INFO,  # Set the logging level to INFO
-#     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-# )
-
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 
-from routes import router  # Ensure absolute import
-from config.dependencies import get_api_gateway_settings
+from routes import router
+from config.api_gateway_settings import APIGatewaySettings
 
+# Load settings directly from Pydantic-powered config
+settings = APIGatewaySettings()
 
-settings = get_api_gateway_settings()
-print(f"\n[INFO] ALLOWED_ORIGINS loaded: {settings.top.get_allowed_origins_list}\n")  # Log it to confirm
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # data.create_tables()
+    # Placeholder for any startup/init logic (e.g., DB warm-up, service ping)
     yield
 
+# Instantiate FastAPI app
 app = FastAPI(lifespan=lifespan)
-
-# enable CORS
-app.add_middleware(
+app.add_middleware(         # # Enable CORS using validated env values
     CORSMiddleware,
-    allow_origins=settings.top.get_allowed_origins_list(), # http://localhost:5173
+    allow_origins=[
+        "http://localhost:9000", # MinIO
+        "http://localhost:5173", # frontend dev server
+        # "http://localhost:8080", # api gateway
+        "http://localhost:8010"  # cover letter service
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Print "Hello World" to the console when the application starts
-print("\nmain_system_trigger.py!\n")
+print("\n🚀 API_GATEWAY is running!\n")
 
-## testing, storing in memory
-words_list = ["test"]
-
-# Include the words router
+# Attach main router
 app.include_router(router)
 
 @app.get("/")
 def read_root():
-    return {"message:": "API_GATEWAY is running"}
+    return {"message": "🔥 THIS IS THE API GATEWAY"}

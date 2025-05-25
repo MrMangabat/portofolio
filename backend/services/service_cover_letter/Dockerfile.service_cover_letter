@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Install Python dependencies
-RUN pip install fastapi uvicorn psycopg2-binary sqlalchemy pydantic qdrant-client minio python-dotenv python-multipart sentence-transformers PyPDF2 kafka-python
+RUN pip install fastapi uvicorn psycopg2-binary sqlalchemy pydantic pydantic-settings qdrant-client minio python-dotenv python-multipart sentence-transformers PyPDF2 kafka-python
 
 
 # Copy service source code into container (context = ./backend/services/service_cover_letter)

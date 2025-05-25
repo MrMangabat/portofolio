@@ -11,7 +11,7 @@ from datetime import datetime
 ## Internal modules
 
 # from src.config.config_top_level import Config
-from src.config.config_low_level import PostgressConnection
+from src.config.config_db_connections import PostgressConnection
 # ## internal modules
 
 # CorrectionType Enum: Defines the possible types for corrections.

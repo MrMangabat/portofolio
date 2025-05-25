@@ -13,33 +13,36 @@ pydantic base settings must be used in the future
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
-from src.config.config_top_level import Config
 from minio import Minio
 from typing import Optional
 from qdrant_client import QdrantClient, models
 
-config = Config()
+from src.config.service_settings import CoverLetterSettings
 
+settings_from_env = CoverLetterSettings()
+### stadardize this connection pattern. ensure i can work cross notebook and system
 class PostgressConnection:
     Base = declarative_base()
-    engine = create_engine(config.POSTGRES_URL)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+    engine = None
+    SessionLocal = None
+
+    @classmethod
+    def initialize(cls) -> None:
+        """
+        Lazy initializer for engine and SessionLocal.
+        Only called explicitly in FastAPI startup or actual usage contexts.
+        """
+        if cls.engine is None:
+            try:
+                cls.engine = create_engine(settings_from_env.POSTGRES_URL)
+                cls.SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=cls.engine)
+            except Exception as e:
+                raise RuntimeError(f"❌ Failed to initialize Postgres connection: {e}")
 
     @staticmethod
     def get_db():
-        db = PostgressConnection.SessionLocal()
-        try:
-            yield db
-        finally:
-            db.close()
-
-class PostgressConnection:
-    Base = declarative_base()
-    engine = create_engine(config.POSTGRES_URL)
-    SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-    @staticmethod
-    def get_db():
+        if PostgressConnection.SessionLocal is None:
+            raise RuntimeError("PostgressConnection was never initialized. Call initialize() first.")
         db = PostgressConnection.SessionLocal()
         try:
             yield db
@@ -52,29 +55,22 @@ class MiniOConnection:
     _instance: Optional["MiniOConnection"] = None
 
     def __init__(self) -> None:
-        minio_ip = self._read_minio_ip()
         print(f"🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑🔑 Connecting to MinIO with:")
-        print(f"   Host: {minio_ip}")
-        print(f"   Port: {config.MINIO_PORT}")
-        print(f"   Access Key: {config.MINIO_ACCESS_KEY}")
-        print(f"   Secret Key: {config.MINIO_SECRET_KEY}")
+        print(f"   Host: {settings_from_env.MINIO_HOST}")
+        print(f"   Port: {settings_from_env.MINIO_PORT}")
+        print(f"   Access Key: {settings_from_env.MINIO_ACCESS_KEY}")
+        print(f"   Secret Key: {settings_from_env.MINIO_SECRET_KEY}")
 
         self.client: Minio = Minio(
-            endpoint=f"{minio_ip}:{config.MINIO_PORT}",
-            access_key=config.MINIO_ACCESS_KEY,
-            secret_key=config.MINIO_SECRET_KEY,
-            secure=False
+            endpoint=f"172.17.0.1:{settings_from_env.MINIO_PORT}",
+            access_key=settings_from_env.MINIO_ACCESS_KEY,
+            secret_key=settings_from_env.MINIO_SECRET_KEY,
+            secure=False,
+            region=None
         )
         self._validate_connection()
 
-    @staticmethod
-    def _read_minio_ip() -> str:
-        resolved_env_path = "/app/service_cover_letter/src/resolved_env.env"
-        with open(resolved_env_path, "r") as file:
-            for line in file:
-                if line.startswith("MINIO_IP="):
-                    return line.strip().split("=")[1]
-        raise RuntimeError("❌ MINIO_IP not found in resolved_env.env")
+        
 
     def _validate_connection(self) -> None:
         try:
@@ -91,11 +87,10 @@ class MiniOConnection:
 
 class QdrantConnection:
     def __init__(self) -> None:
-        self.url: str = config.QDRANT_URL
-        # self.port: int = config.QDRANT_PORT
+        self.url: str = settings_from_env.QDRANT_URL
         self.default_collection: str = "embedded_cover_letters"
 
-        self.client = QdrantClient(url=f"http://{config.QDRANT_HOST}:{config.QDRANT_PORT}")
+        self.client = QdrantClient(url=self.url)
 
         self._ensure_collection_exists()
 

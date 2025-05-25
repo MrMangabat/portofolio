@@ -1,7 +1,7 @@
 from typing import List
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
-from src.config.config_low_level import PostgressConnection
+from src.config.config_db_connections import PostgressConnection
 from src.data_models.postgres_models import JobListingItem
 from src.service_layer.joblisting_service import JobListingService
 

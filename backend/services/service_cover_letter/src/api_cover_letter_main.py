@@ -1,10 +1,11 @@
+# backend/services/service_cover_letter/src/api_cover_letter_main.py
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
 from sqlalchemy.orm import Session
 from sqlalchemy.sql import text
 
-from src.config.config_low_level import PostgressConnection
+from src.config.config_db_connections import PostgressConnection
 from src.routes import router as cover_letter_router
 from src.startup import pre_startup
 
@@ -12,6 +13,7 @@ pre_startup()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    PostgressConnection.initialize()
     db_generator = PostgressConnection.get_db()
     session: Session = next(db_generator)
 
@@ -37,11 +39,14 @@ async def lifespan(app: FastAPI):
         session.close()
 
 app = FastAPI(lifespan=lifespan)
-
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:9000", # MinIO
+        "http://localhost:5173", # frontend dev server
+        "http://localhost:8080", # api gateway
+        "http://localhost:8010"  # cover letter service
+    ],
     allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -49,3 +54,7 @@ app.add_middleware(
 
 # Mount the cover letter routes
 app.include_router(cover_letter_router)
+
+@app.get("/")
+def read_root():
+    return {"message": "Cover Letter Service is running"}

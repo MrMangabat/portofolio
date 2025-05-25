@@ -1,6 +1,6 @@
 # backend/services/service_cover_letter/src/data_repositories/miniO_repository/CRUD_minio.py
 from typing import Dict, List, Optional
-from src.config.config_low_level import MiniOConnection
+from src.config.config_db_connections import MiniOConnection
 from minio.error import S3Error
 from io import BytesIO
 import logging
@@ -64,6 +64,8 @@ class MinioRepository:
             bucket_name = self.buckets.get(bucket_type)
             if not bucket_name:
                 raise ValueError(f"Invalid bucket type: {bucket_type}")
+            logging.info(f"{__file__} | 🗑 Attempting delete: file_name={file_name}, bucket_type={bucket_type}")
+            logging.info(f"{__file__} | 🗑 Attempting delete: file_name={file_name}, bucket_type={bucket_type}")
 
             self.client.remove_object(bucket_name, file_name)
             print(f"Deleted file '{file_name}' from bucket '{bucket_name}'")
@@ -72,20 +74,31 @@ class MinioRepository:
             raise
 
     def list_files(self, bucket_type: str) -> List[Dict[str, str]]:
-        bucket_name = self.buckets.get(bucket_type)
-        if not bucket_name:
+        # Resolve the actual MinIO bucket name
+        bucket_name = self.buckets.get(bucket_type, bucket_type)
+        if bucket_name not in self.buckets.values():
             raise ValueError(f"Invalid bucket type: {bucket_type}")
         
-        file_list = []
-        for obj in self.client.list_objects(bucket_name):
-            stat = self.client.stat_object(bucket_name, obj.object_name)
-            original_name = stat.metadata.get("x-amz-meta-original-name", obj.object_name)
-            file_list.append({
-                "file_name": obj.object_name,
-                "size": stat.size,
-                "original_name": original_name  # This now works
-            })
-            print(f"Metadata for {obj.object_name}: {stat.metadata}")
+        result: List[Dict[str, str]] = []
 
-        return file_list
+        try:
+            objects = self.client.list_objects(bucket_name, recursive=True)
 
+            for obj in objects:
+                object_name: str = obj.object_name
+
+                # Fetch metadata headers for the object
+                metadata = self.client.stat_object(bucket_name, object_name).metadata
+
+                result.append({
+                    "file_name": object_name,  # ✅ Required for downstream code
+                    "original_name": metadata.get("x-amz-meta-original-name", ""),
+                    "size": obj.size,
+                    "file_type": object_name.split(".")[-1]
+                })
+
+        except Exception as e:
+            logging.error(f"{__file__} | ❌ Error listing files from MinIO bucket {bucket_type}: {e}")
+            raise
+
+        return result

@@ -25,7 +25,7 @@ from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance, Filter, FieldCondition, MatchValue, ScoredPoint
 from sentence_transformers import SentenceTransformer
 
-from src.config.config_low_level import QdrantConnection
+from src.config.config_db_connections import QdrantConnection
 
 
 class QdrantCoverLetterRepository:
@@ -71,7 +71,7 @@ class QdrantCoverLetterRepository:
                 vectors_config=VectorParams(size=len(vector), distance=Distance.COSINE),
             )
 
-        point = PointStruct(id=file_id, vector=vector, payload=payload)
+        point = PointStruct(id=str(file_id), vector=vector, payload=payload)  # ✅ Force string
         self.client.upsert(collection_name=self.collection_name, points=[point])
 
     def search_similar_documents(self, query: str, k: int = 3, threshold: float = 0.6) -> Optional[Tuple[Dict[str, Any], float]]:

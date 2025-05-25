@@ -21,7 +21,7 @@ from kafka import KafkaConsumer
 import os
 from io import BytesIO
 
-from src.config.config_low_level import MiniOConnection, QdrantConnection
+from backend.services.service_cover_letter.src.config.config_db_connections import MiniOConnection, QdrantConnection
 from src.data_repositories.miniO_repository.CRUD_minio import MinioRepository
 from src.data_repositories.qdrant_repository.CRUD_qdrant import QdrantCoverLetterRepository
 from src.service_layer.embbing_file_service import FileEmbeddingService
