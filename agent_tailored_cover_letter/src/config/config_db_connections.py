@@ -16,9 +16,9 @@ from minio import Minio
 from typing import Optional
 from qdrant_client import QdrantClient, models
 
-from src.config.service_settings import CoverLetterSettings
+from src.config.service_settings import AgentSettings
 
-settings_from_env = CoverLetterSettings()
+settings_from_env = AgentSettings()
 ### stadardize this connection pattern. ensure i can work cross notebook and system
 class PostgressConnection:
     Base = declarative_base()
@@ -88,8 +88,8 @@ class QdrantConnection:
     def __init__(self) -> None:
         self.url: str = settings_from_env.QDRANT_URL
         self.default_collection: str = "embedded_cover_letters"
-
-        self.client = QdrantClient(url=self.url)
+        print(f"🔗 Connecting to Qdrant at {self.url} with collection '{self.default_collection}'")
+        self.client = QdrantClient(url="localhost:6333", prefer_grpc=False)
 
         self._ensure_collection_exists()
 

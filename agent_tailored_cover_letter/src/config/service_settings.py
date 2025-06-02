@@ -3,11 +3,10 @@
 
 from pydantic_settings import BaseSettings
 from pydantic import Field
-
 from typing import Literal
 
 
-class CoverLetterSettings(BaseSettings):
+class AgentSettings(BaseSettings):
     ENV: Literal["dev", "prod", "test", "notebook"] = "dev"
 
     # PostgreSQL
@@ -20,6 +19,14 @@ class CoverLetterSettings(BaseSettings):
     @property
     def POSTGRES_URL(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
+
+        # Correction API service (NEW)
+    CORRECTION_API_HOST: str = "localhost"
+    CORRECTION_API_PORT: int = 8010
+
+    @property
+    def CORRECTION_API_URL(self) -> str:
+        return f"{self.CORRECTION_API_HOST}:{self.CORRECTION_API_PORT}"
 
     # MinIO
     MINIO_HOST: str
@@ -50,4 +57,4 @@ class CoverLetterSettings(BaseSettings):
     OPENAI_API_KEY: str = Field(..., alias="CHAT_GPT_API_KEY")
 
     class Config:
-        env_file = ".env"
+        env_file = "/home/mangabat/projects/portofolio/backend/services/service_cover_letter/.env"
