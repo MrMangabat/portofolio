@@ -4,7 +4,7 @@ from langgraph.graph import StateGraph
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from src.core.editorial.agent_service_class_editorial import AgentServiceClassEditorial
 from src.core.editorial.components.editorial_prompt_builder import EditorialPromptBuilder
-from src.core.editorial.components.editorial_response_parser import EditorialResultParser
+from agent_tailored_cover_letter.src.core.company_analysis.components.editorial_response_parser import EditorialResultParser
 from src.infrastructure.llm_client import LLMClient
 import logging
 

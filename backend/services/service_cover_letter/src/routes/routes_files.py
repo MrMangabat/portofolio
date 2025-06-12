@@ -34,7 +34,10 @@ async def upload_files(
         logging.info(f"{__file__} | 📥 Received files: {[file.filename for file in files]}")
 
         minio_responses: List[FileItem] = await file_service.process_files(files)
-        print("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        logging.info("XXXXXXXXXXXXXXXXXXXXX UPLOAD ROUTE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        print("XXXXXXXXXXXXXXXXXXXXX UPLOAD ROUTE XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+
+
         qdrant_connection = QdrantConnection()
 
         qdrant_repo = QdrantCoverLetterRepository(qdrant_connection)
@@ -46,6 +49,8 @@ async def upload_files(
             byte_stream: BytesIO = BytesIO(await raw_file.read())
 
             extracted_text = FileTextExtractor.extract_text(byte_stream, file_item.original_file_name)
+
+            print(f"{__file__} | 📄 Extracted text for {file_item.original_file_name}: {extracted_text}...")
 
             if not extracted_text:
                 logging.warning(f"{__file__} | ⚠️ No text extracted for {file_item.original_file_name}")

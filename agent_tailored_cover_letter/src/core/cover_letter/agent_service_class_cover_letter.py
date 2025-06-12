@@ -3,13 +3,13 @@
 from typing import Dict
 from src.infrastructure.correction_client import CorrectionsClient
 from src.core.cover_letter.components.cover_letter_prompt_builder import CoverLetterPromptBuilder
-from src.core.cover_letter.components.cover_letter_parser import CoverLetterResultParser
+from agent_tailored_cover_letter.src.core.company_analysis.components.cover_letter_parser import CoverLetterResultParser
 from src.infrastructure.llm_client import LLMClient
 
 from typing import Dict, Any
 from src.infrastructure.correction_client import CorrectionsClient
 from src.core.cover_letter.components.cover_letter_prompt_builder import CoverLetterPromptBuilder
-from src.core.cover_letter.components.cover_letter_parser import CoverLetterResultParser
+from agent_tailored_cover_letter.src.core.company_analysis.components.cover_letter_parser import CoverLetterResultParser
 from src.infrastructure.llm_client import LLMClient
 
 class AgentServiceClassCoverLetter:

@@ -24,7 +24,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from qdrant_client import QdrantClient
 from qdrant_client.models import PointStruct, VectorParams, Distance, Filter, FieldCondition, MatchValue, ScoredPoint
 from sentence_transformers import SentenceTransformer
-
+import logging
 from src.config.config_db_connections import QdrantConnection
 
 
@@ -53,15 +53,18 @@ class QdrantCoverLetterRepository:
             text (str): Plain text content extracted from the file.
             metadata (Optional[Dict[str, Any]]): Additional traceable metadata.
         """
-        vector: List[float] = self.embedding_model.encode(text).tolist()
 
+        logging.info(f"TTTTTTTTTTTTTTTTTTTTT: Upserting embedding for file_id={text}")
+        vector: List[float] = self.embedding_model.encode(text).tolist()
         payload: Dict[str, Any] = {
             "file_id": file_id,
             "uuid": str(uuid.uuid4()),
+            "text": text,
             "type": "cover_letter",
             "timestamp": datetime.now().isoformat(),
         }
         if metadata:
+            print(f"Metadata: {metadata}")
             payload.update(metadata)
 
         # Ensure collection exists
@@ -88,7 +91,7 @@ class QdrantCoverLetterRepository:
         """
         vector: List[float] = self.embedding_model.encode(query).tolist()
 
-        search_result: List[ScoredPoint] = self.client.search(
+        search_result: List[ScoredPoint] = self.client.query_points(
             collection_name=self.collection_name,
             query_vector=vector,
             limit=k,

@@ -9,7 +9,7 @@ import os
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
 
-from src.core.company_analysis.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
+from agent_tailored_cover_letter.src.core.graph_master.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
 ##############################################
 
 
@@ -37,9 +37,9 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s %(levelname)s %(name
 logger = logging.getLogger(__name__)
 
 # Node imports
-from src.core.company_analysis.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
-from src.core.company_analysis.graph_nodes.node_get_skills import get_skills
-from src.core.cover_letter.graph_nodes.node_generate_cover_letter import generate_cover_letter
+from agent_tailored_cover_letter.src.core.graph_master.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
+from agent_tailored_cover_letter.src.core.graph_master.graph_nodes.node_get_skills import get_skills
+from agent_tailored_cover_letter.src.core.graph_master.graph_nodes.node_generate_cover_letter import generate_cover_letter
 from src.core.cover_letter.graph_nodes.node_semantic_similarity import retrieve_best_matching_template
 from src.core.editorial.graph_nodes.node_user_in_the_loop import user_in_the_loop
 from src.core.editorial.graph_nodes.node_validate_and_correct_editorial import validate_and_correct_editorial

@@ -1,7 +1,7 @@
 # src/core/editorial/agent_service_class_editorial.py
 from typing import Dict, List
 from src.core.editorial.components.editorial_prompt_builder import EditorialPromptBuilder
-from src.core.editorial.components.editorial_response_parser import EditorialResultParser
+from agent_tailored_cover_letter.src.core.company_analysis.components.editorial_response_parser import EditorialResultParser
 from src.infrastructure.llm_client import LLMClient
 from src.core.data_models.editorial_model import EditorialResult
 
