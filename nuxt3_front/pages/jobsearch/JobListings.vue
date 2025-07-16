@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import jobsearch_api from '../../apis/jobsearch_api';
+import jobsearch_api from '../../server/api/jobsearch_api';
 
 const jobListings = ref([]);
 const headers = ref([

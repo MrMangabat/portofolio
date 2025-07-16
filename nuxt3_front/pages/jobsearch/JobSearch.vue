@@ -1,13 +1,4 @@
 <script setup>
-import WordsForm from '../components/jobsearch_view/WordsForm.vue';
-import WordsList from '../components/jobsearch_view/WordsList.vue';
-import SentencesForm from '../components/jobsearch_view/SentenceForm.vue';
-import SentenceList from '../components/jobsearch_view/SentenceList.vue';
-import SkillsetForm from '../components/jobsearch_view/SkillsetForm.vue';
-import SkillSetList from '../components/jobsearch_view/SkillSetList.vue';
-import JobListings from '../components/jobsearch_view/JobListings.vue';
-import FileUploads from '../components/jobsearch_view/FileUploads.vue';
-
 
 </script>
 
@@ -41,7 +32,7 @@ import FileUploads from '../components/jobsearch_view/FileUploads.vue';
             <v-row justify="space-between">
             <!-- Column 1: Contains the First Card -->
                 <v-col cols="12">
-                    <v-card-title>data table for listings</v-card-title>
+                    <v-card-title>Data table for listings</v-card-title>
                     <v-card-text>
                     Select one or multiple positions of interest, for semi-generated applications with human-in-the-loop.
                     <br>

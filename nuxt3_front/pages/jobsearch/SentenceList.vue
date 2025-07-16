@@ -2,7 +2,7 @@
 
 <script setup>
 import { useItemList } from '@/composables/useItemList';
-import jobsearch_api from '../../apis/jobsearch_api';
+import jobsearch_api from '../../server/api/jobsearch_api';
 import { useRemoveSentencesList } from '@/stores/removeSentencesList';
 
 const store = useRemoveSentencesList();

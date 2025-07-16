@@ -1,6 +1,6 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
-import JobSearch from './views/JobSearch.vue';
+import JobSearch from '../../nuxt3_front/pages/jobsearch/JobSearch.vue';
 </script>
 
 <template>

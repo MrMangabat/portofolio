@@ -1,6 +1,6 @@
 <script setup>
-import TimeLine from '../components/TimeLine.vue'
-import EducationLine from '../components/EducationLine.vue'
+  import TimeLine from '../components/TimeLine.vue'
+  import EducationLine from '../components/EducationLine.vue'
 </script>
 
 
