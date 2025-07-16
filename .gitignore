@@ -71,3 +71,6 @@ grafana-data/
 # Ignore misc personal files if they ever appear
 login.txt
 README.md
+
+# Ignore documentation_project
+documentation_project/*
