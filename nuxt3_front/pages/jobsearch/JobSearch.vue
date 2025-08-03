@@ -1,15 +1,80 @@
 <script setup>
+import { useItemForm } from '~/composables/useItemForm'
+import { useItemList } from '~/composables/useItemList'
+import { useJobSearchApi } from '~/composables/useJobSearchApi'
+import { useSkillset } from '~/stores/skillSetStore'
+import { useRemoveWordsList } from '~/stores/removeWordsList'
+import { useRemoveSentencesList } from '~/stores/removeSentencesList'
+import FileUploads from './FileUploads.vue'
 
+// Initialize API and stores
+const api = useJobSearchApi()
+const skillStore = useSkillset()
+const wordsStore = useRemoveWordsList()
+const sentencesStore = useRemoveSentencesList()
+
+// Skills form and list
+const skillForm = useItemForm({
+  apiAddFunction: api.addSkill,
+  piniaAddFunction: skillStore.piniaAddSkill,
+  inputProperty: 'skill',
+  validationErrorMessage: 'Invalid input: skill is either empty or not a string.'
+})
+
+const skillList = useItemList({
+  apiGetFunction: api.getSkills,
+  apiDeleteFunction: api.deleteSkill,
+  piniaStore: skillStore,
+  piniaDeleteFunction: skillStore.piniaDeleteSkill,
+  listProperty: 'skillSetList',
+  itemKey: 'item'
+})
+
+// Words form and list
+const wordsForm = useItemForm({
+  apiAddFunction: api.addWord,
+  piniaAddFunction: wordsStore.piniaAddWord,
+  inputProperty: 'word',
+  validationErrorMessage: 'Invalid input: word is either empty or not a string.'
+})
+
+const wordsList = useItemList({
+  apiGetFunction: api.getWords,
+  apiDeleteFunction: api.deleteWord,
+  piniaStore: wordsStore,
+  piniaDeleteFunction: wordsStore.piniaDeleteWord,
+  listProperty: 'removeWordsList',
+  itemKey: 'item'
+})
+
+// Sentences form and list
+const sentencesForm = useItemForm({
+  apiAddFunction: api.addSentence,
+  piniaAddFunction: sentencesStore.piniaAddSentence,
+  inputProperty: 'sentence',
+  validationErrorMessage: 'Invalid input: sentence is either empty or not a string.'
+})
+
+const sentencesList = useItemList({
+  apiGetFunction: api.getSentences,
+  apiDeleteFunction: api.deleteSentence,
+  piniaStore: sentencesStore,
+  piniaDeleteFunction: sentencesStore.piniaDeleteSentence,
+  listProperty: 'removeSentencesList',
+  itemKey: 'item'
+})
 </script>
 
 <template>
     <div>
         <v-container id = "jobsearch-header">
+    <!-- Debug info -->
+
             <v-row>
                 <div class="jobsearch">
                     <h1>Job market, the search</h1>
                     <v-sheet>
-                        When generating job applications or professional documents using a language model, certain words or phrases can be omitted or rephrased to leverage the model's auto-corrective capabilities. By creating a list of terms to avoid, you can guide the model to produce more consistent and professional results. However, it’s essential not to overload this list, as too many constraints can reduce the model’s effectiveness.
+                        When generating job applications or professional documents using a language model, certain words or phrases can be omitted or rephrased to leverage the model's auto-corrective capabilities. By creating a list of terms to avoid, you can guide the model to produce more consistent and professional results. However, it's essential not to overload this list, as too many constraints can reduce the model's effectiveness.
                         LLMs have limitations in how many corrections they can handle in a single call. When the number of corrections exceeds a certain threshold, the quality of self-correction can deteriorate, leading to less coherent responses. For optimal results, keep the list of forbidden words to a manageable size, allowing the model to balance its adaptive capabilities while maintaining output quality.
                     </v-sheet>
                 </div>
@@ -38,7 +103,7 @@
                     <br>
                     Info: Click on Description to view the full text or click the link for redirection to the job listing.    
                     </v-card-text>
-                    <JobListings />
+                    <!-- <JobListings /> -->
                 </v-col>               
             </v-row>
         </v-container>
@@ -62,11 +127,11 @@
 
         </v-container>
 
-        <v-container class="users-unique-skillset-container mb-4">
+         <v-container class="users-unique-skillset-container mb-4">
             <!-- SKILL Container -->
-            <v-row>
-            <!-- Column 1: Contains the First Card -->
-                <v-col cols="4">
+            <!-- First Row: Description and Input -->
+            <v-row >
+                <v-col cols="8">
                     <v-card-title>Add/Remove unique skills</v-card-title>
                     <v-card-text>
                         <p>You can add & remove unique skills or traits that you possess. This will map your competencies with those of the required position that being targeted.</p>
@@ -75,25 +140,44 @@
                         <p>It also serves as a grounding to minimize a models tendency hallucinate or confabulations of information in regard to your trustworthiness.</p>
                     </v-card-text>
                 </v-col>
-                <!-- Center: Input Field and Button in the Same Column -->
-                <v-col cols="3">
-                    <SkillsetForm/>
+                <v-col cols="4" class="d-flex align-center">
+                    <form @submit.prevent="skillForm.addItemAndClear" class="w-100">
+                        <v-text-field
+                            v-model="skillForm.item.skill"
+                            label="Add your skill"
+                            class="mb-3"
+                        />
+                        <v-btn type="submit" color="primary" block>Add</v-btn>
+                    </form>
                 </v-col>
-                
-
-                <!-- Column 2: Contains the WordsList Component -->
-                <v-col cols="5">
-                    <SkillSetList />
+            </v-row>
+            
+            <!-- Second Row: Skills List -->
+            <v-row class="mt-n8">
+                <v-col cols="12">
+                    <v-list v-if="skillList.items?.value && skillList.items.value.length > 0" class="d-flex flex-wrap">
+                        <v-chip
+                            v-for="skill in skillList.items.value" 
+                            :key="skill?.id || Math.random()"
+                            class="ma-1"
+                            closable
+                            @click:close="skillList.deleteItem(skill?.id)"
+                        >
+                            {{ skill.text }}
+                        </v-chip>
+                    </v-list>
+                    <v-alert v-else type="info" variant="tonal">
+                        No skills loaded yet. Add a skill to get started.
+                    </v-alert>
                 </v-col>
             </v-row>
         </v-container>
 
 
         <v-container class="words-removal-container mb-4">
-            <!-- Main Row Container with 12 Columns Split -->
+            <!-- First Row: Description and Input -->
             <v-row>
-                <!-- Left Side: Description Text -->
-                <v-col cols="4">
+                <v-col cols="8">
                     <v-card-title>Auto-correct words</v-card-title>
                     <v-card-text>
                         <p>Enter unique words in the input box on the right and click "Add" to exclude them.</p>
@@ -102,15 +186,35 @@
                         <p>These restrictstions is meant to support our lazyness in writing application, meaning that we are less likely to sound like a LLM-Agent</p>
                     </v-card-text>
                 </v-col>
-
-                <!-- Center: Input Field and Button in the Same Column -->
-                <v-col cols="3">
-                    <WordsForm/>
+                <v-col cols="4" class="d-flex align-center">
+                    <form @submit.prevent="wordsForm.addItemAndClear" class="w-100">
+                        <v-text-field
+                            v-model="wordsForm.item.word"
+                            label="Add invalid words"
+                            class="mb-3"
+                        />
+                        <v-btn type="submit" color="primary" block>Add</v-btn>
+                    </form>
                 </v-col>
+            </v-row>
 
-                <!-- Right Side: Skill List -->
-                <v-col cols="5">
-                    <WordsList />
+            <!-- Second Row: Words List -->
+            <v-row class="mt-n8">
+                <v-col cols="12">
+                    <v-list v-if="wordsList.items?.value && wordsList.items.value.length > 0" class="d-flex flex-wrap">
+                        <v-chip
+                            v-for="word in wordsList.items.value" 
+                            :key="word?.id || Math.random()"
+                            class="ma-1"
+                            closable
+                            @click:close="wordsList.deleteItem(word?.id)"
+                        >
+                            {{ word.text }}
+                        </v-chip>
+                    </v-list>
+                    <v-alert v-else type="info" variant="tonal">
+                        No words added yet. Add a word to get started.
+                    </v-alert>
                 </v-col>
             </v-row>
         </v-container>
@@ -118,31 +222,50 @@
 
 
         <v-container class = "phrase-removal-container mb-4">
-            <!-- Main Row Container with 12 Columns Split -->
+            <!-- First Row: Description and Input -->
             <v-row>
-                <!-- Left Side: Description Text -->
-                <v-col cols="4">
+                <v-col cols="8">
                     <v-card-title>Auto-correct sentences & phrases</v-card-title>
                     <v-card-text>
                         <p>Enter unique sentences in the input box on the right and click "Add" to exclude them.</p>
                         <p>If you have experiences that the LLM-Agents continuesly generate phrases or sentences that are less attractive, these guardrails serves to mitigate such scenarios</p>
                     </v-card-text>
                 </v-col>
-
-                <!-- Center: Input Field and Button in the Same Column -->
-                <v-col cols="3">
-                    <SentencesForm/>
+                <v-col cols="4" class="d-flex align-center">
+                    <form @submit.prevent="sentencesForm.addItemAndClear" class="w-100">
+                        <v-text-field
+                            v-model="sentencesForm.item.sentence"
+                            label="Add invalid sentences/phrases"
+                            class="mb-3"
+                        />
+                        <v-btn type="submit" color="primary" block>Add</v-btn>
+                    </form>
                 </v-col>
+            </v-row>
 
-                <!-- Right Side: Skill List -->
-                <v-col cols="5">
-                    <SentenceList />
+            <!-- Second Row: Sentences List -->
+            <v-row class="mt-n8">
+                <v-col cols="12">
+                    <v-list v-if="sentencesList.items?.value && sentencesList.items.value.length > 0" class="d-flex flex-wrap">
+                        <v-chip
+                            v-for="sentence in sentencesList.items.value" 
+                            :key="sentence?.id || Math.random()"
+                            class="ma-1"
+                            closable
+                            @click:close="sentencesList.deleteItem(sentence?.id)"
+                        >
+                            {{ sentence.text }}
+                        </v-chip>
+                    </v-list>
+                    <v-alert v-else type="info" variant="tonal">
+                        No sentences added yet. Add a sentence to get started.
+                    </v-alert>
                 </v-col>
             </v-row>
         </v-container>
 
         <v-container class ="cover-letter-layout">
-            <row>
+            <v-row>
                 <v-col>
                     <v-card-title>Generated Cover Letter</v-card-title>
                     <v-card-text>
@@ -151,7 +274,7 @@
                         <p>Click on the "Download Cover Letter" button to download the generated cover letter.</p>
                     </v-card-text>
                 </v-col>
-            </row>
+            </v-row>
         </v-container>
     </div>
 </template>

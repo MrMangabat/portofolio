@@ -6,16 +6,18 @@ services:
     networks:
       - portofolio_network
     build:
-      context: ./frontend
+      context: ./nuxt3_front
       dockerfile: Dockerfile
     ports:
       - "5173:5173"
     volumes:
-      - ./frontend:/app
+      - ./nuxt3_front:/app
       - /app/node_modules
     environment:
       - CHOKIDAR_USEPOLLING=true
-    command: npm run dev -- --host
+      - NUXT_PUBLIC_API_BASE_URL=http://localhost:8080  # Client-side API URL
+      - NUXT_API_BASE_URL=http://api_gateway:8080          # SSR-Server
+    command: npm run dev -- --host 0.0.0.0 --port 5173
     depends_on:
       - api_gateway
 
@@ -77,7 +79,7 @@ services:
 
     volumes:
       - ./backend/services/service_cover_letter:/app/service_cover_letter
-    command: uvicorn src.api_cover_letter_main:app --host 0.0.0.0 --port 8010 --reload
+    command: uvicorn api_cover_letter_main:app --host 0.0.0.0 --port 8010 --reload
 
   # kafka_broker:
   kafka:
@@ -108,11 +110,6 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
       - kafka_data:/var/lib/kafka/data # Store Kafka logs on your local machine.
-
-
-
-
-
 
   cover_letter_postgres:
     image: postgres:latest
@@ -147,9 +144,6 @@ services:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
       - MINIO_DOMAIN=cover_letter_minio
-
-      # - MINIO_SERVER_URL=http://localhost:9000  # ✅ Required for internal DNS
-
       - MINIO_BROWSER_REDIRECT_URL=http://localhost:9001
     command: server /data --console-address ":9001"
     ports:
@@ -157,28 +151,6 @@ services:
       - "9001:9001"
     volumes:
       - cover_letter_minio_data:/data
-
-  # ollama:
-  #   container_name: ollama
-  #   image: ollama/ollama:latest
-  #   networks:
-  #     - portofolio_network
-  #   ports:
-  #     - "11434:11434"
-  #   volumes:
-  #     - ollama_data:/root/.ollama
-  #   environment:
-  #     - OLLAMA_HOST=http://ollama:11434
-  #     - OLLAMA_MODEL_STORE=/root/.ollama
-  #   deploy:
-  #     resources:
-  #       reservations:
-  #         devices:
-  #           - capabilities: [gpu]
-  #   restart: unless-stopped
-
-
-
 
 volumes:
   cover_letter_postgres_data:
@@ -191,55 +163,3 @@ volumes:
 networks:
   portofolio_network:
     name: portofolio_network
-
-# Commented experiments & historical attempts (for transparency)
-
-# - MINIO_DOMAIN=cover_letter_minio
-# - MINIO_URL=http://cover_letter_minio:9000
-# - command: server --address ":9000" --console-address ":9001" /data --compat
-
-# Data Warehouse Services (reserved for future use)
-
-# warehouse_postgres:
-#   image: postgres:latest
-#   container_name: warehouse_postgres
-#   environment:
-#     - POSTGRES_DB=warehouse_db
-#     - POSTGRES_USER=warehouse_user
-#     - POSTGRES_PASSWORD=warehouse_pass
-#   ports:
-#     - "5434:5432"
-#   volumes:
-#     - warehouse_postgres_data:/var/lib/postgresql/data
-
-# warehouse_qdrant:
-#   image: qdrant/qdrant:latest
-#   container_name: warehouse_qdrant
-#   ports:
-#     - "6336:6333"
-#   volumes:
-#     - warehouse_qdrant_data:/qdrant/storage
-
-# warehouse_minio:
-#   image: minio/minio:latest
-#   container_name: warehouse_minio
-#   environment:
-#     - MINIO_ROOT_USER=minioadmin
-#     - MINIO_ROOT_PASSWORD=minioadmin
-#   command: server /data --console-address ":9002"
-#   ports:
-#     - "9200:9000"
-#     - "9201:9001"
-#   volumes:
-#     - warehouse_minio_data:/data
-
-# warehouse_graphdb:
-#   image: neo4j:latest
-#   container_name: warehouse_graphdb
-#   environment:
-#     - NEO4J_AUTH=neo4j/neo4jpassword
-#   ports:
-#     - "7474:7474"
-#     - "7687:7687"
-#   volumes:
-#     - warehouse_graphdb_data:/data

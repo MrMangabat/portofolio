@@ -24,7 +24,7 @@ app.add_middleware(         # # Enable CORS using validated env values
     allow_origins=[
         "http://localhost:9000", # MinIO
         "http://localhost:5173", # frontend dev server
-        # "http://localhost:8080", # api gateway
+        "http://localhost:8080", # api gateway
         "http://localhost:8010"  # cover letter service
     ],
     allow_credentials=True,

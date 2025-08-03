@@ -53,8 +53,14 @@ class AgentSettings(BaseSettings):
     # Logging
     LOG_LEVEL: str = "INFO"
 
+    # LLM Configuration
+    LLM_HOST: str = "http://127.0.0.1:11434"
+
     # OpenAI
     OPENAI_API_KEY: str = Field(..., alias="CHAT_GPT_API_KEY")
 
     class Config:
-        env_file = "/home/mangabat/projects/portofolio/backend/services/service_cover_letter/.env"
+        # Try multiple possible .env file locations
+        env_file = [
+            "/home/manga/projects/portofolio/agent_tailored_cover_letter/src/.env"  # Absolute fallback
+        ]

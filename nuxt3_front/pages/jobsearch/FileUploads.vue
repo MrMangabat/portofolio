@@ -2,10 +2,11 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue';
-import { useFileStore } from '@/stores/fileStore';
+import { useFileStore } from '~/stores/fileStore';
 
 const selectedFiles = ref([]);
 const fileStore = useFileStore();
+const loading = ref(false);
 
 onMounted(async () => {
   await fileStore.fetchFiles('cover-letters');
@@ -23,11 +24,14 @@ const uploadFiles = async () => {
     return;
   }
 
+  loading.value = true;
   try {
     await fileStore.uploadFiles(selectedFiles.value);
     selectedFiles.value = []; // Clear the selected files after upload
   } catch (error) {
     alert(`Error uploading files: ${error.response?.data?.detail || error.message}`);
+  } finally {
+    loading.value = false;
   }
 };
 
