@@ -1,13 +1,10 @@
 # backend/api_gateway/src/main_system_trigger.py
-
 import logging
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from contextlib import asynccontextmanager
-
 from routes import router
 from config.api_gateway_settings import APIGatewaySettings
-
 # Load settings directly from Pydantic-powered config
 settings = APIGatewaySettings()
 

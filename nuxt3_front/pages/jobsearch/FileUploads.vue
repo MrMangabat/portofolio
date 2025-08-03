@@ -1,5 +1,3 @@
-<!-- frontend/src/components/jobsearch_view/FileUploads.vue -->
-
 <script setup>
 import { ref, computed, onMounted } from 'vue';
 import { useFileStore } from '~/stores/fileStore';
