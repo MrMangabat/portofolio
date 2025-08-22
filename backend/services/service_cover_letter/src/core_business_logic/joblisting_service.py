@@ -3,13 +3,13 @@
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from src.models.database.postgresql.postgres_models import JobListingItem
-from src.repositories.postgresql.CRUD_postgres import JoblistingsRepository
+from src.repositories.postgresql.CRUD_postgres import JobListingRepository
 
 class JobListingService:
     """Provides business logic for job listings."""
 
     def __init__(self, db_session: Session):
-        self.repository = JoblistingsRepository(db_session)
+        self.repository = JobListingRepository(db_session)
 
     def get_all_job_listings(self) -> List[JobListingItem]:
         """Retrieve all job listings."""

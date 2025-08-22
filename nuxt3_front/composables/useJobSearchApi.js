@@ -110,6 +110,15 @@ export const useJobSearchApi = () => {
         method: 'DELETE',
         baseURL: API_BASE_URL
       })
+    },
+    
+    // Enhanced upload with metadata
+    async uploadFilesWithMetadata(formData) {
+      return await $fetch('/files/upload-with-metadata', {
+        method: 'POST',
+        baseURL: API_BASE_URL,
+        body: formData
+      })
     }
   }
 }

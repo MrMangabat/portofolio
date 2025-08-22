@@ -10,8 +10,7 @@ pydantic base settings must be used in the future
 """
 
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker, declarative_base
 from minio import Minio
 from typing import Optional
 from qdrant_client import QdrantClient, models
@@ -61,7 +60,7 @@ class MiniOConnection:
         print(f"   Secret Key: {settings_from_env.MINIO_SECRET_KEY}")
 
         self.client: Minio = Minio(
-            endpoint=f"172.30.0.4:{settings_from_env.MINIO_PORT}",
+            endpoint=f"172.31.0.4:{settings_from_env.MINIO_PORT}",
             access_key=settings_from_env.MINIO_ACCESS_KEY,
             secret_key=settings_from_env.MINIO_SECRET_KEY,
             secure=False,

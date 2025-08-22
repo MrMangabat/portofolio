@@ -2,7 +2,7 @@
 # /home/mangabat/projects/portofolio/backend/services/service_cover_letter/src/config/service_settings.py
 
 from pydantic_settings import BaseSettings
-from pydantic import Field
+from pydantic import Field, ConfigDict
 
 from typing import Literal
 
@@ -49,5 +49,5 @@ class CoverLetterSettings(BaseSettings):
     # OpenAI
     OPENAI_API_KEY: str = Field(..., alias="CHAT_GPT_API_KEY")
 
-    class Config:
-        env_file = ".env"
+    model_config = ConfigDict(env_file=".env")
+

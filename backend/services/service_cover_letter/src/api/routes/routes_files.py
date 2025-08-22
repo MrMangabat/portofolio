@@ -7,12 +7,15 @@ from src.models.external_services.minio.minio_models import FileItem
 # Kafka imports removed - not functional yet
 from src.core_business_logic.file_service import FileService
 from src.repositories.minio.CRUD_minio import MinioRepository
+from src.repositories.postgresql.file_metadata_repository import FileMetadataRepository
 from src.repositories.qdrant.CRUD_qdrant import QdrantCoverLetterRepository
 # from src.event_broker.event_producers.file_uploaded_producer import FileUploadedProducer
 from io import BytesIO
 import uuid
 from src.core_business_logic.embbing_file_service import FileEmbeddingService
 from src.utils.text_extraction.text_extractor import FileTextExtractor
+from fastapi import Form
+from typing import Optional
 
 
 router = APIRouter()
@@ -101,6 +104,117 @@ def delete_file(
     except Exception as e:
         logging.error(f"{__file__} | ❌ Failed to delete file: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="Failed to delete file")
+
+
+# TDD Integration: Enhanced metadata endpoints
+@router.post("/upload-with-metadata")
+async def upload_files_with_metadata(
+    files: List[UploadFile] = File(...),
+    file_type: str = Form(...),
+    language: str = Form(...), 
+    jobtype: Optional[str] = Form(None),
+    industry_sectors: Optional[str] = Form(None),  # JSON string
+    template_subtype: Optional[str] = Form("cover_letter"),
+    company_size_target: Optional[str] = Form("any"),
+    experience_years: Optional[int] = Form(None),
+    primary_roles: Optional[str] = Form(None),  # JSON string
+    is_current_cv: bool = Form(False),
+    file_service: FileService = Depends(get_file_service)
+):
+    """
+    Enhanced file upload with comprehensive metadata collection.
+    
+    WHY: Implements TDD-validated enhanced file workflow with structured metadata
+    CONTRIBUTION: Replaces simple upload with comprehensive categorization system
+    HOW: Uses FileService.process_files_with_metadata with proper validation
+    """
+    import json
+    
+    try:
+        # Parse JSON strings
+        industry_list = json.loads(industry_sectors) if industry_sectors else []
+        roles_list = json.loads(primary_roles) if primary_roles else []
+        
+        logging.info(f"{__file__} | 📤 Enhanced upload: {len(files)} files, type={file_type}, language={language}")
+        
+        result = await file_service.process_files_with_metadata(
+            files=files,
+            file_type=file_type,
+            language=language,
+            jobtype=jobtype,
+            industry_sectors=industry_list,
+            template_subtype=template_subtype,
+            company_size_target=company_size_target,
+            experience_years=experience_years,
+            primary_roles=roles_list,
+            is_current_cv=is_current_cv
+        )
+        
+        return {"message": "Files processed successfully", "files": result}
+        
+    except Exception as e:
+        logging.error(f"{__file__} | ❌ Enhanced upload failed: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
+
+
+@router.get("/jobtypes")
+def get_active_jobtypes():
+    """
+    Get active jobtypes for dropdown population - implements TDD Test Behavior 4.
+    
+    WHY: Provides jobtype vocabulary validated by TDD active state filtering tests
+    CONTRIBUTION: Enables frontend metadata collection with standardized job categories
+    HOW: Uses FileMetadataRepository.get_active_jobtypes with proper active filtering
+    """
+    try:
+        metadata_repo = FileMetadataRepository()
+        jobtypes = metadata_repo.get_active_jobtypes()
+        
+        return {
+            "data": [
+                {
+                    "id": jt.id,
+                    "name": jt.name,
+                    "category": jt.category,
+                    "description": jt.description
+                }
+                for jt in jobtypes
+            ]
+        }
+        
+    except Exception as e:
+        logging.error(f"{__file__} | ❌ Failed to fetch jobtypes: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch jobtypes")
+
+
+@router.get("/industries")
+def get_active_industries():
+    """
+    Get active industries for multi-select population.
+    
+    WHY: Provides industry vocabulary for template and CV categorization
+    CONTRIBUTION: Enables industry-based filtering and market analysis capabilities
+    HOW: Uses FileMetadataRepository.get_active_industries with proper filtering
+    """
+    try:
+        metadata_repo = FileMetadataRepository()
+        industries = metadata_repo.get_active_industries()
+        
+        return {
+            "data": [
+                {
+                    "id": ind.id,
+                    "name": ind.name,
+                    "sector": ind.sector,
+                    "description": ind.description
+                }
+                for ind in industries
+            ]
+        }
+        
+    except Exception as e:
+        logging.error(f"{__file__} | ❌ Failed to fetch industries: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch industries")
 
 
 ####
