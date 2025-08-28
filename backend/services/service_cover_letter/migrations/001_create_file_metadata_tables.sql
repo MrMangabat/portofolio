@@ -80,7 +80,7 @@ CREATE TABLE jobtypes (
     CONTRIBUTION: Ensures data consistency for template categorization and enables jobtype-based analytics
     HOW: Follows same pattern as existing corrections table with active lifecycle management
     */
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) UNIQUE NOT NULL,
     category VARCHAR(50), -- Grouping for future UI organization
     is_active BOOLEAN DEFAULT TRUE,
@@ -95,7 +95,7 @@ CREATE TABLE industries (
     CONTRIBUTION: Enables industry-based filtering in semantic search and market analysis capabilities
     HOW: Mirrors jobtypes structure for consistency with existing lookup table patterns
     */
-    id SERIAL PRIMARY KEY,
+    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
     name VARCHAR(100) UNIQUE NOT NULL,
     sector VARCHAR(50), -- Higher-level grouping
     is_active BOOLEAN DEFAULT TRUE,

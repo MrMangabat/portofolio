@@ -31,7 +31,7 @@ class CorrectionRepository:
     HOW: Implements CRUD operations with proper session lifecycle and error handling
     """
     
-    def __init__(self):
+    def __init__(self, db_session: Session = None):
         """
         Initialize repository with database connection management.
         

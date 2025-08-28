@@ -2,18 +2,19 @@
 
 <script setup>
 import { useItemList } from '@/composables/useItemList';
-import jobsearch_api from '../../server/api/jobsearch_api';
+import { useJobSearchApi } from '@/composables/useJobSearchApi';
 import { useSkillset } from '@/stores/skillSetStore';
 
 const store = useSkillset();
+const api = useJobSearchApi();
 
 const { items, deleteItem } = useItemList({
-  apiGetFunction: jobsearch_api.getSkills,
-  apiDeleteFunction: jobsearch_api.deleteSkill,
+  apiGetFunction: api.getSkills,
+  apiDeleteFunction: api.deleteSkill,
   piniaStore: store,
   piniaDeleteFunction: store.piniaDeleteSkill.bind(store),
   listProperty: 'skillSetList',
-  itemKey: 'item',
+  itemKey: 'text',
 });
 </script>
 
@@ -30,7 +31,7 @@ const { items, deleteItem } = useItemList({
                 @click="deleteItem(skill.id)"
                 close
                 class="mx-1 my-1">
-                {{ skill.item }}
+                {{ skill.text }}
               </v-chip>
             </div>
           </v-card-text>

@@ -1,5 +1,6 @@
 # backend/services/service_cover_letter/src/routes/routes_corrections.py
 from typing import List, Optional
+from uuid import UUID
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 
@@ -31,7 +32,7 @@ def create_correction(
 
 @router.delete("/{correction_id}", response_model=CorrectionItem)
 def remove_correction(
-    correction_id: int,
+    correction_id: UUID,
     service: CorrectionService = Depends(get_correction_service)
 ) -> CorrectionItem:
     deleted_correction = service.remove_correction(correction_id)

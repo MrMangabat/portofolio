@@ -79,6 +79,65 @@ async def upload_files(
         logging.error(f"{__file__} | ❌ Error in upload_files: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail="File upload and embedding failed.")
 
+@router.get("/jobtypes")
+def get_active_jobtypes():
+    """
+    Get active jobtypes for dropdown population - implements TDD Test Behavior 4.
+    
+    WHY: Provides jobtype vocabulary validated by TDD active state filtering tests
+    CONTRIBUTION: Enables frontend metadata collection with standardized job categories
+    HOW: Uses FileMetadataRepository.get_active_jobtypes with proper active filtering
+    """
+    try:
+        metadata_repo = FileMetadataRepository()
+        jobtypes = metadata_repo.get_active_jobtypes()
+        
+        return {
+            "data": [
+                {
+                    "id": jt.id,
+                    "name": jt.name,
+                    "category": jt.category,
+                    "description": jt.description
+                }
+                for jt in jobtypes
+            ]
+        }
+        
+    except Exception as e:
+        logging.error(f"{__file__} | ❌ Failed to fetch jobtypes: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch jobtypes")
+
+
+@router.get("/industries")
+def get_active_industries():
+    """
+    Get active industries for multi-select population.
+    
+    WHY: Provides industry vocabulary for template and CV categorization
+    CONTRIBUTION: Enables industry-based filtering and market analysis capabilities
+    HOW: Uses FileMetadataRepository.get_active_industries with proper filtering
+    """
+    try:
+        metadata_repo = FileMetadataRepository()
+        industries = metadata_repo.get_active_industries()
+        
+        return {
+            "data": [
+                {
+                    "id": ind.id,
+                    "name": ind.name,
+                    "sector": ind.sector,
+                    "description": ind.description
+                }
+                for ind in industries
+            ]
+        }
+        
+    except Exception as e:
+        logging.error(f"{__file__} | ❌ Failed to fetch industries: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to fetch industries")
+
 @router.get("/{bucket}", response_model=List[FileItem])
 def get_files(bucket: str, file_service: FileService = Depends(get_file_service)) -> List[FileItem]:
     logging.info(f"{__file__} | ⚙️ Received GET for bucket={bucket}")
@@ -157,64 +216,6 @@ async def upload_files_with_metadata(
         raise HTTPException(status_code=500, detail=f"Upload failed: {str(e)}")
 
 
-@router.get("/jobtypes")
-def get_active_jobtypes():
-    """
-    Get active jobtypes for dropdown population - implements TDD Test Behavior 4.
-    
-    WHY: Provides jobtype vocabulary validated by TDD active state filtering tests
-    CONTRIBUTION: Enables frontend metadata collection with standardized job categories
-    HOW: Uses FileMetadataRepository.get_active_jobtypes with proper active filtering
-    """
-    try:
-        metadata_repo = FileMetadataRepository()
-        jobtypes = metadata_repo.get_active_jobtypes()
-        
-        return {
-            "data": [
-                {
-                    "id": jt.id,
-                    "name": jt.name,
-                    "category": jt.category,
-                    "description": jt.description
-                }
-                for jt in jobtypes
-            ]
-        }
-        
-    except Exception as e:
-        logging.error(f"{__file__} | ❌ Failed to fetch jobtypes: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch jobtypes")
-
-
-@router.get("/industries")
-def get_active_industries():
-    """
-    Get active industries for multi-select population.
-    
-    WHY: Provides industry vocabulary for template and CV categorization
-    CONTRIBUTION: Enables industry-based filtering and market analysis capabilities
-    HOW: Uses FileMetadataRepository.get_active_industries with proper filtering
-    """
-    try:
-        metadata_repo = FileMetadataRepository()
-        industries = metadata_repo.get_active_industries()
-        
-        return {
-            "data": [
-                {
-                    "id": ind.id,
-                    "name": ind.name,
-                    "sector": ind.sector,
-                    "description": ind.description
-                }
-                for ind in industries
-            ]
-        }
-        
-    except Exception as e:
-        logging.error(f"{__file__} | ❌ Failed to fetch industries: {str(e)}")
-        raise HTTPException(status_code=500, detail="Failed to fetch industries")
 
 
 ####
