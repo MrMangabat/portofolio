@@ -154,7 +154,7 @@ class TestAPIConnectivity:
                     containers = network_info[0].get("Containers", {})
                     container_names = [c.get("Name", "") for c in containers.values()]
                     
-                    required_services = ["service_cover_letter", "API_GATEWAY", "cover_letter_postgres", "cover_letter_minio"]
+                    required_services = ["service_cover_letter", "API_GATEWAY", "cover_letter_postgres", "coverletterMinio"]
                     
                     for service in required_services:
                         found = any(service in name for name in container_names)

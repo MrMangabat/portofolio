@@ -1,6 +1,7 @@
 // frontend/src/stores/fileStore.js
 
 import { defineStore } from 'pinia';
+import { watch } from 'vue';
 import { useJobSearchApi } from '~/composables/useJobSearchApi';
 
 export const useFileStore = defineStore('fileStore', {
@@ -78,12 +79,37 @@ export const useFileStore = defineStore('fileStore', {
     async fetchFiles(bucketType) {
       try {
         const api = useJobSearchApi();
-        const { data } = await api.getFiles(bucketType);
+        const result = await api.getFiles(bucketType);
+        
+        // Wait for pending if needed (matching useItemList pattern)
+        if (result.pending?.value === true) {
+          console.log('⏳ Files request is still pending, waiting...');
+          await new Promise((resolve) => {
+            const unwatch = watch(result.pending, (isPending) => {
+              if (!isPending) {
+                unwatch();
+                resolve();
+              }
+            });
+          });
+        }
+        
+        // Check for errors
+        if (result.error?.value) {
+          console.error('❌ API Error:', result.error.value);
+          throw result.error.value;
+        }
+        
+        // Get the actual data (matching useItemList pattern)
+        const responseData = result.data?.value;
+        
         if (bucketType === 'cover-letters') {
           // Instead of saving to coverLetters, populate the "uploadedFiles" array
-          this.uploadedFiles = data.value || [];
+          this.uploadedFiles = responseData || [];
+          console.log(`✅ Loaded ${this.uploadedFiles.length} files from cover-letters`);
         } else if (bucketType === 'images') {
-          this.images = data.value || [];
+          this.images = responseData || [];
+          console.log(`✅ Loaded ${this.images.length} files from images`);
         }
       } catch (error) {
         console.error(`Error fetching files from bucket '${bucketType}':`, error);

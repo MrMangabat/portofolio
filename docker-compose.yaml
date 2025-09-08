@@ -54,7 +54,7 @@ services:
     depends_on:
       - cover_letter_postgres
       - cover_letter_qdrant
-      - cover_letter_minio
+      - coverletterMinio
     environment:
       - POSTGRES_DB=cover_letter_db
       - POSTGRES_USER=cover_letter_user
@@ -64,7 +64,7 @@ services:
 
       - QDRANT_URL=http://cover_letter_qdrant:6333
 
-      - MINIO_HOST=cover_letter_minio
+      - MINIO_HOST=coverletterMinio
       - MINIO_PORT=9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin
@@ -135,31 +135,34 @@ services:
     volumes:
       - cover_letter_qdrant_data:/qdrant/storage
 
-  cover_letter_minio:
+  coverletterMinio:
     image: minio/minio:latest
-    container_name: cover_letter_minio
+    container_name: coverletterMinio
     networks:
       - portofolio_network
     environment:
       - MINIO_ROOT_USER=minioadmin
       - MINIO_ROOT_PASSWORD=minioadmin
-      - MINIO_DOMAIN=cover_letter_minio
       - MINIO_BROWSER_REDIRECT_URL=http://localhost:9001
     command: server /data --console-address ":9001"
     ports:
       - "9000:9000"
       - "9001:9001"
     volumes:
-      - cover_letter_minio_data:/data
+      - coverletterMinio_data:/data
 
 volumes:
   cover_letter_postgres_data:
   cover_letter_qdrant_data:
-  cover_letter_minio_data:
+  coverletterMinio_data:
   ollama_data:
   kafka_data:
 
 
 networks:
   portofolio_network:
+    driver: bridge
     name: portofolio_network
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

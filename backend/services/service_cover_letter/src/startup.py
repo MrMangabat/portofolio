@@ -16,19 +16,42 @@ Pre-boot process:
 ✅ Save resolved MinIO IP into a fresh env file (used by MinioConnection later)
 '''
 
-# def resolve_minio_ip() -> str:
-#     try:
-#         minio_ip = socket.gethostbyname("cover_letter_minio")
-#         logging.info(f"✅ Resolved cover_letter_minio to {minio_ip}")
-#         return minio_ip
-#     except socket.gaierror as e:
-#         logging.error(f"❌ Failed to resolve cover_letter_minio: {e}")
-#         raise
+def resolve_minio_ip() -> str:
+    try:
+        minio_ip = socket.gethostbyname("coverletterMinio")
+        logging.info(f"✅ Resolved coverletterMinio to {minio_ip}")
+        return minio_ip
+    except socket.gaierror as e:
+        logging.error(f"❌ Failed to resolve coverletterMinio: {e}")
+        raise
 
 def write_resolved_env(minio_ip: str) -> None:
-    with open("/app/service_cover_letter/src/resolved_env.env", "w") as file:
-        file.write(f"MINIO_IP={minio_ip}\n")
-    logging.info("✅ resolved_env.env written successfully")
+    import os
+    env_file_path = "/app/service_cover_letter/.env"
+    
+    # Read existing .env content
+    with open(env_file_path, "r") as file:
+        lines = file.readlines()
+    
+    # Update or add MINIO_IP
+    updated = False
+    for i, line in enumerate(lines):
+        if line.startswith("MINIO_IP="):
+            lines[i] = f"MINIO_IP={minio_ip}\n"
+            updated = True
+            break
+    
+    if not updated:
+        lines.append(f"MINIO_IP={minio_ip}\n")
+    
+    # Write back to .env
+    with open(env_file_path, "w") as file:
+        file.writelines(lines)
+    
+    # Update current environment variable for immediate effect
+    os.environ["MINIO_IP"] = minio_ip
+    
+    logging.info(f"✅ Updated .env and environment with MINIO_IP={minio_ip}")
 
 def run_reset_schema() -> None:
     logging.info("Running reset_schema.sh to reset the database schema...")
@@ -41,8 +64,8 @@ def run_reset_schema() -> None:
 
 def pre_startup() -> None:
     try:
-        # minio_ip = resolve_minio_ip()
-        # write_resolved_env(minio_ip)
+        minio_ip = resolve_minio_ip()
+        write_resolved_env(minio_ip)
         run_reset_schema()
         logging.info("✅ Pre-startup process completed successfully.")
     except Exception as e:

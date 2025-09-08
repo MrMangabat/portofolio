@@ -75,7 +75,7 @@ class TestDockerEnvironmentConnections:
         HOW: Uses MinIO Docker hostname and credentials from docker-compose.yaml
         """
         try:
-            minio_host = os.getenv("MINIO_HOST", "cover_letter_minio")
+            minio_host = os.getenv("MINIO_HOST", "coverletterMinio")
             minio_port = int(os.getenv("MINIO_PORT", "9000"))
             access_key = os.getenv("MINIO_ACCESS_KEY", "minioadmin")
             secret_key = os.getenv("MINIO_SECRET_KEY", "minioadmin")
@@ -377,7 +377,7 @@ class TestDockerEnvironmentConnections:
             'POSTGRES_PASSWORD': 'cover_letter_pass',
             'POSTGRES_HOST': 'cover_letter_postgres',
             'POSTGRES_PORT': '5432',
-            'MINIO_HOST': 'cover_letter_minio',
+            'MINIO_HOST': 'coverletterMinio',
             'MINIO_PORT': '9000',
             'MINIO_ACCESS_KEY': 'minioadmin',
             'MINIO_SECRET_KEY': 'minioadmin'
@@ -418,7 +418,7 @@ class TestDockerEnvironmentConnections:
         
         # MinIO connectivity
         if docker_minio_connection:
-            connections_tested.append("✅ MinIO (cover_letter_minio)")
+            connections_tested.append("✅ MinIO (coverletterMinio)")
         
         # Try Qdrant connectivity
         try:

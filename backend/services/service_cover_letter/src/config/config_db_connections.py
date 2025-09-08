@@ -59,8 +59,9 @@ class MiniOConnection:
         print(f"   Access Key: {settings_from_env.MINIO_ACCESS_KEY}")
         print(f"   Secret Key: {settings_from_env.MINIO_SECRET_KEY}")
 
+        # Use the hostname from settings
         self.client: Minio = Minio(
-            endpoint=f"172.31.0.4:{settings_from_env.MINIO_PORT}",
+            endpoint=f"{settings_from_env.MINIO_HOST}:{settings_from_env.MINIO_PORT}",
             access_key=settings_from_env.MINIO_ACCESS_KEY,
             secret_key=settings_from_env.MINIO_SECRET_KEY,
             secure=False,
