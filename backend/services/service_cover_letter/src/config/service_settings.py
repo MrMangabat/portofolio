@@ -26,7 +26,7 @@ class CoverLetterSettings(BaseSettings):
     MINIO_PORT: int
     MINIO_ACCESS_KEY: str
     MINIO_SECRET_KEY: str
-    # MINIO_IP: str
+    MINIO_IP: str
 
     # Qdrant
     QDRANT_HOST: str

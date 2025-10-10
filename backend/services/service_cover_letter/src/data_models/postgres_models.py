@@ -3,10 +3,12 @@
 
 ## external modules
 from sqlalchemy import Column, Integer, String, Enum, DateTime
+from sqlalchemy.dialects.postgresql import UUID as PGUUID
 from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 from enum import Enum as PyEnum
 from datetime import datetime
+from uuid import UUID
 
 ## Internal modules
 
@@ -22,7 +24,7 @@ class CorrectionType(PyEnum):
 
 class CorrectionORM(PostgressConnection.Base):
     __tablename__ = 'corrections'
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(PGUUID(as_uuid=True), primary_key=True, index=True)
     text = Column(String, index=True, nullable=False)
     type = Column(
         Enum(CorrectionType,
@@ -33,7 +35,7 @@ class CorrectionORM(PostgressConnection.Base):
 class CorrectionItem(BaseModel):
 # Enum Matching: Ensure that the CorrectionType enum matches between SQLAlchemy and Pydantic models.
 # Optional id: The id is optional for input (creation) and will be provided by the database.
-    id: Optional[int] = None
+    id: Optional[UUID] = None
     text: str
     type: CorrectionType
 
