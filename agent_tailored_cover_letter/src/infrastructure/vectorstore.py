@@ -53,27 +53,25 @@ class QdrantVectorSearch:
             threshold (float): Minimum score to qualify as a match.
 
         Returns:
-            Optional[Tuple[Document, float]]: Top match and its score, or None if no good match.
+            Optional[Document]: Top match as LangChain Document, or None if no good match.
         """
         # Encode the query into vector space
         query_vector: List[float] = self.embedding_model.encode(query, normalize_embeddings=False).tolist()
 
-        # Search directly in Qdrant
-        results: List[ScoredPoint] = self.client.search(
+        # Search using newer query_points API
+        search_response = self.client.query_points(
             collection_name=self.collection_name,
-            query_vector=query_vector,
+            query=query_vector,
             limit=k,
             with_payload=True,
-            search_params=SearchParams(hnsw_ef=128),  # Optional param
+            search_params=SearchParams(hnsw_ef=128),
         )
 
-        if not results:
+        if not search_response.points:
             return None
 
-        best_result: ScoredPoint = results[0]
-        score: float = best_result.score or threshold
-
-
+        best_result = search_response.points[0]
+        score: float = best_result.score if hasattr(best_result, 'score') else threshold
 
         # Wrap result in a Document object for downstream LangGraph use
         document = Document(

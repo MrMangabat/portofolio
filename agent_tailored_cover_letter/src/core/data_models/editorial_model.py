@@ -10,29 +10,27 @@ class RuleViolation(BaseModel):
     """
     rule_id: Literal[
         "Rule 1", "Rule 2", "Rule 3", "Rule 4", "Rule 5",
-        "Rule 6", "Rule 7", "Rule 8", "Rule 9", "Rule 10",
+        "Rule 6", "Rule 7", "Rule 8", "Rule 9", "Rule 10", "Rule 11", "Rule 12",
         "Language Rule 1", "Language Rule 2", "Language Rule 3",
         "Language Rule 4", "Language Rule 5", "Language Rule 6",
         "Language Rule 7", "Language Rule 8"
     ]
     section: Literal[
-        "company_name", "job_title", "introduction", "motivation", 
-        "skills", "continued_learning", "thank_you", "bullet_points"
+        "company_name", "job_title", "introduction", "motivation",
+        "bulletpoint_1", "bulletpoint_2", "bulletpoint_3", "bulletpoint_4",
+        "thank_you"
     ]
-    error_type: str  # e.g., "invalid_phrase", "hallucination"
-    explanation: str  # Explanation of the issue in natural language
+    error_type: Literal[
+        "overlap", "grammar", "tone", "invalid_phrase", "hallucination",
+        "language", "invalid_word"
+    ]
+    offending_text: str = Field(description="Exact literal span from the draft that caused the violation.")
+    explanation: str = Field(description="Concise natural-language reason (≤ 50 words).")
 
 
 class EditorialResult(BaseModel):
     """
-    Final corrected generation returned by the editorial agent.
+    Editorial validation result returned by the audit node.
+    Contains violations detected + optionally corrected sections (if using reflection mode).
     """
-    company_name: str = Field(description="Company name extracted from job analysis.")
-    job_title: str = Field(description="Job title extracted from job analysis.")
-    introduction: str = Field(description="Corrected introduction paragraph.")
-    motivation: str = Field(description="Corrected motivational paragraph linking user and company.")
-    skills: str = Field(description="Corrected paragraph highlighting matching skills.")
-    continued_learning: str = Field(description="Corrected paragraph showing willingness to learn.")
-    bullet_points: List[str] = Field(description="List of corrected bullet points.")
-    thank_you: str = Field(description="Corrected thank-you note section.")
-    violated_rules: List[RuleViolation] = Field(description="All rule violations this generation fixed.")
+    violated_rules: List[RuleViolation] = Field(description="All rule violations detected in this generation.")

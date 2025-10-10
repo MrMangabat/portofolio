@@ -46,26 +46,20 @@ def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
         editorial_violations=violations
     )
 
-    # Construct next state (mutate safely)
-    updated_state: CoverLetterGraphState = {
-        **state,
-        "generation": result,
+    # Prepare new trace entry (auto-accumulated via Annotated[List[str], add])
+    new_trace = f"editorial_agent @ {timestamp}"
+
+    # Prepare new violation log entry (auto-merged via Annotated[Dict, add_to_dict])
+    new_log_entry = {
+        f"iteration_{iteration}": {
+            "timestamp": timestamp,
+            "violations": state.get("editorial_violations", []),
+            "generation_snapshot": generation,
+        }
     }
 
-    # Append log snapshot
-    log = updated_state.get("generation_violation_log", {})
-    log[f"iteration_{iteration}"] = {
-        "timestamp": timestamp,
-        "violations": state.get("editorial_violations", []),
-        "generation_snapshot": generation,
-    }
-    updated_state["generation_violation_log"] = log
-
-    # Append agent trace
-    updated_state["agent_trace"] = (updated_state.get("agent_trace") or []) + [f"editorial_agent @ {timestamp}"]
-
-    # Append system messages
-    updated_state["messages"] += [
+    # Prepare system messages
+    new_messages = [
         ("system", f"[editorial_agent] Iteration {iteration} completed at {timestamp}."),
         ("system", f"[editorial_agent] Violated rules: {state.get('editorial_violations', [])}")
     ]
@@ -73,9 +67,17 @@ def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
     # Log last 3 iterations for inspection
     logger.info("Application generation completed, Iteration: %s", iteration)
 
+    # Get current log for inspection (read-only)
+    current_log = state.get("generation_violation_log", {})
     for i in range(iteration, max(iteration - 3, -1), -1):
         key = f"iteration_{i}"
-        if key in log:
-            logger.info("Snapshot %s: %s", key, log[key])
+        if key in current_log:
+            logger.info("Snapshot %s: %s", key, current_log[key])
 
-    return updated_state
+    # Return only new values (LangGraph auto-merges)
+    return {
+        "generation": result,
+        "generation_violation_log": new_log_entry,
+        "agent_trace": [new_trace],
+        "messages": new_messages,
+    }

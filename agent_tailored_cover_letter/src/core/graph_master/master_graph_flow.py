@@ -38,12 +38,13 @@ logger = logging.getLogger(__name__)
 
 # Node imports
 from src.core.company_analysis.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
-from src.core.company_analysis.graph_nodes.node_get_skills import get_skills
+from src.core.company_analysis.graph_nodes.node_get_data import node_get_data  # Unified data fetch (replaces get_skills + semantic_similarity)
 from src.core.cover_letter.graph_nodes.node_generate_cover_letter import generate_cover_letter
-from src.core.cover_letter.graph_nodes.node_semantic_similarity import retrieve_best_matching_template
+from src.core.editorial.graph_nodes.node_audit_cover_letter import node_audit_cover_letter  # Editorial validation
+from src.core.editorial.graph_nodes.node_reflection_cover_letter import node_reflection_cover_letter  # Surgical revision
 from src.core.editorial.graph_nodes.node_user_in_the_loop import user_in_the_loop
-from src.core.editorial.graph_nodes.node_validate_and_correct_editorial import validate_and_correct_editorial
 from src.core.editorial.graph_nodes.node_decide_editorial_correction import decide_editorial_next_step
+from src.core.output.graph_nodes.node_create_cover_letter_pdf import node_create_cover_letter_pdf  # PDF export
 
 job_description = """
 Can you deliver IT projects across a large Nordic Team?
@@ -84,53 +85,44 @@ Be part of a fast-growing, innovative company where your contributions will supp
 Direct reporting to Head of IT Operations – A career opportunity not to be missed
 This pivotal position offers a unique opportunity to report directly to our Head of IT Operations, Niels Nielsen. As we do not have a CIO, the overall responsibility for IT is shared between the Head of IT Operations and Head of Business Applications. Based in either Tilst (Aarhus) or Järfälla (Stockholm), this role includes occasional travel, providing a blend of stability and variety."""
 
-class testState(TypedDict):
-    messages: Annotated[List[AnyMessage], add_messages]
-    job_description: str
-    skills: list[str]
-    analysis_output: Optional[Dict[str, Any]]
-    matching_skills: Optional[Dict[str, bool]]
-    cover_letter_output: Optional[Dict[str, Any]]
-    generation: str
-    words_to_avoid: List[str]
-    sentences_to_avoid: List[str]
-    best_match_template_cover_letter: Optional[str]
-    cv: str
-    agent_trace: Optional[List[str]]
-    editorial_violations: Optional[List[str]]
-    generation_violation_log: Optional[Dict[str, Any]]
-    iterations: int
+from src.core.graph_master.initialize_graph import CoverLetterGraphState
 
 
 def build_master_graph(job_offer: str) -> None:
-    graph_builder = StateGraph(testState)
+    graph_builder = StateGraph(CoverLetterGraphState)
 
     # Register all graph nodes
-    graph_builder.add_node("get_skills", get_skills)
-    graph_builder.add_node("semantic_similarity", retrieve_best_matching_template)
+    graph_builder.add_node("get_data", node_get_data)  # Unified data fetch (skills + corrections + semantic search + CV)
     graph_builder.add_node("analyse_vacancy", generate_vacancy_analysis)
-    graph_builder.add_node("generate_cover_letter", generate_cover_letter)
-    graph_builder.add_node("validate_and_correct_editorial", validate_and_correct_editorial)
+    graph_builder.add_node("generate_cover_letter", generate_cover_letter)  # Initial generation only
+    graph_builder.add_node("audit_cover_letter", node_audit_cover_letter)  # Editorial validation
+    graph_builder.add_node("reflection_cover_letter", node_reflection_cover_letter)  # Surgical revision
     graph_builder.add_node("user_in_the_loop", user_in_the_loop)
+    graph_builder.add_node("create_pdf", node_create_cover_letter_pdf)  # PDF export
 
     # Define graph flow
-    graph_builder.set_entry_point("get_skills")
-    graph_builder.add_edge("get_skills", "semantic_similarity")
-    graph_builder.add_edge("semantic_similarity", "analyse_vacancy")
+    graph_builder.set_entry_point("get_data")
+    graph_builder.add_edge("get_data", "analyse_vacancy")
     graph_builder.add_edge("analyse_vacancy", "generate_cover_letter")
-    graph_builder.add_edge("generate_cover_letter", "validate_and_correct_editorial")
+    graph_builder.add_edge("generate_cover_letter", "audit_cover_letter")
 
-    # Conditional loop after editorial
+    # Conditional loop: audit → decide → (surgical revision OR proceed to human)
     graph_builder.add_conditional_edges(
-        "validate_and_correct_editorial",
+        "audit_cover_letter",
         decide_editorial_next_step,
         path_map={
-            "validate_and_correct_editorial": "validate_and_correct_editorial",
-            "user_in_the_loop": "user_in_the_loop",
+            "reflection_cover_letter": "reflection_cover_letter",  # Surgical revision
+            "user_in_the_loop": "user_in_the_loop",  # Exit loop
         }
     )
 
-    graph_builder.set_finish_point("user_in_the_loop")
+    # After reflection, audit again
+    graph_builder.add_edge("reflection_cover_letter", "audit_cover_letter")
+
+    # After user approval, generate PDF
+    graph_builder.add_edge("user_in_the_loop", "create_pdf")
+
+    graph_builder.set_finish_point("create_pdf")
 
     # Runtime config
     unique_id = str(uuid.uuid4())
@@ -142,25 +134,38 @@ def build_master_graph(job_offer: str) -> None:
     memory = MemorySaver()
     graph = graph_builder.compile(checkpointer=memory)
  
-    # Initial state
-    
-    initial_state : testState = testState(
-        messages=["job_posting", job_offer],
-        job_description="We are looking for a junior data scientist with strong skills in Python, machine learning, and data visualization.",
-        skills=["Python", "Machine Learning", "Data Visualization"],
-        analysis_output=None,
-        matching_skills=None,
-        cover_letter_output=None,
-        generation="",
-        words_to_avoid=None,
-        sentences_to_avoid=None,
-        best_match_template_cover_letter=None,
-        cv="Graduated in Data Science. 3 relevant projects completed in Python and scikit-learn.",
-        agent_trace=[],
-        editorial_violations=[],
-        generation_violation_log={},
-        iterations=0
-    )
+    # Initial state (using new CoverLetterGraphState with annotated accumulation)
+    initial_state: CoverLetterGraphState = {
+        "messages": [],
+        "job_description": job_offer,
+        "unique_user_input": "",  # User-specific notes for generation
+        "skills": [],  # Populated by get_skills node
+        "cv": "Graduated in Data Science. 3 relevant projects completed in Python and scikit-learn.",
+
+        # Analysis outputs (populated by analyse_vacancy node)
+        "analysis_output": None,
+        "matching_skills": None,
+        "language_detected": "",
+
+        # Cover letter generation (populated by generate_cover_letter node)
+        "cover_letter_output": None,
+        "generation": "",
+
+        # Semantic search & constraints
+        "best_match_template_cover_letter": None,
+        "words_to_avoid": [],
+        "sentences_to_avoid": [],
+
+        # Auto-accumulating fields (Annotated pattern handles merging)
+        "agent_trace": [],
+        "cover_letter_revision_history": [],
+        "editorial_violations": [],
+        "generation_violation_log": {},
+
+        # Iteration control
+        "iterations": 0,
+        "max_iterations": 3,
+    }
 
     # Execute and observe graph outputs
     logger.info("------ STARTING COVER LETTER FLOW ------")

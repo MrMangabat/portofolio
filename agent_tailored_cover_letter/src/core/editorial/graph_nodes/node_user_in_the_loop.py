@@ -15,12 +15,20 @@ def user_in_the_loop(state: CoverLetterGraphState) -> StateGraph:
         state (CoverLetterGraphState): The full graph state.
 
     Returns:
-        CoverLetterGraphState: State passed through without modification.
+        CoverLetterGraphState: Partial state with new trace and message.
     """
     timestamp: str = datetime.now().strftime("%d/%m/%Y %H:%M:%S")
 
-    state["agent_trace"] = (state.get("agent_trace") or []) + [f"human_in_the_loop @ {timestamp}"]
-    state["messages"] += [("system", f"[human_in_the_loop] Review passed at {timestamp}.")]
+    # Prepare new trace entry (auto-accumulated via Annotated[List[str], add])
+    new_trace = f"human_in_the_loop @ {timestamp}"
 
-    logger.info("HUMAN REVIEW PLACEHOLDER PASSED, Agent trace: %s, Messages: %s", state.get('agent_trace'), state.get('messages'))
-    return state
+    # Prepare new message
+    new_message = ("system", f"[human_in_the_loop] Review passed at {timestamp}.")
+
+    logger.info("HUMAN REVIEW PLACEHOLDER PASSED, Adding trace: %s", new_trace)
+
+    # Return only new values (LangGraph auto-merges)
+    return {
+        "agent_trace": [new_trace],
+        "messages": [new_message],
+    }

@@ -38,25 +38,22 @@ def generate_vacancy_analysis(state: CoverLetterGraphState) -> StateGraph:
 
     ]
 
-    # Step 3: Append to agent_trace
-    trace = state.get("agent_trace", [])
+    # Step 3: Prepare new trace entry (auto-accumulated via Annotated[List[str], add])
     timestamp = datetime.now().strftime("%d/%m/%Y %H:%M")
-    trace.append(f"NODE: company_analysis @ {timestamp}")
+    new_trace = f"NODE: company_analysis @ {timestamp}"
 
     # Step 4: Print state tree
     logger.info("Iteration: %s", state['iterations'])
     logger.info("Job Title: %s", analysis_output.job_title)
     logger.info("Skills Match: %s", analysis_output.matching_skills)
-    logger.info("Agent Trace: %s", trace)
+    logger.info("Adding trace: %s", new_trace)
     logger.info("Analysis Summary: %s", analysis_output.analysis_output)
     logger.info("Finished job vacancy analysis node")
 
-
-
+    # Return only new values (LangGraph auto-merges)
     return {
-        **state,
         "analysis_output": analysis_output,
         "matching_skills": analysis_output.matching_skills,
         "messages": updated_messages,
-        "agent_trace": trace,
+        "agent_trace": [new_trace],
     }
