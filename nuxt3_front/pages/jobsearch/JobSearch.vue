@@ -1,4 +1,5 @@
 <script setup>
+import { ref } from 'vue'
 import { useItemForm } from '~/composables/useItemForm'
 import { useItemList } from '~/composables/useItemList'
 import { useJobSearchApi } from '~/composables/useJobSearchApi'
@@ -12,6 +13,34 @@ const api = useJobSearchApi()
 const skillStore = useSkillset()
 const wordsStore = useRemoveWordsList()
 const sentencesStore = useRemoveSentencesList()
+
+// Cover letter generation state
+const jobDescription = ref('')
+const userInput = ref('')
+const generatedCoverLetter = ref(null)
+const isGenerating = ref(false)
+const generationError = ref(null)
+
+// Generate cover letter function
+const generateCoverLetter = async () => {
+  if (!jobDescription.value.trim()) {
+    generationError.value = 'Please enter a job description'
+    return
+  }
+
+  isGenerating.value = true
+  generationError.value = null
+
+  try {
+    const result = await api.generateCoverLetter(jobDescription.value, userInput.value)
+    generatedCoverLetter.value = result
+  } catch (error) {
+    generationError.value = error.message || 'Failed to generate cover letter'
+    console.error('Cover letter generation error:', error)
+  } finally {
+    isGenerating.value = false
+  }
+}
 
 // Skills form and list
 const skillForm = useItemForm({
@@ -264,15 +293,113 @@ const sentencesList = useItemList({
             </v-row>
         </v-container>
 
-        <v-container class ="cover-letter-layout">
+        <v-container class="cover-letter-layout mb-4">
+            <!-- INPUT SECTION -->
             <v-row>
-                <v-col>
-                    <v-card-title>Generated Cover Letter</v-card-title>
-                    <v-card-text>
-                        <p>Generated cover letter based on the input text and the job listings selected.</p>
-                        <p>Click on the "Generate Cover Letter" button to generate a cover letter.</p>
-                        <p>Click on the "Download Cover Letter" button to download the generated cover letter.</p>
-                    </v-card-text>
+                <v-col cols="12">
+                    <v-card>
+                        <v-card-title>Generate Cover Letter</v-card-title>
+                        <v-card-text>
+                            <p class="mb-4">Paste the job description below and optionally add personal notes. The agent will generate a tailored cover letter using your skills, templates, and preferences.</p>
+
+                            <v-textarea
+                                v-model="jobDescription"
+                                label="Job Description *"
+                                placeholder="Paste the full job description here..."
+                                rows="8"
+                                variant="outlined"
+                                class="mb-4"
+                            />
+
+                            <v-textarea
+                                v-model="userInput"
+                                label="Personal Notes (Optional)"
+                                placeholder="Add any personal notes or specific points you want to highlight..."
+                                rows="3"
+                                variant="outlined"
+                                class="mb-4"
+                            />
+
+                            <v-alert v-if="generationError" type="error" class="mb-4">
+                                {{ generationError }}
+                            </v-alert>
+
+                            <v-btn
+                                color="primary"
+                                size="large"
+                                :loading="isGenerating"
+                                :disabled="!jobDescription.trim()"
+                                @click="generateCoverLetter"
+                            >
+                                <v-icon left>mdi-robot</v-icon>
+                                Generate Cover Letter
+                            </v-btn>
+                        </v-card-text>
+                    </v-card>
+                </v-col>
+            </v-row>
+
+            <!-- OUTPUT SECTION -->
+            <v-row v-if="generatedCoverLetter" class="mt-4">
+                <v-col cols="12">
+                    <v-card>
+                    <span>test</span>
+                        <v-card-title class="d-flex justify-space-between align-center">
+                            <span>Generated Cover Letter</span>
+                            <v-chip color="success">
+                                {{ generatedCoverLetter.iterations }} iterations | {{ generatedCoverLetter.violations }} violations
+                            </v-chip>
+                        </v-card-title>
+                        <v-card-text>
+                            <div class="cover-letter-content">
+                                <div class="mb-4">
+                                    <strong>{{ generatedCoverLetter.company_name }}</strong><br>
+                                    <strong>{{ generatedCoverLetter.job_title }}</strong>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h4 class="text-subtitle-1 font-weight-bold mb-2">Introduction</h4>
+                                    <p class="text-body-1">{{ generatedCoverLetter.introduction }}</p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h4 class="text-subtitle-1 font-weight-bold mb-2">Motivation</h4>
+                                    <p class="text-body-1">{{ generatedCoverLetter.motivation }}</p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h4 class="text-subtitle-1 font-weight-bold mb-2">Unique Selling Points</h4>
+                                    <p class="text-body-1">{{ generatedCoverLetter.unique_selling_points }}</p>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h4 class="text-subtitle-1 font-weight-bold mb-2">Key Highlights</h4>
+                                    <p class="text-body-1 ml-4">• {{ generatedCoverLetter.bulletpoint_1 }}</p>
+                                    <p class="text-body-1 ml-4">• {{ generatedCoverLetter.bulletpoint_2 }}</p>
+                                    <p class="text-body-1 ml-4">• {{ generatedCoverLetter.bulletpoint_3 }}</p>
+                                    <p class="text-body-1 ml-4">• {{ generatedCoverLetter.bulletpoint_4 }}</p>
+                                </div>
+
+                                <div>
+                                    <h4 class="text-subtitle-1 font-weight-bold mb-2">Thank You</h4>
+                                    <p class="text-body-1">{{ generatedCoverLetter.thank_you }}</p>
+                                </div>
+                            </div>
+
+                            <v-divider class="my-4" />
+
+                            <div class="text-center">
+                                <v-btn color="secondary" variant="outlined" class="mr-2">
+                                    <v-icon left>mdi-download</v-icon>
+                                    Download PDF
+                                </v-btn>
+                                <v-btn color="primary" variant="outlined">
+                                    <v-icon left>mdi-content-copy</v-icon>
+                                    Copy to Clipboard
+                                </v-btn>
+                            </div>
+                        </v-card-text>
+                    </v-card>
                 </v-col>
             </v-row>
         </v-container>
@@ -306,6 +433,16 @@ const sentencesList = useItemList({
      padding: 16px; /* Optional: Padding inside the container */
 }
 
+.cover-letter-content {
+    line-height: 1.8;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.cover-letter-content p {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
 
   </style>
   

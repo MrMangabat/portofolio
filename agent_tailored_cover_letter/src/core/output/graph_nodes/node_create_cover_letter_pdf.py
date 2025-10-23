@@ -117,27 +117,6 @@ def node_create_cover_letter_pdf(state: CoverLetterGraphState) -> Dict[str, Any]
     elements += add_section("Motivation", cover_letter.motivation)
     elements += add_section("Unique Selling Points", cover_letter.unique_selling_points)
 
-    # 6️⃣ Build bullet list from bulletpoint_1-4
-    bullet_items = []
-    for i in range(1, 5):
-        content = getattr(cover_letter, f"bulletpoint_{i}", None)
-        if content and content.strip():  # Only add non-empty bullets
-            bullet_items.append(Paragraph(content, normal))
-
-    if bullet_items:
-        elements.append(Paragraph("Key Highlights:", bold))
-        elements.append(Spacer(1, 4))
-        elements.append(
-            ListFlowable(
-                [ListItem(paragraph, leftIndent=10) for paragraph in bullet_items],
-                bulletType='bullet',
-                bulletFontName='Helvetica',
-                bulletFontSize=10,
-                leftIndent=20
-            )
-        )
-        elements.append(Spacer(1, 8))
-
     # Add thank you section
     elements += add_section("Thank You", cover_letter.thank_you)
 

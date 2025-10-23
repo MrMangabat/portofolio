@@ -119,6 +119,18 @@ export const useJobSearchApi = () => {
         baseURL: API_BASE_URL,
         body: formData
       })
+    },
+
+    // ===== AGENT - COVER LETTER GENERATION =====
+    async generateCoverLetter(jobDescription, userInput = '') {
+      return await $fetch('/agent/generate', {
+        method: 'POST',
+        baseURL: API_BASE_URL,
+        body: {
+          job_description: jobDescription,
+          unique_user_input: userInput
+        }
+      })
     }
   }
 }

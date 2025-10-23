@@ -7,9 +7,9 @@
 import sys
 import os
 
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../..")))
+# Add agent_tailored_cover_letter directory to path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "../../..")))
 
-from src.core.company_analysis.graph_nodes.node_generate_vacancy_analysis import generate_vacancy_analysis
 ##############################################
 
 
@@ -47,44 +47,79 @@ from src.core.editorial.graph_nodes.node_decide_editorial_correction import deci
 from src.core.output.graph_nodes.node_create_cover_letter_pdf import node_create_cover_letter_pdf  # PDF export
 
 job_description = """
-Can you deliver IT projects across a large Nordic Team?
-Are you driven by a passion for IT projects and a desire to manage important projects? If you're nodding yes, then you're the talent we're looking for to join our dynamic team!
-Your role
-Step into the role of an IT Project Manager and become the driver of our organization's changes. You will supplement our current Project Manager and your main area will be projects within IT Operations, where we have a significant amount of projects ongoing – our current priority is to integrate Finland/Estonia into the existing Nordic infrastructure. The scope is however broader – we handle infrastructure, security, HR & Customer Service related IT-projects as well as the IT-part of construction projects for new stores/new offices – as we keep expanding.
-You'll collaborate closely with many stakeholders across the IT team and across the entire Nordic organization.
 
-Your responsibilities:
-Scope, plan, drive and deliver IT projects
-Ensure transparency on progress, risks & cost
-Creatively solve problems when they arise
-Conduct project and steerco meetings, as relevant
-Communication, change management and stakeholder management
-Contribute to improving the project model & structures
-Your new playground:
-Join our Nordic IT team, which spans across Denmark, Iceland, Norway, Sweden, and is on the cusp of welcoming Finland and Estonia. With 55 stores, 5 service centers, 5500 users, and a rich tapestry of technologies like Azure, SAP S/4 Hana, Adobe Commerce (Magento), Viking POS, SD-WAN+MPLS network, 2500+ PCs, over 200 servers, and partnerships with external vendors, your work will be both challenging and rewarding.
+Job Description
 
-At BAUHAUS, Nordic IT is a virtual, multicultural team of approx. 90 people that values diversity and foster a flat hierarchy, empowering you to turn your ideas into reality swiftly.
+Are you a student who dreams of a career in Management Consulting? Are you motivated by understanding complex business challenges and passionate about using technology to solve them? Do you want to work in the exciting cross-section between management consulting, AI & technology? If so, you might be our new Junior Consultant (Student Worker) we are looking for. 
 
-Advance your IT career with our nordic team
-What we expect from you:
+About Us:
 
-A minimum of five years of experience in IT project management, with a preference for backgrounds in retail or e-commerce environments
-A bachelor's degree in computer science, information systems, or a related field is ideal, but we value your hands-on experience even more
-A proven track record of managing projects with tangible outcomes
-Excellent communication and collaboration skills, capable of articulating concerns and solutions to a diverse audience, from technical teams to senior management
-A team player with a knack for building cross-functional relationships
-Certifications like PRINCE2 will be considered an asset
-Proficiency in English, with either Danish or Swedish language skills being a significant plus
-What’s in it for you?
-Join a dynamic team of experts in Denmark (Tilst) and Sweden (Stockholm), where cross-team collaboration is the key to our success
-Engage in thrilling challenges within a rapidly growing business, with a focus on new technologies
-Look forward to a competitive salary and benefits package
-Enjoy a flexible and supportive work environment, with options for partial remote work or from one of our offices
-Continuous opportunities for professional development and career advancement
-Be part of a fast-growing, innovative company where your contributions will support our mission to make home improvement accessible and affordable for all
-Direct reporting to Head of IT Operations – A career opportunity not to be missed
-This pivotal position offers a unique opportunity to report directly to our Head of IT Operations, Niels Nielsen. As we do not have a CIO, the overall responsibility for IT is shared between the Head of IT Operations and Head of Business Applications. Based in either Tilst (Aarhus) or Järfälla (Stockholm), this role includes occasional travel, providing a blend of stability and variety."""
+Devoteam is a leading international consultancy firm from Europe, specialized in technology-driven business transformation & AI, helping companies not just adapt, but lead.
 
+For over 30 years, we've been helping clients around the world. Today, we have more than 11,000 employees across 25 countries. In Denmark alone, our team of 350 people supports a wide range of industries.
+
+You'll join our Strategy team within Digital Impulse, our Management Consulting business unit. We are a team of Consultants passionate about helping clients navigate the digital landscape, from shaping their business strategy to designing innovative solutions. You will primarily be collaborating with other Consultants on the team during client projects, internal projects, and take part in our community of like-minded students working on various tasks.
+
+This role is expected to be about 15 hours per week, and we will take exam periods into consideration.
+
+If you want to learn more about life in Devoteam, meet Ida and learn about her story from Student Worker to Senior Consultant in Devoteam here.
+
+What You’ll Do:
+
+Client exposure - Work alongside experienced consultants on different client projects. This could include tasks like doing research, supporting data analysis, helping with deliverables, or preparing slides for client presentations. 
+Business development - Contribute to project proposals and value propositions. You’ll have the chance to support the team in creating presentations and materials for new business opportunities. 
+Workshop co-facilitation - Help prepare materials for client workshops. You may also get the chance to join and co-facilitate workshops, meet key stakeholders, and take part in discussions. 
+Prototyping - Support the creation of low- and high fidelity prototypes. If you bring the right skills and motivation, you might even take the lead on certain parts of the development. 
+Student community building - Be part of a community of fellow students, working together on different tasks within the business unit and sharing knowledge and experiences. 
+
+
+What We Are Looking For:
+
+Academic background - You are either in your last year of Bachelor's degree or your first year of Master's degree. Your studies are focused on a relevant area like Business Administration, Technology Management, Digital Management, or AI
+Analytical skills - You can make sense of large amounts of information and turn it into clear insights or recommendations. 
+Comfort with digital tools - You know your way around Microsoft Office and Google Suite, and you’re quick to pick up new tools and AI applications (such as ChatGPT, Gemini, or NotebookLM). 
+Nice-to-have experience - it is a plus if you have previous experience with case competitions, problem-solving, or Agile & Design Thinking methodologies
+
+
+To Succeed in This Role You have: 
+
+Problem-solver mindset - You are excited by a challenge and are driven by the value you can create for clients by solving complex problems
+Collaborative spirit - You thrive in a collaborative, team-oriented environment and are eager to take ownership of tasks
+Proactive and curious - You have a strong interest in staying on top of the latest trends in AI, digital strategy, and business transformation
+Effective communication - You can communicate clearly and effectively with colleagues and stakeholders, both in writing and verbally
+
+
+What You Will Get:
+
+This role is the perfect stepping stone to a consulting career.
+
+Insights and experience from working on real client projects
+Practical exposure to the Strategy & Digital Transformation field
+Guidance and mentoring to support your development
+Competitive salary to industry standard
+A modern office in central Copenhagen (with flexibility to work from home)
+A strong student community with support in daily tasks and fun social activities
+The chance to explore new technologies and learn how to apply them in real-life solutions
+Access to our canteen for lunch plus free snacks, coffee, and drinks throughout the day
+
+
+Your CV and two reflection questions – No long cover letters!
+
+To get to know you better, we have chosen to replace standard motivation letter with two short, reflective questions that you must answer in your application:
+
+Question 1. Can you give an example of a situation where you stepped out of your comfort zone? What did you learn from it and what surprised you the most about the experience?
+Question 2. Describe a time you were given a problem that felt unstructured or outside of your expertise. What did you do first, and what learnings would you bring into your future work?
+
+
+Don’t worry if you don't meet every single requirement. We believe that skills can be taught, but passion and potential can't.
+
+Our application process is designed to get to know both your personal and professional competencies. It includes relevant interviews with key stakeholders, providing you with an excellent opportunity to learn more about our team and culture.
+
+There will typically be 2 interview rounds, which include a light 15-min 'on the spot' case or a 'take at home' case simulating a real-life client situation - allowing you to demonstrate your approach to problem-solving and toolbox.
+
+If this sounds like your kind of place, let’s talk. Send us something - your CV, your best idea, some code, game illustration or even just a note on why this excites you. We don’t care about cover letter formalities - just show us how you think.
+
+"""
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 
 
@@ -164,7 +199,7 @@ def build_master_graph(job_offer: str) -> None:
 
         # Iteration control
         "iterations": 0,
-        "max_iterations": 3,
+        "max_iterations": 0,
     }
 
     # Execute and observe graph outputs

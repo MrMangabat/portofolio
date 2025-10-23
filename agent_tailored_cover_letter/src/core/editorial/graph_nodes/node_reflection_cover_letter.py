@@ -79,17 +79,14 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
     - Review the violations listed below
     - Update ONLY the sections that were flagged
     - Preserve all other sections EXACTLY as they appear in the original
-    - Ensure revised sections follow all 12 rules + 8 language rules
+    - Ensure revised sections do NOT contain any banned words or sentences
 
     Original cover letter:
     Company: {company_name}
     Job Title: {job_title}
     Introduction: {introduction}
     Motivation: {motivation}
-    Bullet Point 1: {bulletpoint_1}
-    Bullet Point 2: {bulletpoint_2}
-    Bullet Point 3: {bulletpoint_3}
-    Bullet Point 4: {bulletpoint_4}
+    Unique Selling Points: {unique_selling_points}
     Thank You: {thank_you}
 
     Detected violations (flagged sections ONLY):
@@ -100,7 +97,6 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
     User constraints:
     - Banned words: {not_wanted_words}
     - Banned sentences: {not_wanted_sentences}
-    - Language: {language_detected}
 
     Job description (for context):
     {job_description}
@@ -114,12 +110,11 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
     Analysis output (for context):
     {analysis_output}
 
-    IMPORTANT RULES:
+    IMPORTANT:
     - For sections NOT in the violated list, return the EXACT original text
     - For violated sections, apply the editorial feedback and rewrite
     - Maintain the same tone and style as the original
-    - Do NOT add new information not present in CV/skills
-    - Follow all language rules (no boilerplate, clichés, self-assessment, etc.)
+    - Do NOT use any banned words or sentences
 
     {format_instructions}
     """
@@ -131,9 +126,9 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
                 template=SYSTEM_TEMPLATE,
                 input_variables=[
                     "company_name", "job_title", "introduction", "motivation",
-                    "bulletpoint_1", "bulletpoint_2", "bulletpoint_3", "bulletpoint_4",
+                    "unique_selling_points",
                     "thank_you", "editorial_violations_log", "violated_sections",
-                    "not_wanted_words", "not_wanted_sentences", "language_detected",
+                    "not_wanted_words", "not_wanted_sentences",
                     "job_description", "cv", "my_skills", "analysis_output"
                 ],
                 partial_variables={"format_instructions": format_instructions}
@@ -147,16 +142,12 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
         "job_title": current_cover_letter.get("job_title", ""),
         "introduction": current_cover_letter.get("introduction", ""),
         "motivation": current_cover_letter.get("motivation", ""),
-        "bulletpoint_1": current_cover_letter.get("bulletpoint_1", ""),
-        "bulletpoint_2": current_cover_letter.get("bulletpoint_2", ""),
-        "bulletpoint_3": current_cover_letter.get("bulletpoint_3", ""),
-        "bulletpoint_4": current_cover_letter.get("bulletpoint_4", ""),
+        "unique_selling_points": current_cover_letter.get("unique_selling_points", ""),
         "thank_you": current_cover_letter.get("thank_you", ""),
         "editorial_violations_log": violation_log.get(latest_iteration_key, {}),
         "violated_sections": ", ".join(violated_sections),
         "not_wanted_words": state.get("words_to_avoid", []),
         "not_wanted_sentences": state.get("sentences_to_avoid", []),
-        "language_detected": state.get("language_detected", ""),
         "job_description": state.get("job_description", ""),
         "cv": state.get("cv", ""),
         "my_skills": state.get("skills", []),
@@ -170,7 +161,7 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
 
     # 7️⃣ Run LCEL chain
     logger.info("Invoking LLM for surgical revision...")
-    llm = LLMClient().get_model("gpt")
+    llm = LLMClient().get_model("ollama")
     chain = reflection_prompt | llm | parser
     result: CoverLetterResult = chain.invoke(prompt_inputs)
 
@@ -184,10 +175,7 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
         f"Job Title: {result.job_title}\n"
         f"Intro: {result.introduction}\n"
         f"Motivation: {result.motivation}\n"
-        f"Bullet 1: {result.bulletpoint_1}\n"
-        f"Bullet 2: {result.bulletpoint_2}\n"
-        f"Bullet 3: {result.bulletpoint_3}\n"
-        f"Bullet 4: {result.bulletpoint_4}\n"
+        f"USP: {result.unique_selling_points}\n"
         f"Thank you: {result.thank_you}"
     )
     updated_message = AIMessage(content=f"[ReflectionRevision]:\n{out}")
@@ -200,7 +188,7 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
     new_revision_entry = {
         "iteration": iteration,
         "timestamp": timestamp,
-        "cover_letter": result.dict(),
+        "cover_letter": result.model_dump(),
         "revision_type": "surgical",
         "sections_revised": list(violated_sections),
     }
@@ -225,4 +213,5 @@ def node_reflection_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]
         "agent_trace": [new_trace],
         "cover_letter_revision_history": [new_revision_entry],
         "editorial_violations": [],  # Clear for next audit
+        "iterations": iteration + 1,  # Increment iteration after each reflection/correction cycle
     }

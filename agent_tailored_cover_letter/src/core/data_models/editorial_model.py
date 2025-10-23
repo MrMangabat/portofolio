@@ -7,30 +7,33 @@ from pydantic import BaseModel, Field
 class RuleViolation(BaseModel):
     """
     Represents a single rule violation detected during editorial validation.
+
+    Simplified to only track banned words and sentences.
     """
-    rule_id: Literal[
-        "Rule 1", "Rule 2", "Rule 3", "Rule 4", "Rule 5",
-        "Rule 6", "Rule 7", "Rule 8", "Rule 9", "Rule 10", "Rule 11", "Rule 12",
-        "Language Rule 1", "Language Rule 2", "Language Rule 3",
-        "Language Rule 4", "Language Rule 5", "Language Rule 6",
-        "Language Rule 7", "Language Rule 8"
-    ]
+    rule_id: Literal["banned_word", "banned_sentence"] = Field(
+        description="Type of violation: banned_word or banned_sentence"
+    )
     section: Literal[
         "company_name", "job_title", "introduction", "motivation",
-        "bulletpoint_1", "bulletpoint_2", "bulletpoint_3", "bulletpoint_4",
+        "unique_selling_points",
         "thank_you"
-    ]
-    error_type: Literal[
-        "overlap", "grammar", "tone", "invalid_phrase", "hallucination",
-        "language", "invalid_word"
-    ]
-    offending_text: str = Field(description="Exact literal span from the draft that caused the violation.")
-    explanation: str = Field(description="Concise natural-language reason (≤ 50 words).")
+    ] = Field(
+        description="Section of the cover letter where the violation occurred"
+    )
+    offending_text: str = Field(
+        description="Exact literal span from the draft that caused the violation."
+    )
+    explanation: str = Field(
+        description="Concise natural-language reason (≤ 50 words)."
+    )
 
 
 class EditorialResult(BaseModel):
     """
     Editorial validation result returned by the audit node.
-    Contains violations detected + optionally corrected sections (if using reflection mode).
+
+    Simplified to only contain violations for banned words and sentences.
     """
-    violated_rules: List[RuleViolation] = Field(description="All rule violations detected in this generation.")
+    violated_rules: List[RuleViolation] = Field(
+        description="All banned word/sentence violations detected in this generation."
+    )

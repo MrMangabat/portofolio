@@ -45,7 +45,7 @@ class AgentServiceClassEditorial:
         """
         prompt_chain = (
             self.prompt_builder.build_prompt()
-            | self.llm_client.get_model("gpt")
+            | self.llm_client.get_model("ollama")
             | self.response_parser.parser
         )
 

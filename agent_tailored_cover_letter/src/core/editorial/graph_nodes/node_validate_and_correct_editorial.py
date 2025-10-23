@@ -80,4 +80,5 @@ def validate_and_correct_editorial(state: CoverLetterGraphState) -> StateGraph:
         "generation_violation_log": new_log_entry,
         "agent_trace": [new_trace],
         "messages": new_messages,
+        "iterations": iteration + 1,  # Increment iteration counter after editorial pass
     }

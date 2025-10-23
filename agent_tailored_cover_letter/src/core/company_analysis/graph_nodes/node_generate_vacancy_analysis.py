@@ -1,5 +1,6 @@
 # backend/aiml_models/agent_teams/agent_tailored_cover_letter/src/core/company_analysis/graph_nodes/node_generate_vacancy_analysis.py
 
+import json
 from datetime import datetime
 from src.core.graph_master.initialize_graph import CoverLetterGraphState
 from langgraph.graph import StateGraph
@@ -32,17 +33,13 @@ def generate_vacancy_analysis(state: CoverLetterGraphState) -> StateGraph:
         llm_client=LLMClient()
     )
     result = agent.analyze_job_vacancy(state)
-    analysis_output : JobAnalysisResultParser = result['analysis_output']
-    # Step 2: Construct message log update
-    updated_messages = state["messages"] + [ result
+    analysis_output = result['analysis_output']
 
-    ]
-
-    # Step 3: Prepare new trace entry (auto-accumulated via Annotated[List[str], add])
+    # Step 2: Prepare new trace entry (auto-accumulated via Annotated[List[str], add])
     timestamp = datetime.now().strftime("%d/%m/%Y %H:%M")
     new_trace = f"NODE: company_analysis @ {timestamp}"
 
-    # Step 4: Print state tree
+    # Step 3: Print state tree
     logger.info("Iteration: %s", state['iterations'])
     logger.info("Job Title: %s", analysis_output.job_title)
     logger.info("Skills Match: %s", analysis_output.matching_skills)
@@ -50,10 +47,11 @@ def generate_vacancy_analysis(state: CoverLetterGraphState) -> StateGraph:
     logger.info("Analysis Summary: %s", analysis_output.analysis_output)
     logger.info("Finished job vacancy analysis node")
 
+    logger.info("Analysis output (formatted):\n%s", json.dumps(analysis_output.model_dump(), indent=2))
+
     # Return only new values (LangGraph auto-merges)
     return {
         "analysis_output": analysis_output,
         "matching_skills": analysis_output.matching_skills,
-        "messages": updated_messages,
         "agent_trace": [new_trace],
     }

@@ -1,11 +1,5 @@
 # aiml_models/agent_teams/agent_tailored_cover_letter/src/core/cover_letter/agent_service_class_cover_letter.py
 
-from typing import Dict
-from src.infrastructure.correction_client import CorrectionsClient
-from src.core.cover_letter.components.cover_letter_prompt_builder import CoverLetterPromptBuilder
-from src.core.cover_letter.components.cover_letter_parser import CoverLetterResultParser
-from src.infrastructure.llm_client import LLMClient
-
 from typing import Dict, Any
 from src.infrastructure.correction_client import CorrectionsClient
 from src.core.cover_letter.components.cover_letter_prompt_builder import CoverLetterPromptBuilder
@@ -48,11 +42,11 @@ class AgentServiceClassCoverLetter:
         not_wanted_words: list[str] = state["words_to_avoid"]
         not_wanted_sentences: list[str] = state["sentences_to_avoid"]
 
-        
+
         # Build the prompt chain
         prompt_chain = (
-            self.prompt_builder.build_prompt()
-            | self.llm_client.get_model("gpt")
+            self.prompt_builder.build_initial_prompt()
+            | self.llm_client.get_model("ollama")
             | self.response_parser.parser
         )
 
@@ -60,9 +54,9 @@ class AgentServiceClassCoverLetter:
         result = prompt_chain.invoke({
             "job_position": job_description,
             "my_skills": ", ".join(my_skills),
+            "skills_match": str(skills_match),
             "semilarity_jobtemplate": semilarity_jobtemplate,
-            "analysis_output": analysis_output,
-            "skills_match": skills_match,
+            "analysis_output": str(analysis_output),  # Convert to string for prompt
             "cv": cv,
             "personal_message": personal_message,
             "not_wanted_words": ", ".join(not_wanted_words),

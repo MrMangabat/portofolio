@@ -1,8 +1,8 @@
 # aiml_models/agent_teams/agent_tailored_cover_letter/src/core/editorial/graph_nodes/node_audit_cover_letter.py
 
 from datetime import datetime
-from typing import Dict, Any, List
-from langchain_core.messages import AIMessage, BaseMessage
+from typing import Dict, Any
+from langchain_core.messages import AIMessage
 from langchain_core.output_parsers import PydanticOutputParser
 from langchain.prompts import ChatPromptTemplate, SystemMessagePromptTemplate, PromptTemplate
 
@@ -25,7 +25,7 @@ def node_audit_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]:
     Capabilities:
         - Validates against 12 main rules + 8 language rules
         - Detects exact offending text spans for each violation
-        - Logs violations with structured metadata (rule_id, section, error_type)
+        - Logs violations with structured metadata (rule_id, section)
         - Tracks violations in editorial_violations for conditional routing
 
     Reasoning:
@@ -47,92 +47,32 @@ def node_audit_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]:
     # 2️⃣ Build prompt
     SYSTEM_TEMPLATE = """
         You are an editorial compliance specialist.
-        Your sole purpose is to verify or repair a draft cover-letter so that it obeys every rule and language constraint below.
-        You will be asked to extract the exact span of text that caused each violation. This will be used to improve future generations.
+        Your sole purpose is to verify that a draft cover letter does not contain any banned words or sentences.
+        You will be asked to extract the exact span of text that caused each violation.
 
-        Strict rules to follow:
-        Rule 1: Get heavy inspiration from the following template provided by the jobseeker.
-        Rule 2: The cover letter can only overlap a maximum of 30 percent with the jobseekers CV. This is to ensure that the cover letter is unique and not a copy of the CV and provide you with previous experiences of importance.
-        Rule 3: Grammatical correctness is a MUST.
-        Rule 4: English language is equal to EILTS C1 score
-        Rule 5: The template job application must be in English in the job description is in English.
-        Rule 6: Ensure all the information is relevant to the job description and the jobseeker's skills.
-        Rule 7: Tone = personal (as in Rule 1) **and** casual-business professional.
-        Rule 8: You are NOT allowed BY ANY MEANS to assume, infer, or generate any information about the jobseeker that is not present in:
-            – the provided CV
-            – their explicitly listed skills
-            – the personal message
-            If any claim appears that is unsupported by those, it must be flagged as a hallucination.
-
-        Rule 9: Adhere and listen carefully to the jobseekers personal message. This is important to ensure that the cover letter is unique and not a copy of the CV.
-        Rule 10: The jobseeker will provide a list of words, phrases or sentences that they do not want to be useed in the cover letter.
-        Rule 11: The generated applications must be in the detected language of the job description. If the job description is in Danish, the cover letter must be in Danish. If the job description is in English, the cover letter must be in English.
-        Rule 12: The output can NOT contain bullet points
-        All rules must be followed strictly and are of equal importance.
-
-        Language constraints:
-        Do not generate any phrasing that falls into these categories or resembles them in structure or meaning.
-        You may not reword, restate, or soften the expressions — they are forbidden in all forms.
-
-        Language Rule 1: Boilerplate expressions
-        Overly generic phrases frequently used in job applications.
-
-        Language Rule 2: Formulaic language
-        Templated sentence structures that appear across many applications, lacking originality or nuance.
-
-        Language Rule 3: Cliché phrases
-        Overused expressions that have lost clarity, credibility, or sincerity.
-
-        Language Rule 4: Self-assessing superlative claims
-        Statements where the speaker makes a strong evaluative claim about themselves without external support.
-
-        Language Rule 5: Empty or evaluative assertions
-        Subjective statements of enthusiasm, confidence, or value that lack concrete evidence or action.
-
-        Language Rule 6: Paraphrastic suitability claims
-        Avoid paraphrastic variants or semantic equivalents of any statement that implies the jobseeker is a fit, match, or ideal candidate for the role, especially when based on traits, experience, or conclusions not externally supported.
-
-        Language Rule 7: Banned terms (user-defined)
-        The following specific words or expressions must be treated as violations of Rules 1–6 and are forbidden in any form:
+        Banned terms (user-defined):
+        The following specific words or expressions are forbidden in any form:
         {not_wanted_words}
 
-        Language Rule 8: Banned sentences (user-defined)
+        Banned sentences (user-defined):
         The following full sentences — and any semantic paraphrases of them — are forbidden and must not appear in any generated output:
         {not_wanted_sentences}
 
-        Users CV:
-        {cv}
-
-        Detected language of the job description:
-        {language_detected}
-
-        Personal message from the jobseeker:
-        {personal_message}
-
-        The jobseeker's skills are:
-        {my_skills}
-
         YOUR TASKS AND OBJECTIVES:
         VALIDATION:
-        Check the draft cover-letter against every Rule 1-12 and Language Rule 1-8.
-        Reject or flag if lexical overlap with the CV exceeds 30 % → Rule 2 violation.
-        Detect any banned words or sentences (Rule 10, Language Rule 7 & 8).
-        Confirm the letter is written in the detected language **{language_detected}** (Rule 11).
-        Verify IELTS C1-level grammar (Rule 3) and a "personal yet casual-business" tone (Rule 7).
-        Ensure no invented facts about the jobseeker (Rule 8) and that all content is job-relevant (Rule 6).
-        Ensure **no bullet-point formatting** ("-", "•", numbered lists, etc.) is present (Rule 12).
+        - Detect any banned words or sentences in the cover letter.
+        - Check for semantic paraphrases of banned sentences (not just exact matches).
 
         VIOLATION LOGGING:
         For **every** breach create a `RuleViolation` object with:
-        rule_id        – "Rule 3", "Language Rule 4", …
-        section        – company_name | job_title | introduction | motivation | bulletpoint_1 | bulletpoint_2 | bulletpoint_3 | bulletpoint_4 | thank_you
-        error_type – choose from:
-        overlap | grammar | tone | invalid_phrase | hallucination | language | invalid_word
+        rule_id        – "banned_word" or "banned_sentence"
+        section        – company_name | job_title | introduction | motivation | unique_selling_points | thank_you
+
         offending_text – must be the **exact literal span** from the draft that caused the violation.
         - Include only the minimal clause, phrase, or sentence that violates the rule.
         - This will be used for debugging and regeneration — **precision is critical**.
         - Example: if the sentence is "I have expertise in Kubernetes and cloud infrastructure"
-            and `expertise` is banned due to Rule 10, then offending_text = "I have expertise in Kubernetes and cloud infrastructure".
+            and `expertise` is banned, then offending_text = "I have expertise in Kubernetes and cloud infrastructure".
         explanation    – concise natural-language reason (≤ 50 words)
 
         The generated cover letter for audit is:
@@ -146,9 +86,9 @@ def node_audit_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]:
             prompt=PromptTemplate(
                 template=SYSTEM_TEMPLATE,
                 input_variables=[
-                    "job_position", "generated_cover_letter", "cv", "my_skills",
-                    "analysis_output", "skills_match", "personal_message",
-                    "not_wanted_words", "not_wanted_sentences", "language_detected"
+                    "generated_cover_letter",
+                    "not_wanted_words",
+                    "not_wanted_sentences"
                 ],
                 partial_variables={"format_instructions": format_instructions}
             )
@@ -157,24 +97,35 @@ def node_audit_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]:
 
     # 3️⃣ Prepare inputs
     prompt_inputs = {
-        "job_position": state.get("job_description", ""),
         "generated_cover_letter": state.get("cover_letter_output", ""),
-        "cv": state.get("cv", ""),
-        "my_skills": state.get("skills", []),
-        "analysis_output": state.get("analysis_output", ""),
-        "skills_match": state.get("matching_skills", {}),
-        "personal_message": state.get("unique_user_input", ""),
         "not_wanted_words": state.get("words_to_avoid", []),
         "not_wanted_sentences": state.get("sentences_to_avoid", []),
-        "language_detected": state.get("language_detected", ""),
     }
 
     logger.info("Starting editorial validation...")
-    logger.info("  • Cover letter sections to check: %d", 9)  # company, title, intro, motiv, 4 bullets, thanks
-    logger.info("  • Rules to validate: %d", 20)  # 12 main + 8 language
+    logger.info("  • Cover letter sections to check: %d", 6)  # company, title, intro, motiv, USP, thanks
+    logger.info("  • Checking for banned words and sentences only")
+
+    # Log the actual cover letter dict being audited
+    cover_letter = state.get("cover_letter_output", None)
+    if cover_letter:
+        logger.info("=" * 80)
+        logger.info("GENERATED COVER LETTER TO AUDIT (actual values from state):")
+        logger.info("  • Company: %r", cover_letter.get('company_name'))
+        logger.info("  • Job Title: %r", cover_letter.get('job_title'))
+        logger.info("  • Introduction: %r", cover_letter.get('introduction'))
+        logger.info("  • Motivation: %r", cover_letter.get('motivation'))
+        logger.info("  • Unique Selling Points: %r", cover_letter.get('unique_selling_points'))
+        logger.info("  • Thank You: %r", cover_letter.get('thank_you'))
+        logger.info("=" * 80)
+        logger.info("FULL COVER LETTER STRING BEING SENT TO LLM:")
+        logger.info("%r", prompt_inputs.get("generated_cover_letter"))
+        logger.info("=" * 80)
+    else:
+        logger.warning("⚠️  No cover letter found in state!")
 
     # 4️⃣ Run LCEL chain
-    llm = LLMClient().get_model("gpt")
+    llm = LLMClient().get_model("ollama")
     chain = audit_cover_letter_prompt | llm | parser
     result: EditorialResult = chain.invoke(prompt_inputs)
 
@@ -185,14 +136,14 @@ def node_audit_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]:
         logger.warning("⚠️  VIOLATIONS DETECTED:")
         for idx, violation in enumerate(result.violated_rules, 1):
             logger.warning("  %d. [%s] %s in '%s': %s",
-                          idx, violation.rule_id, violation.error_type,
+                          idx, violation.rule_id, violation.rule_id,
                           violation.section, violation.explanation[:50])
     else:
         logger.info("✓ No violations found - cover letter passes all rules!")
 
     # 5️⃣ Build AIMessage
     violation_summary = "\n".join([
-        f"  - [{v.rule_id}] {v.section}: {v.error_type} - {v.explanation[:50]}"
+        f"  - [{v.rule_id}] {v.section}: {v.rule_id} - {v.explanation[:50]}"
         for v in result.violated_rules
     ])
     updated_message = AIMessage(
@@ -210,7 +161,7 @@ def node_audit_cover_letter(state: CoverLetterGraphState) -> Dict[str, Any]:
     new_violation_log_entry = {
         f"iteration_{iteration}": {
             "timestamp": timestamp,
-            "violations": [v.dict() for v in result.violated_rules],
+            "violations": [v.model_dump() for v in result.violated_rules],
             "violation_count": len(result.violated_rules),
         }
     }

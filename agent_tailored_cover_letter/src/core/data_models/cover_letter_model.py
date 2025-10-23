@@ -8,8 +8,4 @@ class CoverLetterResult(BaseModel):
     introduction: str = Field(description="Introduction section of the cover letter")
     motivation: str = Field(description="Motivation section of the cover letter")
     unique_selling_points: str = Field(description="Unique selling points section of the cover letter")
-    bulletpoint_1: str = Field(description="First bullet point")
-    bulletpoint_2: str = Field(description="Second bullet point")
-    bulletpoint_3: str = Field(description="Third bullet point")
-    bulletpoint_4: str = Field(description="Fourth bullet point")
     thank_you: str = Field(description="Thank you section of the cover letter")

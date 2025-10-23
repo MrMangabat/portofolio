@@ -1,6 +1,7 @@
 # aiml_models/agent_teams/agent_tailored_cover_letter/src/core/company_analysis/graph_nodes/node_get_data.py
 
 import logging
+import json
 import httpx
 from typing import List, Dict, Optional, Literal
 from datetime import datetime
@@ -57,8 +58,11 @@ def node_get_data(state: CoverLetterGraphState) -> Dict:
     sentences_to_avoid = fetch_texts("sentence")
     skills = fetch_texts("skill")
 
-    logger.info("Corrections loaded: %d words, %d sentences, %d skills",
-                len(words_to_avoid), len(sentences_to_avoid), len(skills))
+    logger.info("Corrections loaded:\n%s", json.dumps({
+        "words_to_avoid": words_to_avoid,
+        "sentences_to_avoid": sentences_to_avoid,
+        "skills": skills
+    }, indent=2))
 
     # --- 2. Qdrant Semantic Search ---
     logger.info("Step 2: Performing semantic search in Qdrant...")
@@ -69,7 +73,9 @@ def node_get_data(state: CoverLetterGraphState) -> Dict:
     collection_name: str = qdrant_connection.default_collection
 
     job_description = state.get("job_description", "")
-    logger.info("  Encoding job description (length=%d chars)", len(job_description))
+    logger.info("Encoding job description:\n%s", json.dumps({
+        "job_description": job_description
+    }, indent=2, ensure_ascii=False))
 
     vector: List[float] = embedding_model.encode(job_description, normalize_embeddings=False).tolist()
     logger.info("  Vector dimension: %d", len(vector))
@@ -88,8 +94,13 @@ def node_get_data(state: CoverLetterGraphState) -> Dict:
     if search_results.points:
         best_match_template = search_results.points[0].payload.get('text', '')
         score = search_results.points[0].score if hasattr(search_results.points[0], 'score') else 'N/A'
-        logger.info("  ✓ Found matching template (score=%s, length=%d chars)", score, len(best_match_template))
-        logger.info("  Template preview: %s...", best_match_template[:100])
+        point_id = search_results.points[0].id
+        logger.info("Found matching template:\n%s", json.dumps({
+            "point_id": point_id,
+            "score": score,
+            "template_text": best_match_template,
+            "payload_keys": list(search_results.points[0].payload.keys())
+        }, indent=2))
     else:
         logger.warning("  ⚠ No matching templates found in Qdrant")
 
@@ -159,7 +170,9 @@ ________________________________________
 Certificeringer
 Microsoft Azure Fundamentals (2023)
 """
-    logger.info("  ✓ CV loaded (length=%d chars)", len(cv_text))
+    logger.info("CV loaded:\n%s", json.dumps({
+        "cv_text": cv_text
+    }, indent=2, ensure_ascii=False))
 
     # --- Trace Update ---
     new_trace = f"NODE: node_get_data @ {timestamp}"
@@ -168,13 +181,14 @@ Microsoft Azure Fundamentals (2023)
     # --- Summary ---
     logger.info("=" * 80)
     logger.info("NODE: node_get_data - Data fetch complete")
-    logger.info("State updates:")
-    logger.info("  • skills: %d items", len(skills))
-    logger.info("  • words_to_avoid: %d items", len(words_to_avoid))
-    logger.info("  • sentences_to_avoid: %d items", len(sentences_to_avoid))
-    logger.info("  • best_match_template_cover_letter: %s", "SET" if best_match_template else "NONE")
-    logger.info("  • cv: SET (%d chars)", len(cv_text))
-    logger.info("  • agent_trace: +1 entry")
+    logger.info("State updates:\n%s", json.dumps({
+        "skills": skills,
+        "words_to_avoid": words_to_avoid,
+        "sentences_to_avoid": sentences_to_avoid,
+        "best_match_template_cover_letter": best_match_template if best_match_template else None,
+        "cv": cv_text,
+        "agent_trace": new_trace
+    }, indent=2, ensure_ascii=False))
     logger.info("=" * 80)
 
     return {

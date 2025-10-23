@@ -16,6 +16,9 @@ class AgentSettings(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_PORT: int
 
+    # LLM (Ollama)
+    LLM_HOST: str
+
     @property
     def POSTGRES_URL(self) -> str:
         return f"postgresql://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
@@ -57,4 +60,4 @@ class AgentSettings(BaseSettings):
     OPENAI_API_KEY: str = Field(..., alias="CHAT_GPT_API_KEY")
 
     class Config:
-        env_file = "/home/mangabat/projects/portofolio/backend/services/service_cover_letter/.env"
+        env_file = "/home/manga/projects/portofolio/agent_tailored_cover_letter/src/.env"

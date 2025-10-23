@@ -3,7 +3,7 @@
 from typing import Dict
 from langchain_core.language_models.chat_models import BaseChatModel
 from langchain_ollama import ChatOllama
-from langchain_openai import ChatOpenAI
+# from langchain_openai import ChatOpenAI
 from src.config.service_settings import AgentSettings  # 👈 New
 
 class LLMClient:
@@ -16,22 +16,21 @@ class LLMClient:
 
     def __init__(self) -> None:
         settings = AgentSettings()  # ✅ Now uses typed settings
-        openai_api_key: str = settings.OPENAI_API_KEY  # ✅ Pulled from env via pydantic
+        # openai_api_key: str = settings.OPENAI_API_KEY  # ✅ Pulled from env via pydantic
 
         self.models = {
             "ollama": ChatOllama(
-                model="llama3.2:3b",
-                seed=66
+                model="llama3:8b",
+                # model="llama3.1:8b",
+                seed=66,
+                format="json"  # Enable JSON mode for structured outputs
             ),
             "deepseek": ChatOllama(
                 model="deepseek-r1",
-                seed=66
+                seed=66,
+                format="json"  # Enable JSON mode for structured outputs
             ),
-            "gpt": ChatOpenAI(
-                model="gpt-4o-2024-11-20",
-                api_key=openai_api_key,
-                seed=66
-            )
+
         }
 
     def get_model(self, name: str) -> BaseChatModel:
