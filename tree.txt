@@ -1,0 +1,135 @@
+backend
+├── __init__.py
+├── api_gateway
+│   ├── Dockerfile.api_gateway
+│   ├── config
+│   ├── requiremetns_api_gateway.txt
+│   └── src
+│       ├── __init__.py
+│       ├── config
+│       │   ├── __init__.py
+│       │   └── api_gateway_settings.py
+│       ├── main_system_trigger.py
+│       ├── routes.py
+│       └── tests
+└── services
+    ├── service_activity_based_costing
+    ├── service_cover_letter
+    │   ├── Dockerfile.service_cover_letter
+    │   ├── README.md
+    │   ├── deployment_infrastructure
+    │   ├── docs
+    │   │   ├── api
+    │   │   ├── architecture
+    │   │   ├── compliance
+    │   │   └── security
+    │   ├── requirements.txt
+    │   ├── reset_schema.sh
+    │   ├── scripts
+    │   ├── src
+    │   │   ├── __init__.py
+    │   │   ├── api
+    │   │   │   └── routes
+    │   │   ├── api_cover_letter_main.py
+    │   │   ├── config
+    │   │   │   ├── config_db_connections.py
+    │   │   │   └── service_settings.py
+    │   │   ├── core_business_logic
+    │   │   ├── data_models
+    │   │   │   ├── __init__.py
+    │   │   │   ├── kafka_models
+    │   │   │   │   └── producers
+    │   │   │   │       └── file_upload_event.py
+    │   │   │   ├── minio_models.py
+    │   │   │   ├── postgres_models.py
+    │   │   │   ├── qdrant_models.py
+    │   │   │   └── sql_models
+    │   │   │       ├── joblistings.sql
+    │   │   │       └── words_setences_skills.sql
+    │   │   ├── data_repositories
+    │   │   │   ├── __init__.py
+    │   │   │   ├── graph_repository
+    │   │   │   │   └── CRUD_neo4j.py
+    │   │   │   ├── miniO_repository
+    │   │   │   │   └── CRUD_minio.py
+    │   │   │   ├── postgress_repository
+    │   │   │   │   └── CRUD_postgres.py
+    │   │   │   └── qdrant_repository
+    │   │   │       └── CRUD_qdrant.py
+    │   │   ├── event_broker
+    │   │   │   ├── __init__.py
+    │   │   │   ├── event_consumers
+    │   │   │   │   └── embedding_comsumer.py
+    │   │   │   ├── event_producers
+    │   │   │   │   └── file_uploaded_producer.py
+    │   │   │   ├── kafka_config.py
+    │   │   │   └── requirements.txt
+    │   │   ├── messaging_integrations
+    │   │   │   └── kafka
+    │   │   │       └── producers
+    │   │   ├── models
+    │   │   │   ├── __init__.py
+    │   │   │   ├── database
+    │   │   │   │   ├── __init__.py
+    │   │   │   │   ├── neo4j
+    │   │   │   │   │   └── __init__.py
+    │   │   │   │   ├── postgresql
+    │   │   │   │   │   ├── __init__.py
+    │   │   │   │   │   ├── file_metadata_models.py
+    │   │   │   │   │   ├── joblistings.sql
+    │   │   │   │   │   ├── postgres_models.py
+    │   │   │   │   │   └── words_setences_skills.sql
+    │   │   │   │   ├── qdrant
+    │   │   │   │   │   ├── __init__.py
+    │   │   │   │   │   └── qdrant_models.py
+    │   │   │   │   └── redis
+    │   │   │   │       └── __init__.py
+    │   │   │   └── external_services
+    │   │   │       ├── __init__.py
+    │   │   │       └── minio
+    │   │   │           ├── __init__.py
+    │   │   │           └── minio_models.py
+    │   │   ├── notebooks
+    │   │   │   ├── JBach_veovo.pdf
+    │   │   │   ├── __init__.py
+    │   │   │   ├── headings_application.ipynb
+    │   │   │   └── test_file_upload_n_embedding_flow.ipynb
+    │   │   ├── repositories
+    │   │   │   ├── minio
+    │   │   │   ├── postgresql
+    │   │   │   └── qdrant
+    │   │   ├── resolved_env.env
+    │   │   ├── routes
+    │   │   │   ├── __init__.py
+    │   │   │   ├── routes_agent.py
+    │   │   │   ├── routes_corrections.py
+    │   │   │   ├── routes_embedding_file_service.py
+    │   │   │   ├── routes_files.py
+    │   │   │   └── routes_joblistings.py
+    │   │   ├── service_layer
+    │   │   │   ├── correction_services.py
+    │   │   │   ├── embbing_file_service.py
+    │   │   │   ├── file_service.py
+    │   │   │   ├── joblisting_service.py
+    │   │   │   └── text_extractor.py
+    │   │   ├── startup.py
+    │   │   └── utils
+    │   │       ├── __init__.py
+    │   │       ├── date_utils
+    │   │       │   └── __init__.py
+    │   │       ├── decorators
+    │   │       │   └── __init__.py
+    │   │       ├── exceptions
+    │   │       │   └── __init__.py
+    │   │       ├── logging.py
+    │   │       ├── process_mining
+    │   │       │   └── __init__.py
+    │   │       ├── text_extraction
+    │   │       │   ├── __init__.py
+    │   │       │   └── text_extractor.py
+    │   │       └── validation
+    │   │           └── __init__.py
+    │   └── tests
+    └── service_user
+
+60 directories, 73 files

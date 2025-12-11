@@ -1,1 +1,0 @@
-"""Qdrant CRUD functionality"""

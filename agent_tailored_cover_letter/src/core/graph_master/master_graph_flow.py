@@ -44,7 +44,7 @@ from src.core.editorial.graph_nodes.node_audit_cover_letter import node_audit_co
 from src.core.editorial.graph_nodes.node_reflection_cover_letter import node_reflection_cover_letter  # Surgical revision
 from src.core.editorial.graph_nodes.node_user_in_the_loop import user_in_the_loop
 from src.core.editorial.graph_nodes.node_decide_editorial_correction import decide_editorial_next_step
-from src.core.output.graph_nodes.node_create_cover_letter_pdf import node_create_cover_letter_pdf  # PDF export
+from agent_tailored_cover_letter.src.node_create_cover_letter_pdf import node_create_cover_letter_pdf  # PDF export
 
 job_description = """
 
@@ -178,24 +178,17 @@ def build_master_graph(job_offer: str) -> None:
         "cv": "Graduated in Data Science. 3 relevant projects completed in Python and scikit-learn.",
 
         # Analysis outputs (populated by analyse_vacancy node)
-        "analysis_output": None,
         "matching_skills": None,
         "language_detected": "",
 
-        # Cover letter generation (populated by generate_cover_letter node)
-        "cover_letter_output": None,
-        "generation": "",
+
 
         # Semantic search & constraints
         "best_match_template_cover_letter": None,
         "words_to_avoid": [],
         "sentences_to_avoid": [],
 
-        # Auto-accumulating fields (Annotated pattern handles merging)
-        "agent_trace": [],
-        "cover_letter_revision_history": [],
-        "editorial_violations": [],
-        "generation_violation_log": {},
+
 
         # Iteration control
         "iterations": 0,
