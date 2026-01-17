@@ -3,7 +3,7 @@
     <v-app-bar app color="primary" dark>
       <v-toolbar-title>RealUnicorns</v-toolbar-title>
       <v-spacer />
-      <v-btn nuxt to="/landingpage">Home</v-btn>
+      <v-btn nuxt to="/">Home</v-btn>
 
       <!-- Projects Dropdown Menu -->
       <v-menu open-on-hover offset-y>

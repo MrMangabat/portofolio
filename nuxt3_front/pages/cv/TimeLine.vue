@@ -1,81 +1,78 @@
 <script setup>
-import postgres_api from '@/apis/jobsearch_api.js'
-import { ref, onMounted } from 'vue'
+import { ref, computed } from 'vue'
+import masterData from '../../../master_data.json'
 
-//getting the data from the postgres_api.js for working expericences
-const cirriculumVirtue = ref(null)
+// Get work experiences from master_data.json
+const rawWorkExperiences = masterData.document_generation_officer.work_experience
 
-//getting the local images files from the assets folder
-
-onMounted(() => {
-  postgres_api.getWorkingExperiences()
-    .then((response) => {
-      cirriculumVirtue.value = response.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+// Transform data to match template expectations
+const workExperiences = computed(() => {
+  return rawWorkExperiences.map((exp, index) => ({
+    id: index,
+    job_title: exp.position,
+    company_name: exp.company,
+    location: exp.location,
+    start_date: exp.start_date,
+    end_date: exp.end_date,
+    current: exp.current,
+    // Join detailed description or use condensed bullet points
+    job_description: exp.detailed_description?.filter(d => d).join(' ') ||
+                     exp.condensed_description_bulletpoints?.join(' | ') || '',
+    bullet_points: exp.condensed_description_bulletpoints || []
+  }))
 })
-
-defineProps({
-  work_experiences: {
-    type: Object,
-    required: true
-  },
-})
-
-
 </script>
+
 <template>
   <v-container>
-    <div 
-      class="work timeline"
-      style="height: 800px; 
-      overflow-y: auto;">
+    <div
+      class="work-timeline"
+      style="max-height: 800px; overflow-y: auto;">
 
       <v-timeline side="end">
-        <v-timeline-item v-for="work_experience in cirriculumVirtue" :key="work_experience.id">
-          <template v-slot:icon>
-            <v-avatar>
-              <v-img
-                :width="300"
-                aspect-ratio="16/9"
-                :src="work_experience.image_path"
-              ></v-img>
-            </v-avatar>
-          </template>
+        <v-timeline-item
+          v-for="work_experience in workExperiences"
+          :key="work_experience.id"
+          :dot-color="work_experience.current ? 'success' : 'primary'"
+        >
           <template v-slot:default>
             <v-card class="elevation-2">
-              <v-card-title>
-                <span class="job-title">
-                  {{ work_experience.job_title }}
-                </span>
+              <v-card-title class="text-subtitle-1">
+                {{ work_experience.job_title }}
               </v-card-title>
               <v-card-text>
-                  {{ work_experience.job_description }}
+                <ul v-if="work_experience.bullet_points.length > 0" class="bullet-list">
+                  <li v-for="(point, idx) in work_experience.bullet_points" :key="idx">
+                    {{ point }}
+                  </li>
+                </ul>
+                <p v-else>{{ work_experience.job_description }}</p>
               </v-card-text>
-              <v-card-text></v-card-text>
             </v-card>
           </template>
           <template v-slot:opposite>
-            <span class="company-name">
-              {{ work_experience.company_name }}
-            </span>
-            <br>
-            <span class="company-end-dates">
-              End date: {{ work_experience.end_date }}
-            </span>
-            <br>
-            <span class="company-start-dates">
-              Start date: {{ work_experience.start_date }}
-            </span>
+            <div class="text-right">
+              <span class="company-name font-weight-bold">
+                {{ work_experience.company_name }}
+              </span>
+              <br>
+              <span class="text-caption text-grey">
+                {{ work_experience.location }}
+              </span>
+              <br>
+              <v-chip
+                size="x-small"
+                :color="work_experience.current ? 'success' : 'default'"
+                variant="outlined"
+                class="mt-1"
+              >
+                {{ work_experience.start_date }} - {{ work_experience.end_date }}
+              </v-chip>
+            </div>
           </template>
         </v-timeline-item>
       </v-timeline>
     </div>
-
-    
-
   </v-container>
 </template>
 

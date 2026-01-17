@@ -1,81 +1,81 @@
 <script setup>
+import { computed } from 'vue'
+import masterData from '../../../master_data.json'
 
-import postgres_api from '@/apis/jobsearch_api.js'
-import { ref, onMounted } from 'vue'
+// Get education data from master_data.json
+const rawEducation = masterData.document_generation_officer.education
 
-
-const edu_achievements = ref([])
-
-onMounted(() => {
-  postgres_api.getEducation()
-    .then((response) => {
-        edu_achievements.value = response.data
-    })
-    .catch((error) => {
-      console.log(error)
-    })
+// Transform data to match template expectations
+const educations = computed(() => {
+  return rawEducation.map((edu, index) => ({
+    id: index,
+    school_name: edu.institution,
+    degree: edu.degree,
+    location: edu.location,
+    start_date: edu.start_date,
+    end_date: edu.end_date,
+    current: edu.current,
+    gpa: edu.gpa_danish || edu.gpa_international || '',
+    description: edu.condensed_description_bulletpoints?.filter(d => d).join(' | ') || ''
+  }))
 })
 
-defineProps({
-  educations: {
-    type: Object,
-    required: true
-  },
-})
-
+// Split into two columns
+const leftColumn = computed(() => educations.value.slice(0, Math.ceil(educations.value.length / 2)))
+const rightColumn = computed(() => educations.value.slice(Math.ceil(educations.value.length / 2)))
 </script>
 
 <template>
   <v-container>
     <div>
       <v-row>
-        <v-col>
-          <div v-for="(education, index) in edu_achievements.slice(0, Math.ceil(edu_achievements.length / 2))" :key="education.edu_id" :education="education">
-            <v-card class="edu-line" density="compact">
-              <v-row class="row1">
-                <v-col>
-                  <v-card-title>
-                    {{ education.school_name }}
-                  </v-card-title>
-                  <v-card-text>
-                    {{ education.degree }}
-                    <br>
-                    {{ education.start_date }} - {{ education.end_date }}
-                  </v-card-text>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-avatar class="edu-logo" size="80" rounded="1">
-                    <v-img :src="education.image_path"></v-img>
-                  </v-avatar>
-                </v-col>
-              </v-row>
+        <v-col cols="12" md="6">
+          <div v-for="education in leftColumn" :key="education.id">
+            <v-card class="edu-line" density="compact" variant="outlined">
+              <v-card-title class="text-subtitle-1">
+                {{ education.school_name }}
+              </v-card-title>
+              <v-card-subtitle>
+                {{ education.degree }}
+              </v-card-subtitle>
+              <v-card-text>
+                <span class="text-caption text-grey">{{ education.location }}</span>
+                <br>
+                <v-chip size="x-small" color="primary" variant="outlined" class="mt-1">
+                  {{ education.start_date }} - {{ education.end_date }}
+                </v-chip>
+                <span v-if="education.gpa" class="ml-2 text-caption">
+                  GPA: {{ education.gpa }}
+                </span>
+                <p v-if="education.description" class="mt-2 text-body-2">
+                  {{ education.description }}
+                </p>
+              </v-card-text>
             </v-card>
           </div>
         </v-col>
-        <v-col>
-          <div v-for="(education, index) in edu_achievements.slice(Math.ceil(edu_achievements.length / 2))" :key="education.edu_id" :education="education">
-            <v-card class="edu-line" density="compact">
-              <v-row class="row2">
-                <v-col>
-                  <v-card-title>
-                    {{ education.school_name }}
-                  </v-card-title>
-                  <v-card-text>
-                    {{ education.degree }}
-                    <br>
-                    {{ education.start_date }} - {{ education.end_date }}
-                  </v-card-text>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-avatar class="edu-logo" size="80" rounded="1">
-                    <v-img :src="education.image_path"></v-img>
-                  </v-avatar>
-                </v-col>
-              </v-row>
+        <v-col cols="12" md="6">
+          <div v-for="education in rightColumn" :key="education.id">
+            <v-card class="edu-line" density="compact" variant="outlined">
+              <v-card-title class="text-subtitle-1">
+                {{ education.school_name }}
+              </v-card-title>
+              <v-card-subtitle>
+                {{ education.degree }}
+              </v-card-subtitle>
+              <v-card-text>
+                <span class="text-caption text-grey">{{ education.location }}</span>
+                <br>
+                <v-chip size="x-small" color="primary" variant="outlined" class="mt-1">
+                  {{ education.start_date }} - {{ education.end_date }}
+                </v-chip>
+                <span v-if="education.gpa" class="ml-2 text-caption">
+                  GPA: {{ education.gpa }}
+                </span>
+                <p v-if="education.description" class="mt-2 text-body-2">
+                  {{ education.description }}
+                </p>
+              </v-card-text>
             </v-card>
           </div>
         </v-col>

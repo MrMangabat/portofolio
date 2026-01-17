@@ -1,0 +1,503 @@
+{
+  "schema_version": "1.0.0",
+  "user_id": "jannik_mangabat_uuid",
+
+  "_comment_document_generation": "============================================================================",
+  "_comment_document_generation_2": "DOCUMENT_GENERATION_OFFICER DATA",
+  "_comment_document_generation_3": "Used by: document_generation_officer (generate_docs, reflect, user_review)",
+  "_comment_document_generation_4": "Purpose: Generate CV and cover letter PDFs",
+  "_comment_document_generation_5": "============================================================================",
+
+  "document_generation_officer": {
+
+    "personal_info": {
+      "name": "Jannik M. B. Sørensen",
+      "email": "mangabat93@gmail.com",
+      "phone": "+4526335065",
+      "location": "Odder",
+      "country": "Denmark",
+      "title": ""
+    },
+
+    "social_profiles": [
+      {"platform": "LinkedIn", "url": "https://www.linkedin.com/in/jannik-mangabat-bach-616586b9/"},
+      {"platform": "GitHub", "url": "https://github.com/MrMangabat"},
+      {"platform": "Portfolio", "url": ""}
+    ],
+
+    "skills": [
+      {"name": "Python", "proficiency": 3, "_proficiency_note": "subjective by nature == hard to utilize in practice", "domain": "technical", "category": "Backend & Tools"},
+      {"name": "Polars", "proficiency": 3, "domain": "technical", "category": "Data Engineering"},
+      {"name": "FastApi", "proficiency": 2, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "Docker", "proficiency": 2, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "SQL", "proficiency": 3, "domain": "technical", "category": "Data Engineering"},
+      {"name": "Neo4J", "proficiency": 2, "domain": "technical", "category": "Data Engineering"},
+      {"name": "GitHub", "proficiency": 3, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "PyTorch", "proficiency": 2, "domain": "technical", "category": "Machine Learning"},
+      {"name": "PyTest", "proficiency": 3, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "HuggingFace", "proficiency": 2, "domain": "technical", "category": "Machine Learning"},
+      {"name": "Seaborn", "proficiency": 3, "domain": "technical", "category": "Data Engineering"},
+      {"name": "Vue3", "proficiency": 2, "domain": "technical", "category": "Frontend & Tools"},
+      {"name": "Systems Integration", "proficiency": 1, "domain": "technical", "category": "Architecture & Strategy"},
+      {"name": "Data Architecture", "proficiency": 2, "domain": "technical", "category": "Architecture & Strategy"},
+      {"name": "Database Concepts", "proficiency": 2, "domain": "technical", "category": "Data Engineering"},
+      {"name": "API Concepts", "proficiency": 2, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "Abstractive Summarization", "proficiency": 3, "domain": "technical", "category": "Machine Learning"},
+      {"name": "NER", "proficiency": 3, "domain": "technical", "category": "Machine Learning"},
+      {"name": "Vectorstores (FAISS/ANN)", "proficiency": 3, "domain": "technical", "category": "Machine Learning"},
+      {"name": "RAG Systems", "proficiency": 3, "domain": "technical", "category": "Machine Learning"},
+      {"name": "Pandas", "proficiency": 3, "domain": "technical", "category": "Data Engineering"},
+      {"name": "Regex", "proficiency": 2, "domain": "technical", "category": "Data Engineering"},
+      {"name": "ETL Pipelines", "proficiency": 3, "domain": "technical", "category": "Data Engineering"},
+      {"name": "Azure Fundamentals", "proficiency": 4, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "Software Development", "proficiency": 3, "domain": "technical", "category": "Backend & Tools"},
+      {"name": "Zapier", "proficiency": 1, "domain": "technical", "category": "Other"},
+      {"name": "Make.com", "proficiency": 1, "domain": "technical", "category": "Other"},
+      {"name": "Airtable", "proficiency": 1, "domain": "technical", "category": "Other"},
+      {"name": "Jupyter Notebooks", "proficiency": 3, "domain": "technical", "category": "Other"},
+      {"name": "Visma", "proficiency": 2, "domain": "business_tools", "category": "Other"},
+      {"name": "Microsoft Office 365", "proficiency": 2, "domain": "business_tools", "category": "Other"},
+      {"name": "Microsoft SharePoint", "proficiency": 2, "domain": "business_tools", "category": "Other"},
+      {"name": "Business Model Canvas", "proficiency": 4, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "VRIO Framework", "proficiency": 4, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Enterprise Architecture", "proficiency": 4, "domain": "business_tools", "category": "Architecture & Strategy"},
+      {"name": "Operating Models", "proficiency": 4, "domain": "business_tools", "category": "Architecture & Strategy"},
+      {"name": "IT Strategy", "proficiency": 3, "domain": "business_tools", "category": "Architecture & Strategy"},
+      {"name": "IT Governance", "proficiency": 2, "domain": "business_tools", "category": "Architecture & Strategy"},
+      {"name": "SWOT Analysis", "proficiency": 4, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Value Chain Analysis", "proficiency": 3, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Core Competency Analysis", "proficiency": 3, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Competitive Analysis", "proficiency": 3, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Financial Analysis", "proficiency": 3, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Organizational Design", "proficiency": 3, "domain": "business_tools", "category": "Business Analysis"},
+      {"name": "Project Management", "proficiency": 3, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Statistical Modelling", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Market Research", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Detail Oriented", "proficiency": 4, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Collaborative", "proficiency": 5, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Result Oriented", "proficiency": 5, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Critical Thinking", "proficiency": 4, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Strategic Analysis", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Problem-Solving", "proficiency": 4, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Systems Thinking", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Stakeholder Management", "proficiency": 3, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Communication", "proficiency": 4, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Active Listening", "proficiency": 4, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Qualitative Research", "proficiency": 4, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Research Design", "proficiency": 4, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Adaptability", "proficiency": 5, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Self-Reflection", "proficiency": 4, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Strategic Planning", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Strategic Thinking", "proficiency": 4, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Business Process Mapping", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Requirements Gathering", "proficiency": 4, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Change Management", "proficiency": 3, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Time Management", "proficiency": 4, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Report Writing", "proficiency": 3, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Data Synthesis", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Root Cause Analysis", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Gap Analysis", "proficiency": 4, "domain": "soft_skills", "category": "Analytics"},
+      {"name": "Presentation Skills", "proficiency": 3, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Client Relations", "proficiency": 4, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Cross-Cultural Communication", "proficiency": 4, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Intellectual Curiosity", "proficiency": 4, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Self-Directed Learning", "proficiency": 5, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Initiative", "proficiency": 4, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Theory-to-Practice Application", "proficiency": 4, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Complex Problem-Solving", "proficiency": 4, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Cost-Effective Solutions", "proficiency": 3, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Senior Management Communication", "proficiency": 4, "domain": "soft_skills", "category": "Interpersonal"},
+      {"name": "Data Structuring", "proficiency": 3, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Project Contribution", "proficiency": 3, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Continuous Improvement", "proficiency": 3, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Proactive Initiative", "proficiency": 4, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Diligence", "proficiency": 5, "domain": "soft_skills", "category": "Execution"},
+      {"name": "Curious", "proficiency": 5, "domain": "soft_skills", "category": "Mindset"},
+      {"name": "Quantitative", "proficiency": 3, "domain": "soft_skills", "category": "Analytics"}
+    ],
+
+    "work_experience": [
+      {
+        "position": "Founder",
+        "company": "Unicorn",
+        "location": "Odder",
+        "start_date": "January 2025",
+        "end_date": "Present",
+        "current": true,
+        "detailed_description": [
+          "Started a company that provides services for my past working experiences and my aspiration towards AI Engineering, data analysis, data engineering, data visualisation, personal training, health and cocktails"
+        ],
+        "condensed_description_bulletpoints": [
+          "Founded a company focusing on personal training services, water treatment, cocktail catering and with professional aspiration to data science/AI Engineering"
+        ]
+      },
+      {
+        "position": "Project Leader",
+        "company": "EnviroProcess",
+        "location": "Odder",
+        "start_date": "August 2023",
+        "end_date": "January 2024",
+        "current": false,
+        "detailed_description": [
+          "Led construction projects for water treatment infrastructure.",
+          "Responsible for budgeting, planning, and stakeholder communication."
+        ],
+        "condensed_description_bulletpoints": [
+          "Led construction projects for water treatment infrastructure",
+          "Responsible for budgeting, planning, and stakeholder communication"
+        ]
+      },
+      {
+        "position": "Project Leader",
+        "company": "EnviroProcess",
+        "location": "Odder",
+        "start_date": "September 2017",
+        "end_date": "August 2021",
+        "current": false,
+        "detailed_description": [
+          "Worked as on-site Project Leader for water treatment facilities, public pools, and spa/wellness construction projects.",
+          "Managed logistics including scheduling, material procurement, and inventory control for specialized equipment (sand filters, coal filters, chemical systems).",
+          "Coordinated teams of 2-5 international installation technicians using adapted Scrum methodology with three daily standups to track progress, identify blockers, and coordinate across trades.",
+          "Participated in physical installation work alongside technicians. Handled contract deviations, resolved on-site conflicts, and maintained quality control documentation.",
+          "Represented company in meetings with general contractors and attended construction, safety, and planning coordination meetings"
+        ],
+        "condensed_description_bulletpoints": [
+          "On-site Project Leader for water treatment facilities and pool construction projects",
+          "Managed logistics, procurement, and inventory control for specialized equipment",
+          "Coordinated international installation teams using adapted Scrum methodology"
+        ]
+      },
+      {
+        "position": "Cocktail bartender",
+        "company": "Klarbar I/S",
+        "location": "Aarhus",
+        "start_date": "September 2016",
+        "end_date": "June 2021",
+        "current": false,
+        "detailed_description": [
+          "Coordinated high-end cocktail catering for events and functions. Managed teams of 1-10 freelance bartenders, handling training, event logistics, and on-site execution. Planned inventory, setup, and service delivery for 1-10 events monthly."
+        ],
+        "condensed_description_bulletpoints": [
+          "Coordinated high-end cocktail catering for events",
+          "Managed teams of 1-10 freelance bartenders"
+        ]
+      },
+      {
+        "position": "Mixologist",
+        "company": "DiningSix",
+        "location": "Aarhus",
+        "start_date": "September 2016",
+        "end_date": "August 2018",
+        "current": false,
+        "detailed_description": [
+          "Hired as mixologist for fine dining restaurant. Collaborated with chefs to develop cocktail menus as alternatives to traditional wine pairings. Provided table service, story telling about spirit brands and production and distillery backgrounds, and represented the restaurant in competitions."
+        ],
+        "condensed_description_bulletpoints": [
+          "Mixologist for fine dining restaurant",
+          "Developed cocktail menus as alternatives to wine pairings"
+        ]
+      },
+      {
+        "position": "Test Manager",
+        "company": "TDC Hosting",
+        "location": "Tranbjerg",
+        "start_date": "September 2016",
+        "end_date": "January 2017",
+        "current": false,
+        "detailed_description": [
+          "Entered the role of Test Manager tasked with migrating 286 applications from Citrix 1 to Citrix 2, with no prior IT experience and only a background in hospitality, on a project that had stagnated longer than acceptable.",
+          "I approached the backlog by establishing priorities through direct end-user and super-user consultation for daily-use functionality, mapped to stakeholder priorities.",
+          "Applications with the most users or highest operational cost were prioritized.",
+          "Identified domain and technical specialists across functions and structured workflows that empowered technical decisions at the specialist level.",
+          "Coordinated test teams in England and India, which resulted in application approval rates from management and stakeholders increasing from 17% to 87%."
+        ],
+        "condensed_description_bulletpoints": [
+          "Test Manager for Citrix migration project (286 applications)",
+          "Coordinated international test teams in England and India",
+          "Increased application approval rates from 17% to 87%"
+        ]
+      },
+      {
+        "position": "Mixologist",
+        "company": "Scandic Hotels",
+        "location": "Copenhagen",
+        "start_date": "October 2015",
+        "end_date": "May 2016",
+        "current": false,
+        "detailed_description": [
+          "Mixologist at Scandic Webers. Created cocktail recipes and menus for chain-wide consideration, collaborating with sommeliers and beer specialists on beverage selection and seasonal menu changes for the Scandic hotel chain."
+        ],
+        "condensed_description_bulletpoints": [
+          "Mixologist at Scandic Webers hotel",
+          "Created cocktail recipes for chain-wide consideration"
+        ]
+      },
+      {
+        "position": "Back Office",
+        "company": "Processing Danmark A/S",
+        "location": "Odder",
+        "start_date": "June 2013",
+        "end_date": "August 2017",
+        "current": false,
+        "detailed_description": [
+          "Back Office Administrator supporting operational and commercial functions. Responsibilities included project documentation and translations (German, Swedish, English to Danish), inventory management, procurement, and general business administration. Built foundational knowledge of water treatment systems and construction processes."
+        ],
+        "condensed_description_bulletpoints": [
+          "Back Office Administrator supporting operational and commercial functions",
+          "Handled project documentation, translations, inventory management, and procurement"
+        ]
+      },
+      {
+        "position": "Mixologist",
+        "company": "Brooklyn Social",
+        "location": "Sydney",
+        "start_date": "April 2015",
+        "end_date": "September 2015",
+        "current": false,
+        "detailed_description": [
+          "Head Bartender at gin-focused bar. Specialized in guest experiences centered around 250+ gin varieties, including education on flavor profiles, production methods, and brand backgrounds. Created classic cocktails and gin-forward drinks with custom garnishes."
+        ],
+        "condensed_description_bulletpoints": [
+          "Head Bartender at gin-focused bar (250+ gin varieties)",
+          "Specialized in guest education on gin flavor profiles and production"
+        ]
+      },
+      {
+        "position": "Mixologist",
+        "company": "Jam Gallery & Spring Street Social",
+        "location": "Sydney",
+        "start_date": "May 2015",
+        "end_date": "September 2015",
+        "current": false,
+        "detailed_description": [
+          "Mixologist at Jam Gallery (club) and Spring Street Social (live music venue) - two adjacent venues in Bondi Junction. Sourced fresh ingredients, prepared homemade syrups and garnishes, and managed full venue operations from opening prep to closing.",
+          "Took initiative to identify problems and devise solutions. Strong communication skills and cooperation with teammates, with ability to inspire respect from colleagues.",
+          "Excellent rapport with customers, garnering some of the best feedback the venues had received. Recognized by General Manager as a perfect fit for the business and for operational capability across all venue functions."
+        ],
+        "condensed_description_bulletpoints": [
+          "Mixologist at two adjacent venues (club and live music bar)",
+          "Managed full venue operations from opening to closing",
+          "Received exceptional customer feedback"
+        ]
+      },
+      {
+        "position": "Bartender",
+        "company": "Vinstuen",
+        "location": "Aarhus",
+        "start_date": "January 2012",
+        "end_date": "April 2015",
+        "current": false,
+        "detailed_description": [
+          ""
+        ],
+        "condensed_description_bulletpoints": [
+          "Bartending"
+        ]
+      }
+    ],
+
+    "education": [
+      {
+        "institution": "Inspire Institute",
+        "degree": "Personal Trainer",
+        "location": "Aarhus, Denmark",
+        "start_date": "January 2025",
+        "end_date": "May 2025",
+        "current": false,
+        "gpa_danish": "",
+        "gpa_international": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Anatomy & physiology, program design, MetCons"
+        ]
+      },
+      {
+        "institution": "University of Southern Denmark",
+        "degree": "MSc in Data Science",
+        "location": "Odense, Denmark",
+        "start_date": "September 2022",
+        "end_date": "June 2025",
+        "current": false,
+        "gpa_danish": "6.04/12",
+        "gpa_international": "2.65/4.0",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Thesis on foundational models for abstractive summarisation, NER and market research analysis",
+          "RAG based systems",
+          "Software Engineering"
+        ]
+      },
+      {
+        "institution": "Erhvervsakademi Aarhus",
+        "degree": "PBa in Economics & IT",
+        "location": "Aarhus, Denmark",
+        "start_date": "August 2018",
+        "end_date": "January 2021",
+        "current": false,
+        "gpa_danish": "",
+        "gpa_international": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Thesis on enterprise architecture and digital transformation",
+          "IT strategy, business architecture, process optimization"
+        ]
+      },
+      {
+        "institution": "International Butler Academy",
+        "degree": "Private Service & Household Management",
+        "location": "Netherlands",
+        "start_date": "January 2018",
+        "end_date": "March 2018",
+        "current": false,
+        "gpa_danish": "",
+        "gpa_international": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Private service, staffing & household management"
+        ]
+      },
+      {
+        "institution": "European Bartender School",
+        "degree": "Mixologist",
+        "location": "Kos, Greece",
+        "start_date": "June 2011",
+        "end_date": "August 2011",
+        "current": false,
+        "gpa_danish": "",
+        "gpa_international": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Cocktails, pouring techniques, exhibition flair"
+        ]
+      }
+    ],
+
+    "projects": [
+      {
+        "name": "RAG-based Document Summarization System",
+        "context": "Master's thesis project",
+        "start_date": "",
+        "end_date": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Designed and implemented RAG pipeline for business document summarization",
+          "Integrated vectorstore backend (FAISS) with transformer-based models",
+          "Developed FastAPI service and containerized with Docker"
+        ]
+      },
+      {
+        "name": "Abstractive Summarization & NER Research",
+        "context": "Master's thesis",
+        "start_date": "",
+        "end_date": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Evaluated transformer models for summarization and NER",
+          "Implemented ANN-based vectorstore pipeline for market analysis"
+        ]
+      },
+      {
+        "name": "Legal Directive Extraction & Automation",
+        "context": "CC-Green",
+        "start_date": "",
+        "end_date": "",
+        "detailed_description": [""],
+        "condensed_description_bulletpoints": [
+          "Built regex-based extraction pipelines for processing legal text",
+          "Created automation workflows with Zapier and Make.com"
+        ]
+      }
+    ],
+
+    "internships": [
+      {
+        "position": "Data & Business Analyst Intern",
+        "company": "CC-Green",
+        "location": "Odder",
+        "start_date": "September 2024",
+        "end_date": "October 2024",
+        "current": false,
+        "detailed_description": [
+          "Built ROI/CAPEX/OPEX models for digital construction solutions.",
+          "Assessed Azure backend architecture for scalability."
+        ],
+        "condensed_description_bulletpoints": [
+          "Built ROI/CAPEX/OPEX models for digital construction solutions",
+          "Assessed Azure backend architecture for scalability"
+        ]
+      },
+      {
+        "position": "Business Process Improvement Intern",
+        "company": "TDC Group",
+        "location": "Tranbjerg",
+        "start_date": "August 2019",
+        "end_date": "December 2019",
+        "current": false,
+        "detailed_description": [
+          "Performed value stream analysis for VDSL & COAX infrastructure.",
+          "Estimated efficiency savings of 10-350M DKK annually."
+        ],
+        "condensed_description_bulletpoints": [
+          "Performed value stream analysis for VDSL & COAX infrastructure",
+          "Estimated efficiency savings of 10-350M DKK annually"
+        ]
+      }
+    ],
+
+    "languages": [
+      {"name": "Danish", "proficiency": "Native"},
+      {"name": "English", "proficiency": "C1"}
+    ],
+
+    "hobbies": [
+      "Kitesurfing",
+      "Personal Training",
+      "Snowboarding",
+      "AI/ML",
+      "Knowledge Engineering"
+    ],
+
+    "certifications": [
+      {
+        "name": "Azure Fundamentals",
+        "issuer": "Microsoft",
+        "date": "April 2024",
+        "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-fundamentals/?practice-assessment-type=certification"
+      },
+      {
+        "name": "Azure AI Engineer Associate",
+        "issuer": "Microsoft",
+        "date": "learning",
+        "url": "https://learn.microsoft.com/en-us/credentials/certifications/azure-ai-engineer/?practice-assessment-type=certification"
+      },
+      {
+        "name": "Technique I",
+        "issuer": "Danske Svømmebade",
+        "date": "Aug 2025",
+        "url": "https://events.foreningsadministration.dk/events/DSF/dsf-kurser/021e06c3-4d4a-4e68-aaaa-59a8bc5971f5"
+      },
+      {
+        "name": "Technique II",
+        "issuer": "Danske Svømmebade",
+        "date": "Nov 2025",
+        "url": "https://events.foreningsadministration.dk/events/DSF/dsf-kurser/93f28c9a-0bde-4a0d-9e18-cdb3768918a2"
+      }
+    ]
+  },
+
+  "_comment_personality_analysis": "============================================================================",
+  "_comment_personality_analysis_2": "PERSONALITY_ANALYSIS_OFFICER DATA",
+  "_comment_personality_analysis_3": "Used by: personality_analysis_officer (analyze_profile)",
+  "_comment_personality_analysis_4": "Purpose: Process detailed user data to create condensed versions",
+  "_comment_personality_analysis_5": "============================================================================",
+
+  "personality_analysis_officer": {},
+
+  "_comment_research_analysis": "============================================================================",
+  "_comment_research_analysis_2": "RESEARCH_ANALYSIS_OFFICER DATA",
+  "_comment_research_analysis_3": "Used by: research_analysis_officer (financial_analyst, business_intelligence, etc)",
+  "_comment_research_analysis_4": "Purpose: Company research and M&A due diligence",
+  "_comment_research_analysis_5": "============================================================================",
+
+  "research_analysis_officer": {}
+}
