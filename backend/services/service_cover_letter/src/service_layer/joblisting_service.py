@@ -1,9 +1,9 @@
-# backend/jobapplication_feature/services/job_listing_service.py
+# backend/services/service_cover_letter/src/service_layer/joblisting_service.py
 
 from typing import List, Optional
 from sqlalchemy.orm import Session
-from src.data_models.postgres_models import JobListingItem
-from src.data_repositories.postgress_repository.CRUD_postgres import JoblistingsRepository
+from src.data_models.databases.postgres.postgres_models import JobListingItem
+from src.data_repositories.postgres_repository import JoblistingsRepository
 
 class JobListingService:
     """Provides business logic for job listings."""

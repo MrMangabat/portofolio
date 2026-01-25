@@ -2,12 +2,12 @@
 
 from typing import List
 from sqlalchemy.orm import Session
-from src.data_repositories.postgress_repository.CRUD_postgres import CorrectionRepository 
-from src.data_models.postgres_models import CorrectionItem, CorrectionType
+from src.data_repositories.postgres_repository import CorrectionRepository
+from src.data_models.databases.postgres.postgres_models import CorrectionItem, CorrectionType
 
 """middle layers for interacting with the database and the routes, can serve as a place to put business logic if nedded"""
 
-## data transformations, cleaning 
+## data transformations, cleaning
 class CorrectionService:
     """Provides business logic for corrections."""
     def __init__(self, db_session: Session):
