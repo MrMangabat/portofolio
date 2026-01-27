@@ -1,12 +1,6 @@
 # Nuxt3 Frontend Dockerfile
 FROM node:20
 
-# Install build tools for native modules
-RUN apt-get update && apt-get install -y \
-    build-essential \
-    python3 \
-    && rm -rf /var/lib/apt/lists/*
-
 # Set working directory
 WORKDIR /app
 

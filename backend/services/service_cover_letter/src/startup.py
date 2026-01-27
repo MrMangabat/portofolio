@@ -39,8 +39,23 @@ def run_reset_schema() -> None:
         logging.error(f"❌ Schema reset failed:\n{result.stderr}")
         raise RuntimeError("Schema reset failed. Check the logs above.")
 
+def validate_langsmith_config() -> None:
+    tracing = os.environ.get("LANGSMITH_TRACING", "false").lower()
+    project = os.environ.get("LANGSMITH_PROJECT", "default")
+    api_key = os.environ.get("LANGSMITH_API_KEY", "")
+
+    if tracing == "true" and api_key:
+        logging.info(f"LangSmith tracing ENABLED for project: {project}")
+    elif tracing == "true" and not api_key:
+        logging.warning("LANGSMITH_TRACING is true but LANGSMITH_API_KEY is not set — tracing will not work")
+    else:
+        logging.info("LangSmith tracing DISABLED")
+
+
 def pre_startup() -> None:
     try:
+        load_dotenv()
+        validate_langsmith_config()
         # minio_ip = resolve_minio_ip()
         # write_resolved_env(minio_ip)
         run_reset_schema()

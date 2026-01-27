@@ -72,6 +72,11 @@ services:
       - KAFKA_TOPIC_FILE_UPLOADED=file_uploaded
       - KAFKA_CONSUMER_GROUP=embedding_consumer_group
       - KAFKA_BOOTSTRAP_SERVERS=kafka_broker:9092
+
+      # LangSmith Observability
+      - LANGSMITH_TRACING=true
+      - LANGSMITH_PROJECT=cover-letter-service
+      - LANGSMITH_ENDPOINT=https://api.smith.langchain.com
     env_file:
       - backend/services/service_cover_letter/.env
 

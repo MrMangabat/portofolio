@@ -20,4 +20,10 @@ EMBED_FILES = "/embed-files"
 # Agent endpoints
 AGENT_PREFIX = "/agent"
 AGENT_GENERATE = "/generate"
-AGENT_HEALTH = "/agent/health"
+AGENT_HEALTH = "/health"
+
+# Research endpoints
+RESEARCH_PREFIX = "/research"
+RESEARCH_COMPANY_ALL = "/company/all"
+RESEARCH_COMPANY_SINGLE = "/company/{officer}"
+RESEARCH_COMPANY_CACHED = "/company/{company_name}/cached"

@@ -48,5 +48,22 @@ class CoverLetterSettings(BaseSettings):
     # OpenAI
     OPENAI_API_KEY: str = Field(..., alias="CHAT_GPT_API_KEY")
 
+    # LLM Configuration
+    LLM_MODEL: str = "gpt-4o"
+    LLM_TEMPERATURE: float = 0.1
+
+    # Agent Configuration
+    AGENT_RECURSION_LIMIT: int = 50
+
+    # Research Configuration
+    RESEARCH_MAX_WORKERS: int = 4
+    RESEARCH_TIMEOUT_MS: int = 30000
+
+    # LangSmith Observability
+    LANGSMITH_API_KEY: str = ""
+    LANGSMITH_TRACING: str = "false"
+    LANGSMITH_PROJECT: str = "cover-letter-service"
+    LANGSMITH_ENDPOINT: str = "https://api.smith.langchain.com"
+
     class Config:
         env_file = ".env"

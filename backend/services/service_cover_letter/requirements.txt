@@ -3,7 +3,16 @@ uvicorn
 psycopg2-binary
 sqlalchemy
 pydantic
+pydantic-settings
 qdrant-client
 minio
 python-dotenv
 python-multipart
+
+# LangGraph Agent Dependencies
+langgraph>=0.2.0
+langchain-openai>=0.1.0
+langchain-core>=0.2.0
+
+# Observability
+langsmith>=0.1.0

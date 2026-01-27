@@ -1,133 +1,70 @@
 # backend/services/service_cover_letter/src/api/routes/routes_agent.py
 
 """
-Agent Routes - Connects to ML Platform Approved Agent
+Agent Routes - Cover Letter Generation using LangGraph Agent
 
-This service calls the APPROVED and DEPLOYED cover letter agent.
-The agent only becomes available after going through:
-  1. Development & experimentation (ML Platform)
-  2. Evaluation against test suites
-  3. Approval workflow
-  4. Containerization & deployment
+This service uses the integrated LangGraph agent for cover letter generation.
+The agent uses a 4-tier hierarchical supervisor architecture:
+  - Tier 1: Main Supervisor
+  - Tier 2: Officers (Personality, Document, Research)
+  - Tier 3: Workers
+  - Tier 4: Research Sub-agents
 """
 
-from fastapi import APIRouter, HTTPException
-from pydantic import BaseModel
-from typing import Optional
-import httpx
-import os
+from fastapi import APIRouter, Depends
+
+from src.api.dependencies import get_agent_service
+from src.api.schemas.agent_schemas import (
+    AgentHealthResponse,
+    CoverLetterRequest,
+    CoverLetterResponse,
+)
+from src.service_layer.agent_service import AgentService
 
 router = APIRouter()
 
-# Agent endpoint - points to APPROVED agent container
-AGENT_URL = os.getenv("AGENT_URL", "http://cover_letter_agent_prod:8000")
-
-
-class CoverLetterRequest(BaseModel):
-    job_description: str
-    unique_user_input: Optional[str] = ""
-
-
-class CoverLetterResponse(BaseModel):
-    company_name: str
-    job_title: str
-    introduction: str
-    motivation: str
-    unique_selling_points: str
-    bulletpoint_1: str
-    bulletpoint_2: str
-    bulletpoint_3: str
-    bulletpoint_4: str
-    thank_you: str
-    iterations: int
-    violations: int
-
 
 @router.post("/generate", response_model=CoverLetterResponse)
-async def generate_cover_letter(request: CoverLetterRequest):
+async def generate_cover_letter(
+    request: CoverLetterRequest,
+    agent_service: AgentService = Depends(get_agent_service),
+):
     """
-    Generate a cover letter using the approved AI agent.
+    Generate a cover letter using the integrated AI agent.
 
-    This endpoint calls the containerized agent that has been:
-    - Developed and tested in the ML Platform
-    - Evaluated against quality benchmarks
-    - Approved for production use
-    - Deployed as a standalone service
+    This endpoint uses the LangGraph-based hierarchical agent to:
+    - Analyze the candidate profile against job requirements
+    - Generate a tailored cover letter with structured sections
+    - Create PDFs for both cover letter and CV
 
     Architecture:
-        service_cover_letter → cover_letter_agent (approved container)
+        Main Supervisor -> Officers -> Workers -> Sub-agents
 
     Args:
         request: Job description and optional user input
 
     Returns:
-        Generated cover letter with all sections
+        Generated cover letter with all sections and metadata
 
     Raises:
-        HTTPException 503: Agent service unavailable
         HTTPException 500: Agent execution error
-        HTTPException 504: Agent timeout
     """
-    try:
-        async with httpx.AsyncClient(timeout=120.0) as client:
-            response = await client.post(
-                f"{AGENT_URL}/generate",
-                json={
-                    "job_description": request.job_description,
-                    "unique_user_input": request.unique_user_input
-                }
-            )
+    result = await agent_service.generate_cover_letter(
+        job_description=request.job_description,
+        user_id=request.user_id,
+    )
 
-            if response.status_code == 200:
-                return CoverLetterResponse(**response.json())
-            else:
-                raise HTTPException(
-                    status_code=response.status_code,
-                    detail=f"Agent returned error: {response.text}"
-                )
-
-    except httpx.TimeoutException:
-        raise HTTPException(
-            status_code=504,
-            detail="Agent execution timed out (>120s)"
-        )
-    except httpx.ConnectError:
-        raise HTTPException(
-            status_code=503,
-            detail=f"Agent service unavailable at {AGENT_URL}. Ensure approved agent is deployed."
-        )
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=f"Unexpected error calling agent: {str(e)}"
-        )
+    return CoverLetterResponse(**result)
 
 
-@router.get("/agent/health")
-async def check_agent_health():
+@router.get("/health", response_model=AgentHealthResponse)
+async def check_agent_health(
+    agent_service: AgentService = Depends(get_agent_service),
+):
     """
-    Check if the approved agent is healthy and accessible.
+    Check if the agent is healthy and accessible.
 
-    Returns agent version and status.
+    Returns agent configuration and status.
     """
-    try:
-        async with httpx.AsyncClient(timeout=5.0) as client:
-            response = await client.get(f"{AGENT_URL}/health")
-
-            if response.status_code == 200:
-                return {
-                    "status": "healthy",
-                    "agent_info": response.json()
-                }
-            else:
-                return {
-                    "status": "unhealthy",
-                    "error": response.text
-                }
-
-    except Exception as e:
-        return {
-            "status": "unreachable",
-            "error": str(e),
-            "agent_url": AGENT_URL
-        }
+    health = await agent_service.get_agent_health()
+    return AgentHealthResponse(**health)
